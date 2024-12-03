@@ -1,0 +1,74 @@
+{% extends 'store/base.html' %}
+
+{% load static %}
+{% block title %}Profile | {{request.user}} {% endblock %}
+{% block link1 %} {% endblock %}
+{% block link2 %} {% endblock %}
+
+
+{% block content %}
+<main class="main-content">
+
+    <section class="settings">
+        <div class="settings-container">
+            <h2>Settings</h2>
+
+            <!-- Profile Settings -->
+            <div class="settings-section">
+                <h3>Profile</h3>
+                <center>
+                    <img src="{% static 'assets/images/latest.jpg' %}" alt="Profile Picture" class="profile-pic">
+                </center>
+                <form>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="Enter your username">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <div class="file-input-container">
+                            <label for="file-upload">Upload Profile Picture</label>
+                            <input type="file" id="file-upload" name="file-upload" />
+                        </div>
+
+                    </div>
+                    <button type="submit" class="btn save-btn">Save Changes</button>
+                </form>
+            </div>
+
+            <!-- Theme Settings -->
+            <div class="settings-section">
+                <h3>Theme</h3>
+                <div class="form-group">
+                    <label class="inline-label">
+                        <input type="checkbox" id="dark-mode-toggle"> Enable Dark Mode
+                    </label>
+                </div>
+            </div>
+
+            <!-- Security Settings -->
+            <div class="settings-section">
+                <h3>Security</h3>
+                <a href="{% url 'password-reset' request.user %}" class="btn save-btn">Update Password</a>
+                
+            </div>
+
+            <!-- Account Settings -->
+            <div class="settings-section">
+                <h3>Account</h3>
+                <button class="btn deactivate-btn">Deactivate Account</button>
+                <button class="btn delete-btn">Delete Account</button>
+            </div>
+        </div>
+    </section>
+
+</main>
+{% endblock %}
+
+
+{% block footer %}
+
+{% endblock %}

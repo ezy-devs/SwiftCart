@@ -1,0 +1,46 @@
+{% extends 'store/base.html' %}
+
+
+
+
+{% block content %}
+<div class="auth-container">
+    <!-- Register Form -->
+    <div class="auth-box">
+      <h2>Register</h2>
+     
+        <button class="google-btn">Register with Google</button>
+        <div class="separator">or</div>
+      <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          {% if messages %}
+            {% for message in messages %}
+          <label for="login-email" style="color: red; text-align: center;">{{message}}</label>
+          {% endfor %}
+          {% endif %}
+          <label for="register-name">Full Name</label>
+          <input type="text" name="username" id="register-name" placeholder="Enter your full name" required>
+        </div>
+        <div class="form-group">
+          <label for="register-email">Email Address</label>
+          <input type="email" name="email" id="register-email" placeholder="Enter your email" required>
+        </div>
+        <div class="form-group">
+          <label for="register-password">Password</label>
+          <input type="password" name="password" id="register-password" placeholder="Create a password" required>
+        </div>
+        
+        <button type="submit" class="btn">Register</button>
+      </form>
+      <p class="switch-link">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+    </div>
+
+  </div>
+{% endblock %}
+
+
+{% block footer %}
+
+{% endblock %}
