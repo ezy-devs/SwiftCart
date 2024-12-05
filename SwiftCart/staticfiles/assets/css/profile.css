@@ -1,0 +1,190 @@
+/* Profile Layout */
+
+/* Main Content */
+.main-content {
+    margin: 20px auto;
+    padding: 20px;
+  }
+.settings {
+  padding: 40px 20px;
+}
+
+.settings-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 30px;
+}
+
+.settings h2 {
+  font-size: 28px;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+/* Section Styles */
+.settings-section {
+  margin-bottom: 40px;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 20px;
+}
+
+.settings-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.settings-section h3 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #34495e;
+  font-weight: 500;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  color: #7f8c8d;
+  margin-bottom: 8px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #dcdcdc;
+  border-radius: 5px;
+  font-size: 14px;
+  color: #2c3e50;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+select:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+/* Checkbox */
+.form-group input[type="checkbox"] {
+  margin-right: 10px;
+  transform: scale(1.2);
+  accent-color: #1abc9c;
+}
+
+.form-group label.inline-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.profile-pic {
+  width: 150px; 
+  height: 100px; 
+  border: 3px dotted #2ecc71;; 
+  border-radius: 8px; 
+  object-fit: cover; 
+}
+/* Container for the file input */
+.file-input-container {
+  display: inline-block;
+  padding: 10px;
+  border: 3px dotted #2ecc71;; 
+  border-radius: 8px;
+  cursor: pointer; 
+  background-color: #f5f6fa; 
+  transition: background-color 0.3s;
+}
+
+/* File input element itself - hide default input */
+.file-input-container input[type="file"] {
+  display: none; /* Hide the default file input */
+}
+
+/* Style for when the container is hovered */
+.file-input-container:hover {
+  background-color: #eaf2f8; /* Light blue background on hover */
+}
+
+/* Label text styling */
+.file-input-container label {
+  font-size: 14px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 12px 20px;
+  background-color: #2ecc71;;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #21be63;
+  color: #222;
+}
+
+.save-btn {
+  margin-top: 10px;
+}
+
+.deactivate-btn,
+.delete-btn {
+  background-color: #e74c3c;
+  margin-right: 10px;
+}
+
+.deactivate-btn:hover,
+.delete-btn:hover {
+  background-color: #c0392b;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .settings-container {
+    padding: 20px;
+  }
+
+  .settings h2 {
+    font-size: 24px;
+  }
+
+  .settings-section h3 {
+    font-size: 20px;
+  }
+}
+
+body.dark-mode {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+}
+
+body.dark-mode .settings-container {
+  background-color: #34495e;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .form-group input,
+body.dark-mode select {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  border-color: #7f8c8d;
+}
