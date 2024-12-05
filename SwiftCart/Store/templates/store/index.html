@@ -183,7 +183,9 @@
       </div>
     </div>
   </section>
+  {{products_category}}
   <!-- COLLECTIONS -->
+   
   <section class="section container">
     <h1 class="title">Our Collections</h1>
     <div class="section-container">
@@ -243,40 +245,20 @@
     <h1 class="title">Featured Styles</h1>
     <small class="info">Scroll to the right for more!</small>
     <div class="section-container">
-      <a href="/shop.html" style="text-decoration: none;">
-        <div class="card">
-          <div class="card-img">
-            <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
-          </div>
-          <div class="card-content">
-            <div style="display: block;">
-              <h3 class="product-title">Best Suit</h3>
-              <p class="product-description" style="padding: 0; margin: 0;">
-                this is a product description
-              </p>
-              <p class="product-price" style="padding: 0; margin: 0;">N12,000 <span class="old-price"> N20,000 </span>
-              </p>
-              <div class="product-rating">
-                <span class="rating-stars">★★★★☆</span>
-                <span class="rating-count">(120 reviews)</span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </a>
-
+     
+      {% for product in featured_products %}
+      
       <div class="card">
         <div class="card-img">
           <img src="{% static 'assets/images/best-design.jpeg' %}" alt="images/images (20).jpeg">
         </div>
         <div class="card-content">
           <div style="display: block;">
-            <h3 class="product-title">Best Suit</h3>
+            <h3 class="product-title">{{product}}</h3>
             <p class="product-description" style="padding: 0; margin: 0;">
-              this is a product description
+              {{product.description}}
             </p>
-            <p class="product-price" style="padding: 0; margin: 0;">N12,000 <span class="old-price"> N20,000 </span>
+            <p class="product-price" style="padding: 0; margin: 0;">{% if product.new_price %} N{{product.new_price}} {% else %}N{{product.price}} {% endif %} <span class="old-price">{{product.price}}</span>
             </p>
             <div class="product-rating">
               <span class="rating-stars">★★★★☆</span>
@@ -286,6 +268,7 @@
 
         </div>
       </div>
+      {% endfor %}
       <div class="card">
         <div class="card-img">
           <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
@@ -519,6 +502,28 @@
   <section class="section">
     <h1 class="title">Trending</h1>
     <div class="section-container ">
+      {% for trending_product in trending_products %}
+      
+      <div class="card">
+        <div class="card-img">
+          
+          <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
+         
+        </div>
+        <div class="card-content">
+          <div>
+            <h3>{{trending_product}}</h3>
+            <p>
+              {{trending_product.description}}
+            </p>
+            <span><strong>N{{trending_product.price}}</strong></span>
+          </div>
+          <div class="action">
+            <span><a href=""><i class="fa fa-plus"></i></a></span>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
       <div class="card">
         <div class="card-img">
           <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">

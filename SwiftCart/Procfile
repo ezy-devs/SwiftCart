@@ -1,0 +1,1 @@
+web: gunicorn SwiftCart.wsgi:application --log-file -
