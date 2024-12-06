@@ -14,11 +14,13 @@ from .forms import ProductForm
 def home(request):
     trending_products = trending(request)
     featured_products = featured_product()
+    categories = Category.objects.all()
     # products_category = product_category(request, id=pk)
     context = {
         'trending_products':trending_products,
         # 'products_category':products_category,
         'featured_products':featured_products,
+        'categories':categories,
     }
     return render(request, 'store/index.html', context)
 
@@ -127,7 +129,10 @@ def product_category(request, pk):
 # shop logic
 
 def shop(request):
+    categories = Category.objects.all()
+    products = Product.objects.all()
     context = {
-        
+        'categories':categories,
+        'products':products,
     }
     return render(request, 'store/shop.html', context)
