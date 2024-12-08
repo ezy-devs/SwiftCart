@@ -128,11 +128,20 @@ def product_category(request, pk):
         return render(request, 'store/products_category.html', {'products_category':products_category})
 # shop logic
 
-def shop(request):
+def shop_page(request):
     categories = Category.objects.all()
     products = Product.objects.all()
     context = {
         'categories':categories,
         'products':products,
     }
+    # categories
+    # trending products
+    # popular prodycts
+    # new arrivals 
+    # best sellers
+    # discounted or on-sale products
+    # recommed products
+    # featured products
+
     return render(request, 'store/shop.html', context)

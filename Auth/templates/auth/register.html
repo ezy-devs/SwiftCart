@@ -12,7 +12,7 @@
         <button class="google-btn">Register with Google</button>
         <div class="separator">or</div>
       <form action="{% url 'register' %}" method="post">
-        {% csrf_token %}
+       {% csrf_token %}
         
         <div class="form-group">
           {% if messages %}
