@@ -1,10 +1,16 @@
 from django.shortcuts import render,redirect, get_object_or_404, get_list_or_404
 from django.contrib import messages
+from django.http import HttpResponse, JsonResponse
+from django.db.models import Q
+
+import requests
+import json
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import ProductSerializer, CategorySerializer
-from django.http import HttpResponse
+
 from .models import Category, Product, Collection
 from .forms import ProductForm
 
@@ -15,6 +21,7 @@ def home(request):
     trending_products = trending(request)
     featured_products = featured_product()
     categories = Category.objects.all()
+    
     # products_category = product_category(request, id=pk)
     context = {
         'trending_products':trending_products,
@@ -90,7 +97,8 @@ def get_category(request, pk):
     elif request.method == 'DELETE':
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
+
 def trending(request):
     if request.method == 'GET':
         products = Product.objects.all()
@@ -131,17 +139,44 @@ def product_category(request, pk):
 def shop_page(request):
     categories = Category.objects.all()
     products = Product.objects.all()
+    
+    # categories
+    
+    # popular prodycts
+    # new arrivals 
+   
+    trending_products = Product.objects.filter(is_trending=True)
+    best_seller_products = Product.objects.filter(is_best_seller=True)
+    featured_products = Product.objects.filter(is_featured=True)
+
+    # discounted or on-sale products
+    # recommed products
     context = {
         'categories':categories,
         'products':products,
+        'trending_products':trending_products,
+        'best_seller_products':best_seller_products,
+        'featured_products':featured_products,
     }
-    # categories
-    # trending products
-    # popular prodycts
-    # new arrivals 
-    # best sellers
-    # discounted or on-sale products
-    # recommed products
-    # featured products
-
     return render(request, 'store/shop.html', context)
+
+def category_detail(request, category):
+    category = get_object_or_404(Category, name=category)
+    try:
+
+        category_products = Product.objects.filter(category=category)
+
+    except Product.objects.filter(category=category).DoesNotExist():
+        messages.success(request, 'No product found for this category' + category)
+        return render(request, 'store/category_detail.html')
+    return render(request, 'store/category_detail.html', {'category_products':category_products})
+
+def search(request):
+    if request.GET:
+        search_term = request.GET['search_term']
+        search_result = Product.objects.filter(
+            Q(name__icontains=search_term) | Q(description__icontains=search_term))    
+        return render(request, 'store/search.html', {'search_result':search_result, 'search_term':search_term})
+    
+    return render(request, 'store/search.html', {})
+    

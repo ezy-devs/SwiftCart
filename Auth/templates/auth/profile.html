@@ -22,11 +22,11 @@
                 <form>
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" id="username" placeholder="Enter your username">
+                        <input type="text" id="username" placeholder="{{request.user}}">
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="Enter your email">
+                        <input type="email" id="email" placeholder="{{request.user.email}}">
                     </div>
                     <div class="form-group">
                         <div class="file-input-container">

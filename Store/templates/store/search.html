@@ -1,0 +1,73 @@
+{% extends 'store/base.html' %}
+
+{% load static %}
+
+{% block title %}Search Products {% endblock %}
+
+{% block link1 %}   {% endblock %}
+{% block link2 %}   {% endblock %}
+
+
+{% block content %}
+
+ <!-- search Page Content -->
+ <div class="search-container">
+    <h1>Search the Benue Fashion Hub</h1>
+
+    <form action="{% url 'search' %}" method="get">
+      <div style="display: flex; justify-content: space-between; align-items: center; min-width: 400px; gap: 5px;">
+        <input type="text" id="search-input" name="search_term" class="input"
+          placeholder="Search for fashion items, designers, or styles...">
+        <button type="submit" id="search-button" class="actions" style="border: none; background-color: #2ecc71; border-radius: 5px;">
+        <span class="search-icon action" style="border: none; background-color: #2ecc71;">
+        
+            <i class="fas fa-search" id="searchbtn"></i>
+           
+          </span>
+        </button>
+      </div>
+    </form>
+
+
+  </div>
+
+  <div id="results" class="container">
+    <!-- Search results will appear here -->
+    <section class="section">
+        <h1 class="title">You have searched for "{{search_term}}"</h1>
+        <!-- <small class="info">Scroll to the right for more!</small> -->
+        <div class="section-container">
+         {% if search_result %}
+            {% for product in search_result %}
+          
+          <div class="card">
+            <div class="card-img">
+              <img src="{% static 'assets/images/best-design.jpeg' %}" alt="images/images (20).jpeg">
+            </div>
+            <div class="card-content">
+              <div style="display: block;">
+                <h3 class="product-title">{{product}}</h3>
+                <p class="product-description" style="padding: 0; margin: 0;">
+                  {{product.description}}
+                </p>
+                <p class="product-price" style="padding: 0; margin: 0;">{% if product.new_price %} N{{product.new_price}} {% else %}N{{product.price}} {% endif %} <span class="old-price">{{product.price}}</span>
+                </p>
+                <div class="product-rating">
+                  <span class="rating-stars">★★★★☆</span>
+                  <span class="rating-count">(120 reviews)</span>
+                </div>
+              </div>
+    
+            </div>
+          </div>
+          {% endfor %}
+         {% else %}
+         <small class="info">Product not found for {{search_term}}, try again!</small>
+        {% endif %}
+        </div>
+      </section>
+    
+  </div>
+
+ 
+{% endblock %}

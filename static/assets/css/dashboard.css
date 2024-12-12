@@ -293,7 +293,7 @@
   
   /* Form Styles */
   .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   
   .form-group label {
@@ -314,6 +314,38 @@
     font-size: 14px;
     color: #2c3e50;
     transition: border-color 0.3s;
+  }
+
+  /* .form-group input, .input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #dcdcdc;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.3s;
+  } */
+  .input:focus {
+    border-color: #2ecc71;
+  }
+ 
+  
+  /* Button */
+  .btn {
+    width: 100%;
+    background-color: #2ecc71;
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .btn:hover {
+    background-color: #27ae60;
   }
   
   .form-group input:focus,

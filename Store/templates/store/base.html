@@ -1,27 +1,26 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <!-- Bootstrap custom cdn -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-  <title>{% block title %}Base {% endblock %}| SwiftCart </title>
-  <!-- Custom Styles -->
+  <title>Shop - eCommerce</title>
   <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
-  {% block link1 %} <link rel="stylesheet" href="{% static 'assets/css/forms.css' %}">  {% endblock %}
-  {% block link2 %} <link rel="stylesheet" href="{% static 'assets/css/dashboard.css' %}">  {% endblock %}
- {% block link3 %} <link rel="stylesheet" href="{% static 'assets/css/profile.css' %}">  {% endblock %}
+  {% block shop %} <link rel="stylesheet" href="{% static 'assets/css/shop.css' %}">{% endblock %}
+  {% block profile %}<link rel="stylesheet" href="{% static 'assets/css/profile.css' %}">{% endblock %}
+  {% block forms %}<link rel="stylesheet" href="{% static 'assets/css/forms.css' %}">{% endblock %}
+  {% block cart %} <link rel="stylesheet" href="{% static 'assets/css/cart.css' %}">{% endblock %}
+  {% block dashboard %}<link rel="stylesheet" href="{% static 'assets/css/dashboard.css' %}">{% endblock %}
+ 
 </head>
-
 <body>
-
+ 
   <!-- NAVIGATION MENU -->
    {% block header %}
   <header>
@@ -39,18 +38,16 @@
           <li class="menu-item link">
             Categories
             <ul class="dropdown">
-              <li>Electronics</li>
-              <li>Clothing</li>
-              <li>Books</li>
-              <li>Home Appliances</li>
-              <li>Sports & Outdoors</li>
+              {% for category in categories %}
+              <li> <a href="{% url 'category_detail' category %}" style="text-decoration: none; color: #222;">{{category}}</a></li>
+              {%  endfor %}
             </ul>
           </li>
           <li class="menu-item link">
             <a class="link" href="{% url 'shop' %}">Shop</a>
           </li>
           <li class="menu-item link">
-            Producs
+            Products
             <ul class="dropdown">
               <li>Electronics</li>
               <li>Clothing</li>
@@ -76,21 +73,13 @@
           <li class="menu-item link contact">
             <a class="link" href="/checkout.html">Contact</a>
           </li>
-          {% if request.user.is_authenticated %}
+
           <li class="menu-item link">
-            <span><a href="{% url 'logout' %}" class="link">Logout</a></span>
-          </li>&nbsp;&nbsp;&nbsp;
-          <li class="menu-item link">
-            <span><a href="{% url 'profile' request.user %}" class="link">{{request.user}}</a></span>
-          </li>&nbsp;&nbsp;&nbsp;
-          {% else %}
-          <li class="menu-item link">
-            <span><a href="{% url 'login' %}" class="link">Login</a></span>
+            <span><a href="" class="link">Login</a></span>
           </li>&nbsp;&nbsp;&nbsp;
           <li class="menu-item">
-            <span style="color: red;"><a href="{% url 'register' %}" class="link">Sigup</a></span>
+            <span><a href="/register.html" class="link">Sigup</a></span>
           </li>
-          {% endif %}
         </ul>
       </div>
 
@@ -114,33 +103,33 @@
             </a>
           </span>
           <span class="action">
-            <a href="{% url 'profile' request.user %}">
+            <a href="#">
               <i class="fas fa-user"></i>
             </a>
           </span>
-          <div class="action btn" style="margin-top: -20px;">
+          <div class="action toggler">
             <span id="opennav" onclick="openNav()">
               <i class="fas fa-bars"></i>
             </span>
-            <span id="closebtn" onclick="closeNav()">&times;</span>
+            <span id="closebtn" onclick="closeNav()" style="display: none;">&times;</span>
           </div>
           <div>
 
 
           </div>
         </div>
+      </div>
     </nav>
   </header>
-  {% endblock%}
+  {% endblock %}
+<!-- MAIN CONTAINER SECTION-->
 
 
-  <!-- MAIN CONTAINER SECTION-->
+  <!-- Shop Page Content -->
    {% block content %}
-
   
   {% endblock %}
-
-  {% block footer %}
+ {% block footer %}
   <footer class="footer">
     <div class="footer-container">
       <!-- Company Logo and About Section -->
@@ -185,13 +174,13 @@
     </div>
   </footer>
   {% endblock %}
-  <!-- Bootstrap JavaScript (with Popper) -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+
+
+    <!-- Bootstrap JavaScript (with Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ENjdO4Dr2bkBIFxQpd6aqTeGh0kBhWZY4PTZT2ylH8laC2xLpz5rs9czjR0VVnDa"
     crossorigin="anonymous"></script>
 
-  <!-- custom script -->
   <script src="{% static 'assets/js/script.js' %}"></script>
 </body>
-
 </html>

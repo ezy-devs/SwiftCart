@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     # my apps
     'Auth',
     'Store',
+    'dashboard',
     
     'rest_framework',
 ]
