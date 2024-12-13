@@ -536,7 +536,12 @@
     justify-content: space-between;
     padding: 20px;
   }
-  
+  .product-detail-page .product-detail {
+    flex: 2.5;
+  }
+  .product-detail-page .related-products {
+    flex: 1;
+  }
   .product-images {
     width: 45%;
   }
@@ -639,7 +644,7 @@
   }
   
   .product-card {
-    width: 150px;
+    width: 200px;
     text-align: center;
   }
   

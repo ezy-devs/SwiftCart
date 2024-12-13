@@ -20,6 +20,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='products_images', blank=True, null=True)
     description = models.TextField()
+    in_stock = models.PositiveBigIntegerField(default=1)
     price = models.DecimalField(decimal_places=2, max_digits=10000)
     is_sale = models.BooleanField(default=False)
     sale_price = models.DecimalField(decimal_places=2, max_digits=10000, blank=True, null=True)

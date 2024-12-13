@@ -134,7 +134,7 @@ def product_category(request, pk):
         
         products_category = get_list_or_404(Product, category=category)
         return render(request, 'store/products_category.html', {'products_category':products_category})
-# shop logic
+
 
 def shop_page(request):
     categories = Category.objects.all()
@@ -161,6 +161,8 @@ def shop_page(request):
     return render(request, 'store/shop.html', context)
 
 def category_detail(request, category):
+    categories = Category.objects.all()
+
     category = get_object_or_404(Category, name=category)
     try:
 
@@ -169,7 +171,7 @@ def category_detail(request, category):
     except Product.objects.filter(category=category).DoesNotExist():
         messages.success(request, 'No product found for this category' + category)
         return render(request, 'store/category_detail.html')
-    return render(request, 'store/category_detail.html', {'category_products':category_products})
+    return render(request, 'store/category_detail.html', {'category_products':category_products, 'categories':categories})
 
 def search(request):
     if request.GET:
@@ -179,4 +181,18 @@ def search(request):
         return render(request, 'store/search.html', {'search_result':search_result, 'search_term':search_term})
     
     return render(request, 'store/search.html', {})
+
+
+def product_details(request, product_id):
+    categories = Category.objects.all()
+
+    product = get_object_or_404(Product, id=product_id)
+    related_products = Product.objects.filter(category=product.category).exclude(id=product_id)[0:3]
     
+
+    context = {
+        'product':product,
+        'related_products':related_products,
+        'categories':categories,
+        }
+    return render(request, 'store/product_details.html', context)

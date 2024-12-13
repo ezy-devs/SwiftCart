@@ -1,7 +1,12 @@
 {% extends 'store/base.html' %}
-
+{% load static %}
 {% block title %}Login {% endblock %}
+{% block forms %}<link rel="stylesheet" href="{% static 'assets/css/forms.css' %}">{% endblock %}
 
+{% block dashboard %} {% endblock %}
+{% block profile %} {% endblock %}
+{% block cart %} {% endblock %}
+{% block shop %} {% endblock %}
 
 {% block content %}
 <div class="auth-container">
@@ -27,6 +32,9 @@
         </div>
         <button type="submit" class="btn">Login</button>
       </form>
+      <!-- <div class="separator">or</div> -->
+      <p class="switch-link"><a href="">Forget password</a></p>
+
       <p class="switch-link">Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
     </div>
   </div>

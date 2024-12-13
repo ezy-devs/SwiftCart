@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import SetPasswordForm
 from Store.views import home
-from .forms import PasswordReset
+from .forms import PasswordResetForm, ForgetPasswordForm
 
 def register(request):
     if request.method == 'POST':
@@ -53,19 +53,23 @@ def logout_user(request):
 def password_reset(request, username):
     user = get_object_or_404(User, username=username)
     if request.method == 'POST':
-        form = SetPasswordForm(user, request.POST)
+        form = PasswordResetForm(user, request.POST)
         if form.is_valid():
             form.save()
             messages.success(request, 'Password reset successfully!')
+            login(request, user)
             return redirect('profile', user)
         else: 
             messages.error(request, 'Password does not Match')
-            form.error_messages(request)
-            return redirect('password-reset', user)
+            for error in list(form.errors.values()):
 
-    form = SetPasswordForm(user)
-    
-    return render(request, 'auth/password_reset.html', {'form': form})
+                messages.error(request, error)
+                return redirect('password-reset', user)
+    else:
+
+        form = PasswordResetForm(user)
+        
+        return render(request, 'auth/password_reset.html', {'form': form})
 
 @login_required(login_url='login/')
 def profile(request, username):
@@ -79,5 +83,18 @@ def profile(request, username):
         return redirect('register')
     
 
+# def forget_password(request):
+#     if request.method == 'POST':
+#         form = ForgetPasswordForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('login')
+#         else:
+            
+#             for error in form.errors:
+#                 messages.error(request, error)
+#                 return redirect('forget_password')
+#     form = ForgetPasswordForm(request)
+#     return render(request, 'auth/password_forget.html', {'form':form})
 
     

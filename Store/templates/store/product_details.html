@@ -1,0 +1,212 @@
+{% extends 'store/base.html' %}
+
+{% load static %}
+<!-- 
+{% block title %}Shop {% endblock %} -->
+
+{% block forms %} {% endblock %}
+{% block dashboard %} {% endblock %}
+{% block profile %} {% endblock %}
+{% block cart %} {% endblock %}
+{% block shop %} {% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br><br>
+<div class="container-fluid">
+    <div class="product-detail-page">
+        <div style="display: flex; justify-content: space-between;" class="product-detail">
+            <div class="product-images product-card">
+                {% if product.image %}
+                <img src="{{product.image.url}}" alt="images/images (20).jpeg">
+                {% endif %}
+            </div>
+            <div class="product-info">
+                <h1 class="product-title">{{product}}</h1>
+                {% if product.is_sale%}
+                <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} <span class="old-price">
+                        N{{product.sale_price}} </span></p>
+                {% else %}
+                <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} </p>
+                {% endif %}
+                <div class="product-rating">
+                    <span class="rating-stars">★★★★☆</span>
+                    <span class="rating-count">(120 reviews)</span>
+                </div>
+
+                <p class="product-description">{{product.description}}.</p>
+
+                <div class="product-variations">
+                    <label for="color">Color:</label>
+                    <select id="color">
+                        <option value="red">Red</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                    </select>
+                </div>
+                <style>
+                    .quantity {
+                        display: flex;
+                        align-items: center;
+                        margin: 5px 0;
+                    }
+
+                    .quantity button {
+                        width: 25px;
+                        height: 25px;
+                        margin: 0 5px;
+                        background-color: #0073bb;
+                        color: white;
+                        border: none;
+                        border-radius: 3px;
+                        cursor: pointer;
+                    }
+                    .button {
+                        width: 40px;
+                        height: 25px;
+                        margin: 0 5px;
+                        background-color: #0073bb;
+                        color: white;
+                        border: none;
+                        border-radius: 3px;
+                        cursor: pointer;
+                        text-align: center;
+                    }
+                </style>
+                <form action="{% url 'add_to_cart' product.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="quantity">
+                        <label for="quantity-{{product.id}}">quantity:</label>
+                        <input type="number" name="quantity" id="quantity-{{product.id}}" min="1" value="1" class="button">
+                        <!-- <button onclick="updateQuantity(-1, 20)">-</button>
+                        <span id="quantity">1</span>
+                        <button onclick="updateQuantity(1, 20)">+</button> -->
+                    </div>
+
+                    <div class="cta-buttons">
+                        <button type="submit" class="add-to-cart btn">Add to Cart</button>
+                        <button class="buy-now btn">Buy Now</button>
+                    </div>
+                </form>
+                <div class="product-stock">
+                    {% if product.in_stock == 1 %}
+                    <p>In Stock: <span class="stock-quantity">{{product.in_stock}} item</span></p>
+                    {% else %}
+                    <p>In Stock: <span class="stock-quantity">{{product.in_stock}} items</span></p>
+                    {% endif %}
+                </div>
+
+                <div class="product-shipping">
+                    <p>Free Shipping on Orders over $50</p>
+                </div>
+
+                <div class="social-sharing">
+                    <button>Share on Facebook</button>
+                    <button>Share on Twitter</button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let quantity = 1;
+            let unitPrice = 20;
+
+            function updateQuantity(amount, price) {
+                quantity += amount;
+                if (quantity < 1) quantity = 1; // Prevent going below 1
+                document.getElementById('quantity').textContent = quantity;
+                document.getElementById('subtotal').textContent = quantity * price;
+                document.getElementById('total-subtotal').textContent = quantity * price;
+                document.getElementById('total-price').textContent = quantity * price + 5; // Assuming $5 shipping
+            }
+
+            function removeItem(button) {
+                button.parentElement.remove();
+            }
+            // function addToCart(productId, quantity = 1) {
+            //     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+            //     fetch('/add_to_cart/${productId}/', {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //             'X-CSRFToken': csrfToken
+            //         },
+            //         body: JSON.stringify({quantity:quantity})
+            //     })
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         alert(data.message)
+            //     })
+            //     .catch(error => {
+            //         console.log('Error:', error)
+            //     });
+            // }
+            // function getCookie(name) {
+            //     let cookieValue = null;
+            //     if (document.cookie && document.cookie !== '') {
+            //         const cookies = document.cookie.split(';');
+            //         for (let i = 0; i < cookies.length; i++) {
+            //             const cookie = cookies[i].trim();
+            //             if (cookies.substring(0, name.length + 1) === (name + '=')) {
+            //                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            //                 break;
+            //             }
+                        
+            //         }
+            //     }
+            //     return cookieValue;
+            // }
+        </script>
+
+        <div class="related-products">
+            <h3>Related Products</h3>
+            <section class="section">
+                <div class="product-carousel section-container">
+
+                    {% for product in related_products %}
+                    <div class="card">
+                        <div class="card-img">
+                            {% if product.image %}
+                            <img src="{{product.image.url}}" alt="images/images (20).jpeg">
+                            {% endif %}
+                        </div>
+                        <div class="card-content">
+                            <a href="{% url 'product_details' product.id %}"
+                                style="text-decoration: none; color: #222;">
+                                <div>
+                                    <h3 class="product-title">{{product}}</h3>
+                                    <p class="product-description" style="padding: 0; margin: 0;">
+                                        this is a product description
+                                    </p>
+                                    {% if product.is_sale%}
+                                    <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} <span
+                                            class="old-price"> N{{product.sale_price}} </span></p>
+                                    {% else %}
+                                    <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} </p>
+                                    {% endif %}
+
+                                    <div class="product-rating">
+                                        <span class="rating-stars">★★★★☆</span>
+                                        <span class="rating-count">(120 reviews)</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </section>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+
+
+{% block footer %}
+{% endblock %}

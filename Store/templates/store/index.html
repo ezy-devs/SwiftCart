@@ -1,6 +1,9 @@
 {% extends 'store/base.html' %}
 {% load static %}
 
+
+{% block title %}Home{% endblock %}
+
 {% block forms %} {% endblock %}
 {% block dashboard %} {% endblock %}
 {% block profile %} {% endblock %}
@@ -248,22 +251,24 @@
           <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
         </div>
         <div class="card-content">
+          <a href="{% url 'product_details' product.id %}" style="text-decoration: none; color: #222;">
           <div>
             <h3 class="product-title">{{product}}</h3>
             <p class="product-description" style="padding: 0; margin: 0;">
               this is a product description
             </p>
             {% if product.is_sale%}
-            <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} <span class="old-price"> N{{product.sale_price}} </span>
+            <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} <span class="old-price"> N{{product.sale_price}} </span></p>
               {% else %}
               <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} </p>
             {% endif %}
-            </p>
+            
             <div class="product-rating">
               <span class="rating-stars">★★★★☆</span>
               <span class="rating-count">(120 reviews)</span>
             </div>
           </div>
+          </a>
           <div class="action">
             <span id="addwaitlist"><i class="fa fa-heart"></i></span>
           </div>

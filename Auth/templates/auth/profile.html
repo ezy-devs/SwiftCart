@@ -2,12 +2,14 @@
 
 {% load static %}
 {% block title %}Profile | {{request.user}} {% endblock %}
-{% block link1 %} {% endblock %}
-{% block link2 %} {% endblock %}
+
+{% block dashboard %} {% endblock %}
+{% block cart %} {% endblock %}
+{% block shop %} {% endblock %}
 
 
 {% block content %}
-<main class="main-content">
+<main class="main-content" style="width: 80%; margin-top: 45rem;">
 
     <section class="settings">
         <div class="settings-container">
@@ -22,11 +24,11 @@
                 <form>
                     <div class="form-group">
                         <label for="username">Username</label>
-                        <input type="text" id="username" placeholder="{{request.user}}">
+                        <input type="text" id="username" value="{{request.user}}">
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" placeholder="{{request.user.email}}">
+                        <input type="email" id="email" value="{{request.user.email}}">
                     </div>
                     <div class="form-group">
                         <div class="file-input-container">
@@ -59,8 +61,15 @@
             <!-- Account Settings -->
             <div class="settings-section">
                 <h3>Account</h3>
-                <button class="btn deactivate-btn">Deactivate Account</button>
-                <button class="btn delete-btn">Delete Account</button>
+                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center; gap:2px">
+                    <button class="btn deactivate-btn" style="background-color: #ff1f2a;">Deactivate Account</button>
+                    <button class="btn delete-btn" style="background-color: #ff1f2a;">Delete Account</button>
+
+                </div>
+                
+                <div class="form-group">
+                </div>
+                
             </div>
         </div>
     </section>

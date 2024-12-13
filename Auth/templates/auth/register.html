@@ -1,9 +1,15 @@
 {% extends 'store/base.html' %}
+{% load static %}
+{% block title %}Login {% endblock %}
+{% block forms %}<link rel="stylesheet" href="{% static 'assets/css/forms.css' %}">{% endblock %}
 
-
-
+{% block dashboard %} {% endblock %}
+{% block profile %} {% endblock %}
+{% block cart %} {% endblock %}
+{% block shop %} {% endblock %}
 
 {% block content %}
+<br><br><br><br>
 <div class="auth-container">
     <!-- Register Form -->
     <div class="auth-box">
