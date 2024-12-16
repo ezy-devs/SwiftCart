@@ -15,7 +15,15 @@
 <br>
 <br><br>
 <div class="container-fluid">
+    {% for message in messages %}
+    <div class="__modal" id="modal">
+       <div class="modal-content">
+          <p> {{message}}!</p>
+        </div>
+      </div>
+      {% endfor %}
     <div class="product-detail-page">
+        
         <div style="display: flex; justify-content: space-between;" class="product-detail">
             <div class="product-images product-card">
                 {% if product.image %}
@@ -73,22 +81,77 @@
                         cursor: pointer;
                         text-align: center;
                     }
+                    .__modal {
+                        padding: 10px 20px;
+                        width: 230px;
+                        background-color: #d1ecf1;
+                        color: #0c5460;
+                        max-height: 40px;
+                        /* display: flex; */
+                        align-items: center;
+                        justify-content: center;
+                        position: absolute;
+                        left: 40%;
+                        top: 8%;
+                        border-radius: 8px;
+                        margin: 20px auto;
+                        transition: all ease-in-out 0.2s;
+                        
+                        display: none;
+                    
+                    }
                 </style>
-                <form action="{% url 'add_to_cart' product.id %}" method="post">
+                 <!-- <form action="" method="post">
                     {% csrf_token %}
                     <div class="quantity">
                         <label for="quantity-{{product.id}}">quantity:</label>
-                        <input type="number" name="quantity" id="quantity-{{product.id}}" min="1" value="1" class="button">
+                        <input type="number" name="quantity" id="quantity" min="1" value="1" class="button"> -->
+                        <!-- <button onclick="updateQuantity(-1, 20)">-</button>
+                        <span id="quantity">1</span>
+                        <button onclick="updateQuantity(1, 20)">+</button> -->
+                    <!-- </div>
+
+                    <div class="cta-buttons">
+                        <button type="submit" class="add-to-cart btn" onclick="addToCart()" value="{{product.id}}" id="add-to-cart">Add to Cart</button>
+                        <button class="buy-now btn">Buy Now</button>
+                    </div>
+                </form> -->
+                
+                   
+                    <div class="quantity">
+                        <label for="quantity-{{product.id}}">quantity:</label>
+                        <input type="number" name="quantity" id="quantity" min="1" value="1" class="button">
                         <!-- <button onclick="updateQuantity(-1, 20)">-</button>
                         <span id="quantity">1</span>
                         <button onclick="updateQuantity(1, 20)">+</button> -->
                     </div>
 
                     <div class="cta-buttons">
-                        <button type="submit" class="add-to-cart btn">Add to Cart</button>
+                        <button type="submit" class="add-to-cart btn"  value="{{product.id}}" id="add-to-cart">Add to Cart</button>
                         <button class="buy-now btn">Buy Now</button>
                     </div>
-                </form>
+               
+        <script>
+            $(document).on('click', '#add-to-cart', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'add_to_cart' %}",
+                    data: {
+                        product_id: $('#add-to-cart').val(),
+                        quantity: $('#quantity').val(),
+                        csrfmiddlewaretoken: '{{csrf_token}}',
+                        action: 'post'
+                    },
+                    success: function (json) {
+                        console.log(json)
+                    },
+                    error: function(xhr, errmsg, err){
+
+                    }
+                })
+            })
+        </script>
                 <div class="product-stock">
                     {% if product.in_stock == 1 %}
                     <p>In Stock: <span class="stock-quantity">{{product.in_stock}} item</span></p>
@@ -102,13 +165,16 @@
                 </div>
 
                 <div class="social-sharing">
-                    <button>Share on Facebook</button>
+                    <button><a href="https://facebook.com/"></a>Share on Facebook</button>
                     <button>Share on Twitter</button>
                 </div>
             </div>
         </div>
 
         <script>
+             function addToCart() {
+                document.getElementById('modal').style.display = "block";
+             }
             let quantity = 1;
             let unitPrice = 20;
 
@@ -206,7 +272,7 @@
 </div>
 {% endblock %}
 
-
+<script src="{% static 'assets/js/cart.js' %}"></script>
 
 {% block footer %}
 {% endblock %}

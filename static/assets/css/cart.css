@@ -28,7 +28,7 @@ h2 {
 .cart-items-container {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  /* align-items: center; */
   gap: 10px;
 }
 
@@ -102,10 +102,10 @@ h2 {
 /* Cart Summary */
 .cart-summary {
   background-color: white;
+  max-height: 305px;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* float: right; */
   flex: 1;
 }
 
@@ -237,10 +237,14 @@ textarea {
   border-radius: 3px;
   cursor: pointer;
 }
-@media screen and (max-width: 620px) {
+@media screen and (max-width: 768px) {
   #checkout-form {
     display: block;
   }
+  }
+  .cart-items-container {
+    display: block;
+    gap: 10px;
   }
 /* Footer */
 .footer {

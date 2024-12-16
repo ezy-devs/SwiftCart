@@ -62,3 +62,24 @@ function updateQuantity(amount, price) {
 function removeItem(button) {
   button.parentElement.remove();
 }
+
+
+
+$(document).on('click', '#remove-item', function(e) {
+  e.preventDefault();
+  $.ajax({
+      type: 'POST',
+      url: "{% url 'remove_item' %}",
+      data: {
+          product_id: $('#remove-item').val(),
+          csrfmiddlewaretoken: '{{csrf_token}}',
+          action: 'post',
+      },
+      success: function(response) {
+          addToCart()
+      },
+      error: function(xhr, errmsg, err){
+         
+      },
+  })
+})

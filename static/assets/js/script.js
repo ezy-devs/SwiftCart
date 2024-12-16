@@ -1,12 +1,12 @@
-document.getElementById('searchbtn').addEventListener('click', () => {
-  document.querySelector('search')
-});
+// document.getElementById('searchbtn').addEventListener('click', () => {
+//   document.querySelector('search')
+// });
 
 
-document.getElementById('addwaitlist').addEventListener('click',  function (e) {
-  e.preventDefault();
-  document.getElementById('addwaitlist').style.color = "red";
-})
+// document.getElementById('addwaitlist').addEventListener('click',  function (e) {
+//   e.preventDefault();
+//   document.getElementById('addwaitlist').style.color = "red";
+// })
 
 
 function openNav() {
@@ -40,4 +40,10 @@ menuItem.addEventListener('mouseleave', () => {
 
 function openFilter() {
   document.getElementById('filters').style.opacity = "1";
+}
+
+
+
+function addToCart() {
+  document.getElementById('modal').style.display = "block";
 }

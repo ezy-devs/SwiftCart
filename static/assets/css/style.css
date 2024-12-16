@@ -661,6 +661,27 @@
   .product-card .related-product-price {
     color: #e74c3c;
   }
+
+
+  .__modal {
+    padding: 10px 20px;
+    width: 230px;
+    background-color: #d1ecf1;
+    color: #0c5460;
+    max-height: 40px;
+    /* display: flex; */
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    left: 40%;
+    top: 8%;
+    border-radius: 8px;
+    margin: 20px auto;
+    transition: all ease-in-out 0.2s;
+    
+    display: none;
+
+}
   
   
   /* Footer Styling */
