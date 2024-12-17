@@ -19,7 +19,11 @@
             <div class="settings-section">
                 <h3>Profile</h3>
                 <center>
+                    {% if request.user.profile.photo.url %}
                     <img src="{{request.user.profile.photo.url}}" alt="Profile Picture" class="profile-pic" style="object-fit: cover;">
+                    {% else %}
+                    <img src="{% static 'assets/images/best-design.jpeg' %}" alt="Profile Picture" class="profile-pic" style="object-fit: cover;">
+                    {% endif %}
                 </center>
                 <form>
                     <div class="form-group">
