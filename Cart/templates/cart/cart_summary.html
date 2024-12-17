@@ -3,7 +3,16 @@
 
 {% load static %}
 
-{% block title %}Cart - {{request.user}}{% endblock %}
+{% block title %}Cart -
+    {% if request.user.is_authenticated %}
+        {{request.user}}
+
+    {% else %}
+        {{request.session.session_key}}
+
+    {% endif %} 
+
+{% endblock %}
 
 {% block forms %} {% endblock %}
 {% block dashboard %} {% endblock %}
@@ -105,6 +114,7 @@
                                     html += '</div>';
                                     $('#cart-items').html(html);
                                 }
+
                                 else {
                                     $('#cart-items').html('<h3>Your cart is empty.</h3>');
                                 }
@@ -120,11 +130,11 @@
                     setInterval(fetchCartItems, 3000);
                 });
 
-                $(document).on('click', '.update-cart', function(e) {
+                $(document).on('click', '.update-cart', function (e) {
                     e.preventDefault();
                     const product_id = $(this).data('product-id')
-                    const quantity =  $('#quantity').val();
-                    
+                    const quantity = $('#quantity').val();
+
                     console.log("product id being sent", product_id)
                     console.log('quantity', quantity)
                     $.ajax({
@@ -136,12 +146,12 @@
                             csrfmiddlewaretoken: '{{csrf_token}}',
                             action: 'post'
                         },
-                        success: function(response) {
+                        success: function (response) {
                             // addToCart();
                             console.log(response);
                             console.log(response.product_id)
                         },
-                        error: function(xhrr) {
+                        error: function (xhrr) {
                             console.log(xhr.responseJSON);
                         },
                     });
@@ -177,7 +187,7 @@
                 <p>Subtotal: <span id="subtotal">$139.98</span></p>
                 <p>Shipping: <span id="shipping">$10.00</span></p>
                 <p>Total: <span id="total">$149.98</span></p>
-                <button class="checkout-btn"> <a href="/checkout.html">Proceed to Checkout</a></button>
+                <button class="checkout-btn"> <a href="{% url 'checkout' %}">Proceed to Checkout</a></button>
             </div>
         </div>
     </div>

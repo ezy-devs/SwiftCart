@@ -45,7 +45,12 @@ def cart_summary(request):
         cart = Cart.objects.filter(user=request.user).first()
     else:
         cart = Cart.objects.filter(session_key=request.session.session_key).first()
-    cart_items = cart.items.all()
+
+    if cart:
+        cart_items = cart.items.all()
+    else:
+        cart_items = []
+
     context = {
             'categories':categories,
             'cart':cart,
@@ -204,13 +209,16 @@ def remove_item(request):
 
 
 def checkout(request):
+    categories = Category.objects.all()
+
     if request.method == 'POST':
         form = ShippingForm(request.POST)
         if form.is_valid():
             form.save()
     else:
         form = ShippingForm()
-        return render(request, 'cart/checkout.html', {'form':form})
+
+        return render(request, 'cart/checkout.html', {'form':form, 'categories':categories})
 
 
 

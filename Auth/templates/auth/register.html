@@ -26,7 +26,9 @@
           <label for="login-email" style="color: red; text-align: center;">{{message}}</label>
           {% endfor %}
           {% endif %}
-          <label for="register-name">Full Name</label>
+        </div>
+          <div class="form-group">
+          <label for="register-name">Username</label>
           <input type="text" name="username" id="register-name" placeholder="Enter your full name" required>
         </div>
         <div class="form-group">
@@ -37,7 +39,11 @@
           <label for="register-password">Password</label>
           <input type="password" name="password" id="register-password" placeholder="Create a password" required>
         </div>
-        
+        <div class="form-group">
+          <label for="register-password">Password re-peat</label>
+          <input type="password" name="password2" id="register-password" placeholder="Password re-peat" required>
+        </div>
+
         <button type="submit" class="btn">Register</button>
       </form>
       <p class="switch-link">Already have an account? <a href="{% url 'login' %}">Login here</a></p>

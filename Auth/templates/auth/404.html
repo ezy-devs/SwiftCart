@@ -1,0 +1,32 @@
+{% extends 'store/base.html' %}
+{% load static %}
+{% block title %}404 Page {% endblock %}
+{% block forms %}<link rel="stylesheet" href="{% static 'assets/css/forms.css' %}">{% endblock %}
+
+{% block dashboard %} {% endblock %}
+{% block profile %} {% endblock %}
+{% block cart %} {% endblock %}
+{% block shop %} {% endblock %}
+
+{% block content %}
+
+  <div class="container" style="margin-top: 40px;">
+    <center>
+        <div style="color: red;font-size: 20px;">
+            <h3 style="color: red; padding: 10px; font-size: 100px;">404 SwiftCart</h3>
+            <p>Resource Not Found</p>
+            <div class="form-group">
+              {% if messages %}
+                {% for message in messages %}
+              <p style="color: red; text-align: center;" class="info">{{message}}</p>
+              {% endfor %}
+              {% endif %}
+              
+            </div>
+        </div>
+    </center>
+  </div>
+
+  {% endblock %}  
+  {% block footer %}
+  {% endblock %}

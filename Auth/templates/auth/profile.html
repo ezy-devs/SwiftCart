@@ -19,7 +19,7 @@
             <div class="settings-section">
                 <h3>Profile</h3>
                 <center>
-                    <img src="{% static 'assets/images/latest.jpg' %}" alt="Profile Picture" class="profile-pic">
+                    <img src="{{request.user.profile.photo.url}}" alt="Profile Picture" class="profile-pic" style="object-fit: cover;">
                 </center>
                 <form>
                     <div class="form-group">

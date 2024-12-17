@@ -89,11 +89,14 @@ select:focus {
   gap: 10px;
 }
 .profile-pic {
-  width: 150px; 
-  height: 100px; 
+  width: 200px;
+  height: 180px;
+  object-fit: cover;
+  object-position: top;
+  margin-right: 20px;
+  border-radius: 5px;
   border: 3px dotted #2ecc71;; 
   border-radius: 8px; 
-  object-fit: cover; 
 }
 /* Container for the file input */
 .file-input-container {
