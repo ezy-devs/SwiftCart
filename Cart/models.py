@@ -25,16 +25,17 @@ class CartItem(models.Model):
 class ShippingInfo(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shipping_info', null=True, blank=True)
     session_key = models.CharField(max_length=255, null=True, blank=True)
-    address = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=20, null=True, blank=True)
+    address_1 = models.CharField(max_length=255)
+    address_2 = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
     postal_code = models.CharField(max_length=20)
     country = models.CharField(max_length=100)
-    phone_number = models.CharField(max_length=20, null=True, blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Shipping Info for {self.user.username} - {self.address}, {self.city}"
+        return f"Shipping Info for {self.user.username or self.session_key} - {self.address}, {self.city}"
 
 class Order(models.Model):
     STATUS_CHOICES = [

@@ -1,0 +1,70 @@
+{% extends 'store/base.html' %}
+
+
+{% load static %}
+
+{% block title %}Cart - {{request.user}}{% endblock %}
+
+{% block forms %} {% endblock %}
+{% block dashboard %} {% endblock %}
+{% block profile %} {% endblock %}
+{% block shop %} {% endblock %}
+
+
+<!-- <link rel="stylesheet" href="{% static 'assets/css/shop.css' %}">   -->
+{% block content %}
+
+
+<!-- Checkout Page Content -->
+<section class="checkout-page">
+    <div class="container-fluid">
+      <h2>Checkout</h2>
+
+      <div class="checkout-form">
+        <h3>Shipping Information</h3>
+        <form id="checkout-form" class="form-control">
+          <div>
+            <div class="form-group">
+            {{form.as_p}}
+          </div>
+
+          
+
+          <h3>Payment Method</h3>
+          <div class="form-group">
+            <label for="card">Credit Card:</label>
+            <input type="text" id="card" name="card" required placeholder="1234 5678 9012 3456">
+          </div>
+
+          <div class="form-group">
+            <label for="expiry">Expiry Date:</label>
+            <input type="month" id="expiry" name="expiry" required>
+          </div>
+
+          <div class="form-group">
+            <label for="cvv">CVV:</label>
+            <input type="text" id="cvv" name="cvv" required placeholder="123">
+          </div>
+        </div>
+
+          <div class="order-summary">
+            <h3>Order Summary</h3>
+            <ul>
+              <li>Subtotal: $149.98</li>
+              <li>Shipping: $10.00</li>
+              <li>Total: $159.98</li>
+            </ul>
+            <button type="submit" class="checkout-btn">Complete Purchase</button>
+          </div>
+
+          
+        </form>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
+
+<!-- <script src="{% static 'assets/js/cart.js' %}"></script> -->
+
+{% block footer %} {% endblock %}

@@ -5,6 +5,7 @@ from django.utils.deprecation import MiddlewareMixin
 from django.contrib import messages
 from Store.models import Category, Product
 from .models import Cart, CartItem
+from .forms import ShippingForm
 
 
 
@@ -198,3 +199,71 @@ def remove_item(request):
     response = JsonResponse({'message': 'Unable to process request'})
     messages.success(request, response)
     return response
+
+
+
+
+def checkout(request):
+    if request.method == 'POST':
+        form = ShippingForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = ShippingForm()
+        return render(request, 'cart/checkout.html', {'form':form})
+
+
+
+
+
+#     from django.shortcuts import render, redirect, get_object_or_404
+# from django.contrib.auth.decorators import login_required
+# from .models import Product, Order, OrderItem, Shipping
+# from .forms import ShippingForm
+# from django.db import transaction
+
+# @login_required
+# def checkout(request):
+#     cart = request.session.get('cart', {})  # Simulate cart stored in session
+#     if not cart:
+#         return redirect('cart')  # Redirect to cart if empty
+
+#     products = Product.objects.filter(id__in=cart.keys())
+#     total_price = sum(product.price * int(cart[str(product.id)]) for product in products)
+    
+#     if request.method == 'POST':
+#         form = ShippingForm(request.POST)
+#         if form.is_valid():
+#             with transaction.atomic():
+#                 # Create the order
+#                 order = Order.objects.create(user=request.user, total_price=total_price)
+                
+#                 # Add order items
+#                 for product in products:
+#                     quantity = int(cart[str(product.id)])
+#                     OrderItem.objects.create(order=order, product=product, quantity=quantity, price=product.price)
+                
+#                 # Save shipping details
+#                 shipping = form.save(commit=False)
+#                 shipping.user = request.user
+#                 shipping.order = order
+#                 shipping.save()
+
+#                 # Clear the cart
+#                 request.session['cart'] = {}
+#                 return redirect('order_success', order_id=order.id)
+#     else:
+#         form = ShippingForm()
+
+#     context = {
+#         'products': products,
+#         'cart': cart,
+#         'total_price': total_price,
+#         'form': form
+#     }
+#     return render(request, 'checkout.html', context)
+
+# @login_required
+# def order_success(request, order_id):
+#     order = get_object_or_404(Order, id=order_id, user=request.user)
+#     return render(request, 'order_success.html', {'order': order})
