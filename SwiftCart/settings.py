@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-w4d+#8k9#v+24vi39#_%slqet!(k40%ub^2ixmsv4fg&w-e0_6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["swiftcart-production.up.railway.app", "127.0.0.1"]
 
