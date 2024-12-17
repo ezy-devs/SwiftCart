@@ -91,22 +91,73 @@ def fetch_cart(request):
 
 def update_cart(request):
     if request.method == 'POST':
-        product_id = request.POST.get('product_id')
-        quantity = request.POST.get('quantity')
-        product = get_object_or_404(Product, id=product_id)
-        if request.user.is_authenticated:
-            cart = Cart.objects.filter(user=request.user)
-        else:
-            session_key = request.session.session_key
-            if not session_key:
-                session_key = request.session.create()
-                cart = Cart.objects.filter(session_key=request.session.session_key)
-        cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-        if not created:
-            cart_item.quantity += int(quantity)
-            cart_item.save()
-       
-        return JsonResponse({'response': 'Item updated!'})
+        
+        try:
+            product_id = request.POST.get('product_id')
+            print('product id', product_id)
+            new_quantity = int(request.POST.get('quantity', 1))
+            print('q', new_quantity)
+            
+            if new_quantity <=0:
+                return JsonResponse({'error': 'quantity must be aleast one'})
+            
+            product = get_object_or_404(Product, id=product_id)
+            print('product fetched', product.name)
+            if request.user.is_authenticated:
+                print('user', request.user)
+                cart, _ = Cart.objects.get_or_create(user=request.user)
+
+            else:
+                session_key = request.session.session_key
+                print('key', session_key)
+                if not session_key:
+                    request.session.create()
+                cart, _ = Cart.objects.get_or_create(session_key=request.session.session_key)
+            
+            cart_item, created= CartItem.objects.get_or_create(cart=cart, product=product)
+            print('cart item', cart_item, 'created', created)
+
+            if not created:
+                cart_item.quantity += new_quantity
+                cart_item.save()
+            else:
+                cart_item.quantity += new_quantity
+                cart_item.save()
+                # cart_item = CartItem.objects.create(cart=cart, product=product, quantity=new_quantity)
+            return JsonResponse({
+                'message': 'Item updated!',
+                'new_total_price':cart_item.quantity * cart_item.product.price
+            })
+           
+        except ValueError as e:
+           
+            return JsonResponse({'error': f'Invalid input {str(e)}'}, status=400)
+        
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+        # try:
+        #     product = CartItem.objects.filter(cart__user=request.user, product__id=product_id)
+
+        #     quantity = request.POST.get('quantity',0)
+        #     if quantity < 1:
+        #         return JsonResponse({'error': 'quantity must be aleast one'})
+            
+        #     if request.user.is_authenticated:
+        #         cart = Cart.objects.filter(user=request.user)
+        #     else:
+        #         session_key = request.session.session_key
+        #         if not session_key:
+        #             session_key = request.session.create()
+        #             cart = Cart.objects.filter(session_key=request.session.session_key)
+        #     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+        #     if not created:
+        #         cart_item.quantity += int(quantity)
+        #         cart_item.save()
+        
+        #     return JsonResponse({'response': 'Item updated!'})
+        # except ValueError:
+        #     return JsonResponse({'error': 'Error occur'})
+    
 
 
 class MergeCartMiddleware(MiddlewareMixin):

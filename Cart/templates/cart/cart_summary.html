@@ -89,14 +89,14 @@
                         </div>
                         <div>
                             <div class="quantity">
-                                <label for="quantity-{{item.id}}">quantity:</label>
+                                <label for="quantity-${item.quantity}">quantity:</label>
                                 <input type="number" name="quantity" id="quantity" min="1" value="1"
                                     class="button">
                             </div>
                             <div class="cta-buttons">
-                                <button type="button" id="update-cart" value="${item.product_id}" class="btn">Update</button>
-                                <button type="button" class="remove-item btn" id="remove-item"
-                                    value="${item.product_id}">Remove</button>
+                                <button type="button" data-product-id="${item.product_id}"  class="update-cart btn">Update</button>
+                                
+                                <button type="button" class="remove-item btn" data-product-id="${item.product_id}">Remove</button>
                             </div>
                         </div>
                  </div>`;
@@ -120,24 +120,29 @@
                     setInterval(fetchCartItems, 3000);
                 });
 
-                $(document).on('click', '#update-cart', function(e) {
+                $(document).on('click', '.update-cart', function(e) {
                     e.preventDefault();
-
+                    const product_id = $(this).data('product-id')
+                    const quantity =  $('#quantity').val();
+                    
+                    console.log("product id being sent", product_id)
+                    console.log('quantity', quantity)
                     $.ajax({
                         type: 'POST',
-                        url: "{% url 'add_to_cart' %}",
+                        url: "{% url 'update_cart' %}",
                         data: {
-                            product_id: $('#update-cart').val(),
-                            quantity: $('#quantity').val(),
+                            product_id: product_id,
+                            quantity: quantity,
                             csrfmiddlewaretoken: '{{csrf_token}}',
                             action: 'post'
                         },
                         success: function(response) {
-                            addToCart();
-                            console.log(response)
+                            // addToCart();
+                            console.log(response);
+                            console.log(response.product_id)
                         },
-                        error: function(xhr, errmsg, err) {
-                            console.log(err);
+                        error: function(xhrr) {
+                            console.log(xhr.responseJSON);
                         },
                     });
                 });
@@ -146,13 +151,14 @@
                     document.getElementById('modal').style.display = "block";
                 }
 
-                $(document).on('click', '#remove-item', function (e) {
+                $(document).on('click', '.remove-item', function (e) {
                     e.preventDefault();
+                    const product_id = $(this).data('product-id')
                     $.ajax({
                         type: 'POST',
                         url: "{% url 'remove_item' %}",
                         data: {
-                            product_id: $('#remove-item').val(),
+                            product_id: product_id,
                             csrfmiddlewaretoken: '{{csrf_token}}',
                             action: 'post',
                         },
@@ -161,7 +167,7 @@
                             alert(response)
                         },
                         error: function (xhr, errmsg, err) {
-
+                            console.log(xhr.responseJSON)
                         },
                     })
                 })
