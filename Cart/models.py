@@ -20,24 +20,11 @@ class CartItem(models.Model):
     def __str__(self):
         return f"{self.quantity} of {self.product}"
 
+
+
 class ShippingInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shipping_info', null=True, blank=True)
     session_key = models.CharField(max_length=255, null=True, blank=True)
-    address_1 = models.CharField(max_length=255)
-    address_2 = models.CharField(max_length=255, null=True, blank=True)
-    phone = models.CharField(max_length=15)
-    city = models.CharField(max_length=100)
-    state = models.CharField(max_length=100)
-    country = models.CharField(max_length=100, default='Nigeria')
-
-    def __str__(self):
-        return f"{self.user or self.session_key} - {self.phone}"
-
-
-
-
-class ShippingInfo(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='shipping_info')
     address = models.CharField(max_length=255)
     city = models.CharField(max_length=100)
     state = models.CharField(max_length=100)
