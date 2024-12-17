@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-w4d+#8k9#v+24vi39#_%slqet!(k40%ub^2ixmsv4fg&w-e0_6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["swiftcart-production.up.railway.app", "http://127.0.0.1:8000", "https://swiftcart-production.up.railway.app"]
+ALLOWED_HOSTS = ["swiftcart-production.up.railway.app", "127.0.0.1", "https://swiftcart-production.up.railway.app"]
 
 
 # Application definition
@@ -133,6 +133,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # For production
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # For development
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
