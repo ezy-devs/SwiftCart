@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-w4d+#8k9#v+24vi39#_%slqet!(k40%ub^2ixmsv4fg&w-e0_6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["swiftcart-production.up.railway.app", "127.0.0.1", "https://swiftcart-production.up.railway.app"]
+ALLOWED_HOSTS = ["swiftcart-production.up.railway.app", "127.0.0.1"]
 
 
 # Application definition
@@ -55,12 +55,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://swiftcart-production.up.railway.app",  
 ]
 
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'SwiftCart.urls'
 
