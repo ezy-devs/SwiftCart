@@ -78,7 +78,7 @@ body {
     margin-bottom: 5px;
   }
   
-  .form-group input {
+  .form-group input, .input {
     width: 100%;
     padding: 10px;
     font-size: 14px;
@@ -87,7 +87,9 @@ body {
     outline: none;
     transition: border-color 0.3s;
   }
-  
+  .input:focus {
+    border-color: #2ecc71;
+  }
   .form-group input:focus {
     border-color: #2ecc71;
   }
