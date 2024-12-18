@@ -4,11 +4,12 @@
 
 {% block title %}Shop{% endblock %}
 
-{% block forms %}   {% endblock %}
-{% block dashboard %}   {% endblock %}
-{% block profile %}   {% endblock %} 
-{% block cart %}   {% endblock %} 
-{% block shop %} <link rel="stylesheet" href="{% static 'assets/css/shop.css' %}">  {% endblock %}
+{% block forms %} {% endblock %}
+{% block dashboard %} {% endblock %}
+{% block profile %} {% endblock %}
+{% block cart %} {% endblock %}
+{% block shop %}
+<link rel="stylesheet" href="{% static 'assets/css/shop.css' %}"> {% endblock %}
 
 {% block content %}
 <br>
@@ -20,17 +21,17 @@
 
     <div class="filters">
       <div style="display: flex; width: 100%;">
-        <h3 style="background-color: #2ecc71; border-radius: 10px; font-size: 18px; color: white; padding: 10px;"
-          id="openFilter" onclick="openFilter()">Filter</h3>
-        <div class="search-products form-search-sms">
-          <form action="" method="post"
+        <!-- <h3 style="background-color: #2ecc71; border-radius: 10px; font-size: 18px; color: white; padding: 10px;"
+          id="openFilter" onclick="openFilter()">Filter</h3> -->
+        <div class="search-products form-search-sms" style="display: block;">
+          <form
             style="display: flex; justify-content: space-between; align-items: center; gap: 3px; min-width: 300px;">
             <div class="form-group">
-              <input type="search" name="search-term" id="" placeholder="Search products.....">
+              <input type="search" id="search-term" placeholder="Search products.....">
             </div>
 
             <div class="form-group">
-              <button type="submit" class="btn success" style="padding: 10px;">Filter</button>
+              <button class="btn success" id="searchbtn" style="padding: 10px;">Filter</button>
               <button type="reset" class="btn danger" style="padding: 10px;">Clear</button>
             </div>
           </form>
@@ -41,11 +42,13 @@
       <div id="filters">
         <div class="filter-category">
 
-          <h4>Category</h4>
+          <h4>Categories</h4>
           <ul>
-            <li><input type="checkbox" id="electronics"><label for="electronics">Electronics</label></li>
-            <li><input type="checkbox" id="fashion"><label for="fashion">Fashion</label></li>
-            <li><input type="checkbox" id="home-decor"><label for="home-decor">Home Decor</label></li>
+            {% for category in categories %}
+            <li><a href="{% url 'category_detail' category %}"
+                style="text-decoration: none; color: #f4f4f4;">{{category}}</a></li>
+
+            {% endfor %}
           </ul>
         </div>
         <div class="filter-price">
@@ -54,23 +57,115 @@
           <p>Max Price: $<span id="price-value">500</span></p>
         </div>
         <div class="search-products">
-          <form action="" method="post">
-            <div class="form-group">
-              <input type="search" name="search-term" id="" placeholder="Search products.....">
-            </div>
 
-            <div class="form-group">
-              <button type="submit" class="btn success">Filter</button>
-              <button type="reset" class="btn danger">Clear</button>
-            </div>
-          </form>
+          <div class="form-group">
+            <input type="text" id="search-term" placeholder="Search..." />
+          </div>
+
+          <div class="form-group">
+            <button class="btn success" id="searchbtn">Filter</button>
+            <button type="reset" class="btn danger">Clear</button>
+          </div>
+          <script>
+            $(document).on('click', '#searchbtn', function (e) {
+              e.preventDefault();
+              const defaultResults = document.getElementById('default-results')
+              $.ajax({
+                type: 'GET',
+                url: "{% url 'search_shop' %}",
+                data: {
+                  search_term: $('#search-term').val(),
+                  action: 'get'
+                },
+               
+                success: function (response) {
+                  console.log(response)
+                  
+                  $('#search-results').empty();
+                 const searchResults = response.search_result
+                  
+
+                  if (searchResults && searchResults.length > 0) {
+                    const title = document.getElementById('title')
+                    title.innerHTML = "You've searched for " + $('#search-term').val(),
+                    defaultResults.innerHTML = ''
+                    searchResults.forEach(function (item) {
+                      $('#search-results').append(
+                        `
+                  <div class="card" style="position: relative;">
+                    <div class="card-img">
+                     
+                      ${item.image ? `<img src="${item.image}" alt="Product Image">` : '<img src="" alt="Not found">'}
+                    </div>
+
+                    ${item.is_sale ? `
+                    <div class="sale-badge"
+                      style="position: absolute; background-color: #cc2ecc; color: #f4f4f4; right: 5px; top: 5px; padding: 3px; border-radius: 5px; width: 50px; text-align: center;">
+                      <span>Sale</span>
+                    </div>` : ``
+                  }
+              
+
+                    <div class="card-content" style="margin-top: 2px;">
+                      <a href="/product/${item.id}/" style="text-decoration: none; color: #222;">
+                        <div>
+                          <h3 class="product-title" style="padding: 0; margin: 0; font-size: 13px;">
+                            ${item.name}</h3>
+                          <p class="product-description" style="padding: 0; margin: 0;">
+                             ${item.description.substring(0, 20)}
+                          </p>
+                         ${item.is_sale 
+                         ? ` 
+                          <p class="product-price" style="padding: 0; margin: 0;">N${item.sale_price} <span
+                              class="old-price"> N${item.price} </span>
+                          </p>` 
+                          : `
+                          <p class="product-price" style="padding: 0; margin: 0;">N${item.price} </p> `
+
+                          }
+
+                        </div>
+                      </a>
+                      <div style="display: flex; flex-direction: column; gap: 5px;">
+                        <div class="action" style="padding: 5px; width: 35px; height: 30px;">
+                          <span id="addToCart" class="add-to"><i class="fa fa-plus"></i></span>
+                        </div>
+                        <div class="action" style="padding: 5px; width: 35px; height: 30px;">
+                          <span id="addToWaitList" class="add-to"><i class="fa fa-heart"></i></span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                        `
+                      );
+                    });
+                  } else {
+                    const title = document.getElementById('title')
+                    title.innerHTML = "You've searched for " + $('#search-term').val(),
+                    defaultResults.innerHTML = searchResults
+                    $('#search-results').append(
+                      `<div>Records not found</div>`
+                    );
+                  }
+                },
+                
+                error: function (xhr, errmsg, err) {
+                  console.log('Error', errmsg);
+                }
+              
+              });
+            });
+          
+          
+          </script>
         </div>
       </div>
     </div>
 
     <!-- Product Listing Section -->
     <div class="product-listing">
-      <h2>Shop Our Collection</h2>
+      <h2 style="margin-left: 20px;">Shop Our Collection</h2>
       <div class="sorting">
         <select id="sort-options" class="input">
           <option value="low-to-high">Price: Low to High</option>
@@ -84,389 +179,218 @@
           <p> added successfully!</p>
         </div>
       </div>
-      <section class="section">
-        <h1 class="title">Trending</h1>
-        <div class="section-container">
-          <div class="card">
+      
+      <section class="section" style="margin-bottom: 10px;">
+        <h1 class="title" id="title"></h1>
+        <div class="section-container" id="search-results">
+          <!-- dynamically loads search products -->
+        </div>
+      </section>
+      <section class="section" id="default-results" style="margin-bottom: 10px;">
+        <h1 class="title">Shop SwiftCart</h1>
+        <div class="section-container" >
+          {% for product in first_ten_products %}
+          <div class="card" style="position: relative;">
             <div class="card-img">
-              <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
+              {% if product.image %}
+              <img src="{{product.image.url}}" alt="images/images (20).jpeg">
+              {% else %}
+              <img src="" alt="Not found">
+              {% endif %}
             </div>
-            <div class="card-content">
-              <div style="display: block;">
-                <h3 class="product-title">Best Suit</h3>
-                <p class="product-description" style="padding: 0; margin: 0;">
-                  this is a product description
-                </p>
-                <p class="product-price" style="padding: 0; margin: 0;">N12,000 <span class="old-price"> N20,000 </span>
-                </p>
-                <div class="product-rating">
-                  <span class="rating-stars">★★★★☆</span>
-                  <span class="rating-count">(120 reviews)</span>
-                </div>
-              </div>
 
+            {% if product.is_sale %}
+            <div class="sale-badge"
+              style="position: absolute; background-color: #cc2ecc; color: #f4f4f4; right: 5px; top: 5px; padding: 3px; border-radius: 5px; width: 50px; text-align: center;">
+              <span>Sale</span>
             </div>
-          </div>
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
-            </div>
+            {% endif %}
+
             <div class="card-content" style="margin-top: 2px;">
-              <div>
-                <h3 class="product-title">Best Suit</h3>
-                <p class="product-description" style="padding: 0; margin: 0;">
-                  this is a product description
-                </p>
-                <p class="product-price" style="padding: 0; margin: 0; font-size: 18px;">N12,000 <span
-                    class="old-price"> N20,000 </span>
-                </p>
-                <div class="product-rating">
-                  <span class="rating-stars">★★★★☆</span>
-                  <span class="rating-count">(120 reviews)</span>
+              <a href="{% url 'product' product.id %}" style="text-decoration: none; color: #222;">
+                <div>
+                  <h3 class="product-title" style="padding: 0; margin: 0; font-size: 13px;">
+                    {{product.name|truncatewords:3}}</h3>
+                  <p class="product-description" style="padding: 0; margin: 0;">
+                    {{product.description|truncatewords:4}}..
+                  </p>
+                  {% if product.is_sale%}
+                  <p class="product-price" style="padding: 0; margin: 0;">N{{product.sale_price}} <span class="old-price"> N{{product.price}} </span></p>
+                    {% else %}
+                    <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} </p>
+                  {% endif %}
+
+                </div>
+              </a>
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                <div class="action" style="padding: 5px; width: 35px; height: 30px;">
+                  <span id="addToCart" class="add-to"><i class="fa fa-plus"></i></span>
+                </div>
+                <div class="action" style="padding: 5px; width: 35px; height: 30px;">
+                  <span id="addToWaitList" class="add-to"><i class="fa fa-heart"></i></span>
                 </div>
               </div>
-              <div class="action">
-                <span id="addToCart"><i class="fa fa-plus"></i></span>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3 class="product-title">Best Suit</h3>
-                <p class="product-description" style="padding: 0; margin: 0;">
-                  this is a product description
-                </p>
-                <p class="product-price" style="padding: 0; margin: 0;">N12,000 <span class="old-price"> N20,000 </span>
-                </p>
-                <div class="product-rating">
-                  <span class="rating-stars">★★★★☆</span>
-                  <span class="rating-count">(120 reviews)</span>
-                </div>
-              </div>
-              <div class="action">
-                <span id="addToCart"><i class="fa fa-plus"></i></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/latest.jpg' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3 class="name">Best Suit</h3>
-                <p class="description">
-                  this is a product description
-                </p>
-                <span class="price"><strong>N12,000</strong></span>
-              </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/men-wear (1).png' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
-              </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
-              </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/men-wear (2).jpeg' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
-              </div>
-
-              <span class="action"><a href=""><i class="fa fa-plus"></i></a></span>
 
             </div>
           </div>
-
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/best-design.jpeg' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
-              </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
+          {% endfor %}
         </div>
         <br>
-        <div class="section-container ">
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
-              </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
+        <div class="section-container">
 
-          <div class="card">
+          {% for product in second_ten_products %}
+          <div class="card" style="position: relative;">
             <div class="card-img">
-              <img src="{% static 'assets/images/latest.jpg' %}" alt="images/images (20).jpeg">
+              {% if product.image %}
+              <img src="{{product.image.url}}" alt="images/images (20).jpeg">
+              {% else %}
+              <img src="" alt="Not found">
+              {% endif %}
             </div>
-            <div class="card-content">
-              <div>
-                <h3 class="name">Best Suit</h3>
-                <p class="description">
-                  this is a product description
-                </p>
-                <span class="price"><strong>N12,000</strong></span>
-              </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
 
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/men-wear (1).png' %}" alt="images/images (20).jpeg">
+            {% if product.is_sale %}
+            <div class="sale-badge"
+              style="position: absolute; background-color: #cc2ecc; color: #f4f4f4; right: 5px; top: 5px; padding: 3px; border-radius: 5px; width: 50px; text-align: center;">
+              <span>Sale</span>
             </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
-              </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
+            {% endif %}
 
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
-              </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
+            <div class="card-content" style="margin-top: 2px;">
+              <a href="{% url 'product' product.id %}" style="text-decoration: none; color: #222;">
+                <div>
+                  <h3 class="product-title" style="padding: 0; margin: 0; font-size: 13px;">
+                    {{product.name|truncatewords:3}}</h3>
+                  <p class="product-description" style="padding: 0; margin: 0;">
+                    {{product.description|truncatewords:4}}..
+                  </p>
+                  {% if product.is_sale %}
+                  <p class="product-price" style="padding: 0; margin: 0;">N{{product.sale_price}} <span
+                      class="old-price"> N{{product.price}} </span>
+                  </p>
+                  {% else %}
+                  <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} </p>
+                  {% endif %}
 
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/men-wear (2).jpeg' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
+                </div>
+              </a>
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                <div class="action" style="padding: 5px; width: 35px; height: 30px;">
+                  <span id="addToCart" class="add-to"><i class="fa fa-plus"></i></span>
+                </div>
+                <div class="action" style="padding: 5px; width: 35px; height: 30px;">
+                  <span id="addToWaitList" class="add-to"><i class="fa fa-heart"></i></span>
+                </div>
               </div>
-
-              <span class="action"><a href=""><i class="fa fa-plus"></i></a></span>
 
             </div>
           </div>
-
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/best-design.jpeg' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
-              </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
+          {% endfor %}
         </div>
-      </section>
-      <section class="section">
-        <h1 class="title">Trending</h1>
-        <div class="section-container ">
-          <div class="card">
+        <br>
+        <div class="section-container">
+          {% for product in third_ten_products %}
+          <div class="card" style="position: relative;">
             <div class="card-img">
-              <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
+              {% if product.image %}
+              <img src="{{product.image.url}}" alt="images/images (20).jpeg">
+              {% else %}
+              <img src="" alt="Not found">
+              {% endif %}
             </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
-              </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
 
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/latest.jpg' %}" alt="images/images (20).jpeg">
+            {% if product.is_sale %}
+            <div class="sale-badge"
+              style="position: absolute; background-color: #cc2ecc; color: #f4f4f4; right: 5px; top: 5px; padding: 3px; border-radius: 5px; width: 50px; text-align: center;">
+              <span>Sale</span>
             </div>
-            <div class="card-content">
-              <div>
-                <h3 class="name">Best Suit</h3>
-                <p class="description">
-                  this is a product description
-                </p>
-                <span class="price"><strong>N12,000</strong></span>
-              </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
+            {% endif %}
 
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/men-wear (1).png' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
-              </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
+            <div class="card-content" style="margin-top: 2px;">
+              <a href="{% url 'product' product.id %}" style="text-decoration: none; color: #222;">
+                <div>
+                  <h3 class="product-title" style="padding: 0; margin: 0; font-size: 13px;">
+                    {{product.name|truncatewords:3}}</h3>
+                  <p class="product-description" style="padding: 0; margin: 0;">
+                    {{product.description|truncatewords:4}}..
+                  </p>
+                  {% if product.is_sale %}
+                  <p class="product-price" style="padding: 0; margin: 0;">N{{product.sale_price}} <span
+                      class="old-price"> N{{product.price}} </span>
+                  </p>
+                  {% else %}
+                  <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} </p>
+                  {% endif %}
 
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
+                </div>
+              </a>
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                <div class="action" style="padding: 5px; width: 35px; height: 30px;">
+                  <span id="addToCart" class="add-to"><i class="fa fa-plus"></i></span>
+                </div>
+                <div class="action" style="padding: 5px; width: 35px; height: 30px;">
+                  <span id="addToWaitList" class="add-to"><i class="fa fa-heart"></i></span>
+                </div>
               </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-img">
-              <img src="{% static 'assets/images/men-wear (2).jpeg' %}" alt="images/images (20).jpeg">
-            </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
-              </div>
-
-              <span class="action"><a href=""><i class="fa fa-plus"></i></a></span>
 
             </div>
           </div>
+          {% endfor %}
 
-          <div class="card">
+        </div><br>
+        <div class="section-container">
+          {% for product in fourth_ten_products %}
+          <div class="card" style="position: relative;">
             <div class="card-img">
-              <img src="{% static 'assets/images/best-design.jpeg' %}" alt="images/images (20).jpeg">
+              {% if product.image %}
+              <img src="{{product.image.url}}" alt="images/images (20).jpeg">
+              {% else %}
+              <img src="" alt="Not found">
+              {% endif %}
             </div>
-            <div class="card-content">
-              <div>
-                <h3>Best Suit</h3>
-                <p>
-                  this is a product description
-                </p>
-                <span><strong>N12,000</strong></span>
+
+            {% if product.is_sale %}
+            <div class="sale-badge"
+              style="position: absolute; background-color: #cc2ecc; color: #f4f4f4; right: 5px; top: 5px; padding: 3px; border-radius: 5px; width: 50px; text-align: center;">
+              <span>Sale</span>
+            </div>
+            {% endif %}
+
+            <div class="card-content" style="margin-top: 2px;">
+              <a href="{% url 'product' product.id %}" style="text-decoration: none; color: #222;">
+                <div>
+                  <h3 class="product-title" style="padding: 0; margin: 0; font-size: 13px;">
+                    {{product.name|truncatewords:3}}</h3>
+                  <p class="product-description" style="padding: 0; margin: 0;">
+                    {{product.description|truncatewords:4}}..
+                  </p>
+                  {% if product.is_sale %}
+                  <p class="product-price" style="padding: 0; margin: 0;">N{{product.sale_price}} <span
+                      class="old-price"> N{{product.price}} </span>
+                  </p>
+                  {% else %}
+                  <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} </p>
+                  {% endif %}
+
+                </div>
+              </a>
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                <div class="action" style="padding: 5px; width: 35px; height: 30px;">
+                  <span id="addToCart" class="add-to"><i class="fa fa-plus"></i></span>
+                </div>
+                <div class="action" style="padding: 5px; width: 35px; height: 30px;">
+                  <span id="addToWaitList" class="add-to"><i class="fa fa-heart"></i></span>
+                </div>
               </div>
-              <div class="action">
-                <span><a href=""><i class="fa fa-plus"></i></a></span>
-              </div>
+
             </div>
           </div>
+          {% endfor %}
+
         </div>
+
+        
       </section>
-      <!-- More product cards here -->
+
     </div>
 
   </div>

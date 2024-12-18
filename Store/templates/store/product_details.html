@@ -1,8 +1,8 @@
 {% extends 'store/base.html' %}
 
 {% load static %}
-<!-- 
-{% block title %}Shop {% endblock %} -->
+
+{% block title %}Product - {{product}} {% endblock %}
 
 {% block forms %} {% endblock %}
 {% block dashboard %} {% endblock %}
@@ -17,13 +17,13 @@
 <div class="container-fluid">
     {% for message in messages %}
     <div class="__modal" id="modal">
-       <div class="modal-content">
-          <p> {{message}}!</p>
+        <div class="modal-content">
+            <p> {{message}}!</p>
         </div>
-      </div>
-      {% endfor %}
+    </div>
+    {% endfor %}
     <div class="product-detail-page">
-        
+
         <div style="display: flex; justify-content: space-between;" class="product-detail">
             <div class="product-images product-card">
                 {% if product.image %}
@@ -70,6 +70,7 @@
                         border-radius: 3px;
                         cursor: pointer;
                     }
+
                     .button {
                         width: 40px;
                         height: 25px;
@@ -81,6 +82,7 @@
                         cursor: pointer;
                         text-align: center;
                     }
+
                     .__modal {
                         padding: 10px 20px;
                         width: 230px;
@@ -96,62 +98,63 @@
                         border-radius: 8px;
                         margin: 20px auto;
                         transition: all ease-in-out 0.2s;
-                        
+
                         display: none;
-                    
+
                     }
                 </style>
-                 <!-- <form action="" method="post">
+                <!-- <form action="" method="post">
                     {% csrf_token %}
                     <div class="quantity">
                         <label for="quantity-{{product.id}}">quantity:</label>
                         <input type="number" name="quantity" id="quantity" min="1" value="1" class="button"> -->
-                        <!-- <button onclick="updateQuantity(-1, 20)">-</button>
+                <!-- <button onclick="updateQuantity(-1, 20)">-</button>
                         <span id="quantity">1</span>
                         <button onclick="updateQuantity(1, 20)">+</button> -->
-                    <!-- </div>
+                <!-- </div>
 
                     <div class="cta-buttons">
                         <button type="submit" class="add-to-cart btn" onclick="addToCart()" value="{{product.id}}" id="add-to-cart">Add to Cart</button>
                         <button class="buy-now btn">Buy Now</button>
                     </div>
                 </form> -->
-                
-                   
-                    <div class="quantity">
-                        <label for="quantity-{{product.id}}">quantity:</label>
-                        <input type="number" name="quantity" id="quantity" min="1" value="1" class="button">
-                        <!-- <button onclick="updateQuantity(-1, 20)">-</button>
+
+
+                <div class="quantity">
+                    <label for="quantity-{{product.id}}">quantity:</label>
+                    <input type="number" name="quantity" id="quantity" min="1" value="1" class="button">
+                    <!-- <button onclick="updateQuantity(-1, 20)">-</button>
                         <span id="quantity">1</span>
                         <button onclick="updateQuantity(1, 20)">+</button> -->
-                    </div>
+                </div>
 
-                    <div class="cta-buttons">
-                        <button type="submit" class="add-to-cart btn"  value="{{product.id}}" id="add-to-cart">Add to Cart</button>
-                        <button class="buy-now btn">Buy Now</button>
-                    </div>
-               
-        <script>
-            $(document).on('click', '#add-to-cart', function(e) {
-                e.preventDefault();
-                $.ajax({
-                    type: 'POST',
-                    url: "{% url 'add_to_cart' %}",
-                    data: {
-                        product_id: $('#add-to-cart').val(),
-                        quantity: $('#quantity').val(),
-                        csrfmiddlewaretoken: '{{csrf_token}}',
-                        action: 'post'
-                    },
-                    success: function (json) {
-                        console.log(json)
-                    },
-                    error: function(xhr, errmsg, err){
+                <div class="cta-buttons">
+                    <button type="submit" class="add-to-cart btn" value="{{product.id}}" id="add-to-cart">Add to
+                        Cart</button>
+                    <button class="buy-now btn">Buy Now</button>
+                </div>
 
-                    }
-                })
-            })
-        </script>
+                <script>
+                    $(document).on('click', '#add-to-cart', function (e) {
+                        e.preventDefault();
+                        $.ajax({
+                            type: 'POST',
+                            url: "{% url 'add_to_cart' %}",
+                            data: {
+                                product_id: $('#add-to-cart').val(),
+                                quantity: $('#quantity').val(),
+                                csrfmiddlewaretoken: '{{csrf_token}}',
+                                action: 'post'
+                            },
+                            success: function (json) {
+                                console.log(json)
+                            },
+                            error: function (xhr, errmsg, err) {
+
+                            }
+                        })
+                    })
+                </script>
                 <div class="product-stock">
                     {% if product.in_stock == 1 %}
                     <p>In Stock: <span class="stock-quantity">{{product.in_stock}} item</span></p>
@@ -172,9 +175,9 @@
         </div>
 
         <script>
-             function addToCart() {
+            function addToCart() {
                 document.getElementById('modal').style.display = "block";
-             }
+            }
             let quantity = 1;
             let unitPrice = 20;
 
@@ -190,40 +193,7 @@
             function removeItem(button) {
                 button.parentElement.remove();
             }
-            // function addToCart(productId, quantity = 1) {
-            //     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-            //     fetch('/add_to_cart/${productId}/', {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //             'X-CSRFToken': csrfToken
-            //         },
-            //         body: JSON.stringify({quantity:quantity})
-            //     })
-            //     .then(response => response.json())
-            //     .then(data => {
-            //         alert(data.message)
-            //     })
-            //     .catch(error => {
-            //         console.log('Error:', error)
-            //     });
-            // }
-            // function getCookie(name) {
-            //     let cookieValue = null;
-            //     if (document.cookie && document.cookie !== '') {
-            //         const cookies = document.cookie.split(';');
-            //         for (let i = 0; i < cookies.length; i++) {
-            //             const cookie = cookies[i].trim();
-            //             if (cookies.substring(0, name.length + 1) === (name + '=')) {
-            //                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            //                 break;
-            //             }
-                        
-            //         }
-            //     }
-            //     return cookieValue;
-            // }
         </script>
 
         <div class="related-products">
@@ -239,16 +209,16 @@
                             {% endif %}
                         </div>
                         <div class="card-content">
-                            <a href="{% url 'product_details' product.id %}"
-                                style="text-decoration: none; color: #222;">
+                            <a href="{% url 'product' product.id %}" style="text-decoration: none; color: #222;">
                                 <div>
                                     <h3 class="product-title">{{product}}</h3>
                                     <p class="product-description" style="padding: 0; margin: 0;">
                                         this is a product description
                                     </p>
-                                    {% if product.is_sale%}
-                                    <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} <span
-                                            class="old-price"> N{{product.sale_price}} </span></p>
+                                    {% if product.is_sale %}
+                                    <p class="product-price" style="padding: 0; margin: 0;">N{{product.sale_price}}
+                                        <span class="old-price"> N{{product.price}} </span>
+                                    </p>
                                     {% else %}
                                     <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} </p>
                                     {% endif %}

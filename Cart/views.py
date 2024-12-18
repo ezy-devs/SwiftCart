@@ -44,19 +44,28 @@ def cart_summary(request):
     if request.user.is_authenticated:
         cart = Cart.objects.filter(user=request.user).first()
     else:
-        cart = Cart.objects.filter(session_key=request.session.session_key).first()
+        session_key = request.session.session_key
+        
+        cart = Cart.objects.filter(session_key=session_key).first()
 
     if cart:
         cart_items = cart.items.all()
     else:
         cart_items = []
-
+    for item in cart_items:
+            if item.product.is_sale:
+                price = item.product.sale_price
+            else:
+                price = item.product.price
+    total_price = price * item.quantity
     context = {
             'categories':categories,
             'cart':cart,
             'cart_items':cart_items,
+            'total_price':total_price,
         }
-        
+    
+    print(total_price)
     return render(request, 'cart/cart_summary.html', context)
 
 def fetch_cart(request):
@@ -71,28 +80,31 @@ def fetch_cart(request):
 
             cart = Cart.objects.filter(session_key=request.session.session_key).first()
         cart_items = []
+        total_price = 0.0
         if cart:
-            # if item.product.is_sale: 
-            #     final_price = item.product.sale_price 
-            # else:
-            #     final_price = item.product.price
-            cart_item_list = cart.items.all()
-
-            cart_items = [
-                
-                {
-                'product_id': item.product.id,
-                'product_image': item.product.image.url,
-                'product_name': item.product.name,
-                'description': item.product.description,
-                'quantity': item.quantity,
-                'total_price': item.quantity * item.product.price,
-            }
-
             
-            for item in cart_item_list
-            ]
-        return JsonResponse({'cart_items': cart_items})
+            cart_item_list = cart.items.all()
+            for item in cart_item_list:
+                
+                if item.product.is_sale:
+                    price = item.product.sale_price
+                else:
+                    price = item.product.price
+                item_total =  item.quantity * price
+
+                total_price += float(item_total)
+
+                cart_items.append({
+                        'product_id': item.product.id,
+                        'product_image': item.product.image.url,
+                        'product_name': item.product.name,
+                        'description': item.product.description,
+                        'quantity': item.quantity,
+                        'total_price': item_total,
+                    })
+            
+        cart_items.reverse()
+        return JsonResponse({'cart_items': cart_items, 'total_price': total_price})
 
 
 def update_cart(request):
@@ -141,29 +153,6 @@ def update_cart(request):
         
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
-        # try:
-        #     product = CartItem.objects.filter(cart__user=request.user, product__id=product_id)
-
-        #     quantity = request.POST.get('quantity',0)
-        #     if quantity < 1:
-        #         return JsonResponse({'error': 'quantity must be aleast one'})
-            
-        #     if request.user.is_authenticated:
-        #         cart = Cart.objects.filter(user=request.user)
-        #     else:
-        #         session_key = request.session.session_key
-        #         if not session_key:
-        #             session_key = request.session.create()
-        #             cart = Cart.objects.filter(session_key=request.session.session_key)
-        #     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-        #     if not created:
-        #         cart_item.quantity += int(quantity)
-        #         cart_item.save()
-        
-        #     return JsonResponse({'response': 'Item updated!'})
-        # except ValueError:
-        #     return JsonResponse({'error': 'Error occur'})
-    
 
 
 class MergeCartMiddleware(MiddlewareMixin):

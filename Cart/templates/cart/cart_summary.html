@@ -76,6 +76,9 @@
                             type: 'GET',
                             success: function (response) {
                                 const cartItems = response.cart_items;
+                                const totalPrice = document.getElementById('total');
+                                totalPrice.innerHTML = 'N'+response.total_price;
+                                
                                 if (cartItems.length > 0) {
                                     let html = '<div class="cart-items">';
                                     cartItems.forEach(item => {
@@ -99,7 +102,7 @@
                         <div>
                             <div class="quantity">
                                 <label for="quantity-${item.quantity}">quantity:</label>
-                                <input type="number" name="quantity" id="quantity" min="1" value="1"
+                                <input type="number" name="quantity" id="quantity" min="1" value="${item.quantity}"
                                     class="button">
                             </div>
                             <div class="cta-buttons">
@@ -186,7 +189,7 @@
                 <h3>Cart Summary</h3>
                 <p>Subtotal: <span id="subtotal">$139.98</span></p>
                 <p>Shipping: <span id="shipping">$10.00</span></p>
-                <p>Total: <span id="total">$149.98</span></p>
+                <p>Total: <span id="total"></span></p>
                 <button class="checkout-btn"> <a href="{% url 'checkout' %}">Proceed to Checkout</a></button>
             </div>
         </div>

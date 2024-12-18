@@ -497,7 +497,7 @@
     background-color: #2ecc71;
     color: #fff;
     height: 30px;
-    width: 50px;
+    width: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -571,13 +571,14 @@
   }
   
   .product-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
     margin-bottom: 2px;
   }
   
   .product-price {
-    font-size: 20px;
+    font-size: 15px;
+    
     color: #e74c3c;
   }
   
@@ -688,10 +689,11 @@
   .footer {
     
     background-color: #2ecc71;
-    color: #f1f1f1;
+    color: #222;
     padding: 40px 0;
     font-family: Arial, sans-serif;
     margin-top: 10px;
+    position: relative;
   }
   
   .footer-container {
@@ -717,7 +719,7 @@
   
   .footer p,
   .footer a {
-    color: #ccc;
+    color: #222;
     font-size: 14px;
     line-height: 1.8;
   }
@@ -741,7 +743,7 @@
   }
   
   .footer-section ul li a {
-    color: #ccc;
+    color: #222;
     font-size: 14px;
   }
   
@@ -758,10 +760,14 @@
   /* Footer Bottom */
   .footer-bottom {
     background-color: #111;
-    padding: 10px;
+    padding: 5px;
     text-align: center;
     font-size: 14px;
-    color: #888;
+    color: #2ecc71;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
   
   
@@ -885,6 +891,9 @@
       padding: 0px;
     }
   
+    .product-rating {
+      font-size: 12px;
+    }
     .section-container .card .card-img img {
       width: 100%;
       height: 100px;
@@ -910,7 +919,6 @@
       height: 30px;
       width: 40px;
     }
-  
     .section-container .card .card-content .action a {
       color: #fff;
       text-align: center;

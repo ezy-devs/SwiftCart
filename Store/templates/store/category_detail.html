@@ -41,11 +41,12 @@
       <div id="filters">
         <div class="filter-category">
 
-          <h4>Category</h4>
+          <h4>Categories</h4>
           <ul>
-            <li><input type="checkbox" id="electronics"><label for="electronics">Electronics</label></li>
-            <li><input type="checkbox" id="fashion"><label for="fashion">Fashion</label></li>
-            <li><input type="checkbox" id="home-decor"><label for="home-decor">Home Decor</label></li>
+            {% for category in categories %}
+            <li><a href="{% url 'category_detail' category %}" style="text-decoration: none; color: #f4f4f4;">{{category}}</a></li>
+            
+{% endfor %}
           </ul>
         </div>
         <div class="filter-price">
@@ -85,35 +86,48 @@
         </div>
       </div>
       <section class="section">
-        <h1 class="title">Trending</h1>
+        <h1 class="title">{{category}} Products</h1>
         <div class="section-container">
             {% for product in category_products %}
-            <div class="card">
+            
+            <div class="card" style="position: relative;">
               <div class="card-img">
-                <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
+                {% if product.image %}
+                <img src="{{product.image.url}}" alt="images/images (20).jpeg">
+                {% else %}
+              <img src="" alt="Not found">
+              {% endif %}
               </div>
-              <div class="card-content">
-                <a href="{% url 'product_details' product.id %}" style="text-decoration: none; color: #222;">
+              
+              {% if product.is_sale %}
+              <div class="sale-badge" style="position: absolute; background-color: #cc2ecc; color: #f4f4f4; right: 5px; top: 5px; padding: 3px; border-radius: 5px; width: 50px; text-align: center;">
+                <span>Sale</span>
+              </div>
+              {% endif %}
+              
+              <div class="card-content" style="margin-top: 2px;">
+                <a href="{% url 'product' product.id %}" style="text-decoration: none; color: #222;">
                 <div>
-                  <h3 class="product-title">{{product}}</h3>
+                  <h3 class="product-title" style="padding: 0; margin: 0; font-size: 13px;">{{product.name|truncatewords:3}}</h3>
                   <p class="product-description" style="padding: 0; margin: 0;">
-                    this is a product description
+                    {{product.description|truncatewords:4}}..
                   </p>
-                  {% if product.is_sale%}
-                  <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} <span class="old-price"> N{{product.sale_price}} </span></p>
-                    {% else %}
-                    <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} </p>
+                  {% if product.is_sale %}
+                  <p class="product-price" style="padding: 0; margin: 0;">N{{product.sale_price}} <span
+                      class="old-price"> N{{product.price}} </span>
+                  </p>
+                  {% else %}
+                  <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}}  </p>
                   {% endif %}
                   
-                  <div class="product-rating">
-                    <span class="rating-stars">★★★★☆</span>
-                    <span class="rating-count">(120 reviews)</span>
-                  </div>
                 </div>
                 </a>
-                <div class="action">
-                  <span id="addwaitlist"><i class="fa fa-heart"></i></span>
+                
+                <div class="action" style="padding: 5px; width: 35px; height: 30px;">
+                  <span id="addToWaitList" class="add-to"><i class="fa fa-heart"></i></span>
+                
                 </div>
+                
               </div>
             </div>
             {% endfor %}
@@ -127,7 +141,7 @@
                 <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
               </div>
               <div class="card-content">
-                <a href="{% url 'product_details' product.id %}" style="text-decoration: none; color: #222;">
+                <a href="{% url 'product' product.id %}" style="text-decoration: none; color: #222;">
                 <div>
                   <h3 class="product-title">{{product}}</h3>
                   <p class="product-description" style="padding: 0; margin: 0;">
