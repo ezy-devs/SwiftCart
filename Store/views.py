@@ -113,10 +113,11 @@ def category_detail(request, category):
     return render(request, 'store/category_detail.html', {'category_products':category_products, 'categories':categories, 'category':category})
 
 def search(request):
-    if request.method == 'GET':
-        search_term = request.GET['search_term']
+    if request.GET:
+        search_term = request.GET.get('search-term')
         search_result = Product.objects.filter(
-            Q(name__icontains=search_term) | Q(description__icontains=search_term))    
+            Q(name__icontains=search_term) | Q(description__icontains=search_term)) 
+           
         return render(request, 'store/search.html', {'search_result':search_result, 'search_term':search_term})
     
     return render(request, 'store/search.html', {})

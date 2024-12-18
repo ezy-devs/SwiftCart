@@ -17,7 +17,7 @@
 
     <form action="{% url 'search' %}" method="get">
       <div style="display: flex; justify-content: space-between; align-items: center; min-width: 400px; gap: 5px;">
-        <input type="text" id="search-input" name="search_term" class="input"
+        <input type="text" id="search-input" name="search-term" class="input"
           placeholder="Search for fashion items, designers, or styles...">
         <button type="submit" id="search-button" class="actions" style="border: none; background-color: #2ecc71; border-radius: 5px;">
         <span class="search-icon action" style="border: none; background-color: #2ecc71;">
@@ -45,7 +45,7 @@
                 {% endif %}
               </div>
               <div class="card-content">
-                <a href="{% url 'product_details' product.id %}" style="text-decoration: none; color: #222;">
+                <a href="{% url 'product' product.id %}" style="text-decoration: none; color: #222;">
                 <div>
                   <h3 class="product-title">{{product}}</h3>
                   <p class="product-description" style="padding: 0; margin: 0;">
