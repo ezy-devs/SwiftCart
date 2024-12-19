@@ -25,10 +25,11 @@ h2 {
 }
 
 
+
 .cart-items-container {
   display: flex;
   justify-content: space-between;
-  /* align-items: center; */
+  flex-direction: row;
   gap: 10px;
 }
 
@@ -244,7 +245,6 @@ textarea {
   }
   .cart-items-container {
     display: block;
-    gap: 10px;
   }
 /* Footer */
 .footer {

@@ -12,7 +12,27 @@
 {% block content %}
 
 <div class="container-fluid">
-
+  <style>
+    
+    .button {
+        width: 40px;
+        height: 25px;
+        margin: 0 5px;
+        background-color: #0073bb;
+        color: white;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        text-align: center;
+    }
+</style>
+  {% for message in messages %}
+        <div class="__modal" id="modal">
+            <div class="modal-content">
+                <p> {{message}}!</p>
+            </div>
+        </div>
+        {% endfor %}
   <section id="hero">
     <div class="hero-card gradient-container">
       <img src="{% static 'assets/images/latest.jpg' %}" alt="">
