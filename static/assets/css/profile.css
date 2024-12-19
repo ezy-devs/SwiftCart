@@ -1,9 +1,9 @@
-/* Profile Layout */
 
-/* Main Content */
 .main-content {
     margin: 20px auto;
+    margin-top: 30rem;
     padding: 20px;
+    width: 80%;
   }
 .settings {
   padding: 40px 20px;
@@ -162,6 +162,9 @@ select:focus {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .main-content {
+    width: 100%;
+  }
   .settings-container {
     padding: 20px;
   }

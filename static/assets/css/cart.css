@@ -29,7 +29,7 @@ h2 {
 .cart-items-container {
   display: flex;
   justify-content: space-between;
-  flex-direction: row;
+  /* flex-direction: row; */
   gap: 10px;
 }
 
@@ -242,9 +242,10 @@ textarea {
   #checkout-form {
     display: block;
   }
-  }
   .cart-items-container {
-    display: block;
+    display: flex;
+    flex-direction: column;
+  }
   }
 /* Footer */
 .footer {

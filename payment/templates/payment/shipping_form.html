@@ -1,0 +1,53 @@
+{% extends 'store/base.html' %}
+
+{% load static %}
+{% block title %}Shipping Info | {{request.user}} {% endblock %}
+
+{% block dashboard %} {% endblock %}
+{% block cart %} {% endblock %}
+{% block shop %} {% endblock %}
+
+
+{% block content %}
+<main class="main-content">
+
+    <section class="settings">
+        <div class="settings-container">
+            {% for message in messages %}
+            <div style="padding: 6px; background-color: #8acbf7; color: #0464a3;">
+                <p>{{message}}</p>
+                
+            </div>
+            {% endfor %}
+           
+            <div class="settings-section">
+                <h3>Shipping info</h3>
+            <form action="{% url 'update_shipping_info' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    
+                   {{ form.as_p }}
+                   <!-- {% if form.photo %}
+                   <div class="file-input-container">
+                    {{ form.photo.label }}
+                    {{ form.photo }}
+                    {% endif %} -->
+                    <!-- </div> -->
+                </div>
+                
+               
+                <button type="submit" class="btn save-btn">Update Info</button>
+            </form>
+        </div>
+            
+           
+        </div>
+    </section>
+
+</main>
+{% endblock %}
+
+
+{% block footer %}
+
+{% endblock %}

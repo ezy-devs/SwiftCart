@@ -147,7 +147,6 @@ def update_cart(request):
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 
-
 class MergeCartMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if request.user.is_authenticated:

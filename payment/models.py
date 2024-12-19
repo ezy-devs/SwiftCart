@@ -18,7 +18,7 @@ class ShippingInfo(models.Model):
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Shipping Info for {self.user.username or self.session_key} - {self.address}, {self.city}"
+        return f"Shipping Info for {self.user or self.session_key} - {self.shipping_address_1}, {self.shipping_city}"
 
 class Order(models.Model):
     STATUS_CHOICES = [

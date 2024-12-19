@@ -9,6 +9,7 @@ from django.contrib.auth.forms import UserCreationForm
 from Store.views import home
 from .forms import PasswordResetForm, ForgetPasswordForm, LoginForm, RegisterForm, UpdateProfileForm
 from payment.forms import ShippingForm
+from payment.models import ShippingInfo
 
 
 def register(request):
@@ -88,6 +89,17 @@ def password_reset(request, username):
 def error_404(request):
      return render(request, 'auth/404.html', {})
 
+def update_profile(request):
+    if request.method == 'POST':
+        form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated successfully!')
+            return redirect('profile', request.user)
+        else:
+            messages.success(request, 'Request could not be completed, try again!')
+            return redirect('profile', request.user)
+
 # @login_required(login_url='login/')
 def profile(request, username):
     if request.user.is_authenticated:
@@ -95,25 +107,26 @@ def profile(request, username):
         username = request.user
         try:
             get_object_or_404(User, username=username)
+
          
         except User.objects.get(username=username).DoesNotExist:
             messages.success(request, 'User not found, please Login')
             return redirect('login')
         
-        if request.method == 'POST':
-            form = UpdateProfileForm(request.POST,request.FILES, instance=request.user.profile)
-            if form.is_valid():
-                form.save()
-                return redirect('profile')
+        form = UpdateProfileForm(instance=request.user.profile)
+        try:
 
-        else:
-            form = UpdateProfileForm(instance=request.user.profile)
-            return render(request, 'auth/profile.html', {'username': username, 'form':form})
+            user_shipping_info = ShippingInfo.objects.filter(user=request.user).first()
+            shipping_Form = ShippingForm(instance=user_shipping_info)
+
+        except ShippingInfo.objects.filter(user=request.user).DoesNotExist:
+            shipping_Form = ShippingForm()
+            
+        return render(request, 'auth/profile.html', {'username': username, 'form':form, 'shipping_Form':shipping_Form})
     else:
         messages.error(request, 'You have to login to access that page')
         return redirect(error_404)
 
-    
 
 # def forget_password(request):
 #     if request.method == 'POST':
