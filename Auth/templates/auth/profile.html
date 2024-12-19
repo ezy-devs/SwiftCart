@@ -9,7 +9,8 @@
 
 
 {% block content %}
-<main class="main-content" style="width: 80%; margin-top: 45rem;">
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<main class="main-content" style="width: 80%; margin-top: 70rem;">
 
     <section class="settings">
         <div class="settings-container">
@@ -25,22 +26,19 @@
                     <img src="{% static 'assets/images/best-design.jpeg' %}" alt="Profile Picture" class="profile-pic" style="object-fit: cover;">
                     {% endif %}
                 </center>
-                <form>
+                <form enctype="multipart/form-data">
                     <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" value="{{request.user}}">
+                        
+                       {{ form.as_p }}
+                       <!-- {% if form.photo %}
+                       <div class="file-input-container">
+                        {{ form.photo.label }}
+                        {{ form.photo }}
+                        {% endif %} -->
+                        <!-- </div> -->
                     </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" value="{{request.user.email}}">
-                    </div>
-                    <div class="form-group">
-                        <div class="file-input-container">
-                            <label for="file-upload">Upload Profile Picture</label>
-                            <input type="file" id="file-upload" name="file-upload" />
-                        </div>
-
-                    </div>
+                    
+                   
                     <button type="submit" class="btn save-btn">Save Changes</button>
                 </form>
             </div>

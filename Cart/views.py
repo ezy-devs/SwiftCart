@@ -5,7 +5,7 @@ from django.utils.deprecation import MiddlewareMixin
 from django.contrib import messages
 from Store.models import Category, Product
 from .models import Cart, CartItem
-from .forms import ShippingForm
+# from .forms import ShippingForm
 
 
 
@@ -52,20 +52,13 @@ def cart_summary(request):
         cart_items = cart.items.all()
     else:
         cart_items = []
-    for item in cart_items:
-            if item.product.is_sale:
-                price = item.product.sale_price
-            else:
-                price = item.product.price
-    total_price = price * item.quantity
     context = {
             'categories':categories,
             'cart':cart,
             'cart_items':cart_items,
-            'total_price':total_price,
+            # 'total_price':total_price,
         }
     
-    print(total_price)
     return render(request, 'cart/cart_summary.html', context)
 
 def fetch_cart(request):
@@ -91,7 +84,7 @@ def fetch_cart(request):
                 else:
                     price = item.product.price
                 item_total =  item.quantity * price
-
+                
                 total_price += float(item_total)
 
                 cart_items.append({
@@ -197,17 +190,17 @@ def remove_item(request):
 
 
 
-def checkout(request):
-    categories = Category.objects.all()
+# def checkout(request):
+#     categories = Category.objects.all()
 
-    if request.method == 'POST':
-        form = ShippingForm(request.POST)
-        if form.is_valid():
-            form.save()
-    else:
-        form = ShippingForm()
+#     if request.method == 'POST':
+#         form = ShippingForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#     else:
+#         form = ShippingForm()
 
-        return render(request, 'cart/checkout.html', {'form':form, 'categories':categories})
+#         return render(request, 'cart/checkout.html', {'form':form, 'categories':categories})
 
 
 

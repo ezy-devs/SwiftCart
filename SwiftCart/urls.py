@@ -10,6 +10,7 @@ urlpatterns = [
     path('auth/', include('Auth.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('cart/', include('Cart.urls')),
+    path('payment/', include('payment.urls'))
 ]
 # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 if settings.DEBUG:

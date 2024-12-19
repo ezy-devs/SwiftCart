@@ -7,7 +7,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserCreationForm
 from Store.views import home
-from .forms import PasswordResetForm, ForgetPasswordForm, LoginForm, RegisterForm
+from .forms import PasswordResetForm, ForgetPasswordForm, LoginForm, RegisterForm, UpdateProfileForm
+from payment.forms import ShippingForm
 
 
 def register(request):
@@ -94,11 +95,20 @@ def profile(request, username):
         username = request.user
         try:
             get_object_or_404(User, username=username)
-            return render(request, 'auth/profile.html', {'username': username})
-        
+         
         except User.objects.get(username=username).DoesNotExist:
             messages.success(request, 'User not found, please Login')
-            return redirect('register')
+            return redirect('login')
+        
+        if request.method == 'POST':
+            form = UpdateProfileForm(request.POST,request.FILES, instance=request.user.profile)
+            if form.is_valid():
+                form.save()
+                return redirect('profile')
+
+        else:
+            form = UpdateProfileForm(instance=request.user.profile)
+            return render(request, 'auth/profile.html', {'username': username, 'form':form})
     else:
         messages.error(request, 'You have to login to access that page')
         return redirect(error_404)

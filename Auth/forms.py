@@ -3,10 +3,50 @@ from django.contrib.auth.forms import UserCreationForm
 
 from django.contrib.auth.forms import SetPasswordForm, PasswordResetForm, PasswordChangeForm
 from django import forms
+from .models import Profile
 
 
 
 INPUT_CLASSES = 'input'
+
+class UpdateProfileForm(forms.ModelForm):
+    photo = forms.ImageField(
+        widget= forms.ClearableFileInput(attrs={
+            'class': 'file-input-container'
+        })
+    )
+    class Meta:
+        model = Profile
+        fields = ['full_name', 'phone_number', 'photo', 'address', 'city', 'state', 'postal_code', 'country']
+
+        widgets = {
+            'full_name': forms.TextInput(attrs={
+                'class': INPUT_CLASSES,
+            }),
+            'phone_number': forms.TextInput(attrs={
+                'class': INPUT_CLASSES,
+            }),
+            
+        
+            'address': forms.TextInput(attrs={
+                'class': INPUT_CLASSES,
+            }),
+            'city': forms.TextInput(attrs={
+                'class': INPUT_CLASSES,
+            }),
+            'state': forms.TextInput(attrs={
+                'class': INPUT_CLASSES,
+            }),
+            'postal_code': forms.TextInput(attrs={
+                'class': INPUT_CLASSES,
+            }),
+            'country': forms.TextInput(attrs={
+                'class': INPUT_CLASSES,
+            }),
+        }
+        
+
+
 class LoginForm(forms.ModelForm):
     username = forms.CharField(max_length=100)
     password = forms.CharField(widget=forms.PasswordInput)
