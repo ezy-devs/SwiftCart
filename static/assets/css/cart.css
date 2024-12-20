@@ -144,13 +144,12 @@ h2 {
 }
 #checkout-form {
   display: flex;
-  justify-content: space-between;
   gap: 10px;
 }
-#checkout-form > div {
+#checkout-form .info {
   flex: 1.5;
 }
-#checkout-form > .order-summary {
+#checkout-form .Summary {
   flex: 1;
 }
 .checkout-form h3 {
@@ -209,7 +208,7 @@ textarea {
 .checkout-btn {
   background-color: #2ecc71;
   color: white;
-  padding: 15px 30px;
+  padding: 10px;
   font-size: 18px;
   border: none;
   cursor: pointer;

@@ -26,13 +26,7 @@
         text-align: center;
     }
 </style>
-  {% for message in messages %}
-        <div class="__modal" id="modal">
-            <div class="modal-content">
-                <p> {{message}}!</p>
-            </div>
-        </div>
-        {% endfor %}
+ 
   <section id="hero">
     <div class="hero-card gradient-container">
       <img src="{% static 'assets/images/latest.jpg' %}" alt="">
@@ -47,7 +41,13 @@
       <span><a href="" class="btn btn-primary">Shop Now</a></span>
     </div>
   </section>
+  {% for message in messages %}
+       
+  <small class="info">
+      <p> {{message}}!</p>
+  </small>
 
+{% endfor %}
   <section class="section container" style="margin-top: 10px;">
     <div class="section-container">
       <div class="card">

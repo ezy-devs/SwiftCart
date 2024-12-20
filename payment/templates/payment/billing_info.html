@@ -1,0 +1,89 @@
+{% extends 'store/base.html' %}
+
+
+{% load static %}
+
+{% block title %}Cart - {{request.user}}{% endblock %}
+
+{% block forms %} {% endblock %}
+{% block dashboard %} {% endblock %}
+{% block profile %} {% endblock %}
+{% block shop %} {% endblock %}
+
+
+<!-- <link rel="stylesheet" href="{% static 'assets/css/shop.css' %}">   -->
+{% block content %}
+
+
+<!-- Checkout Page Content -->
+<section class="checkout-page">
+  <div class="container-fluid">
+    <h2>Billing Information</h2>
+
+    <div class="checkout-form">
+      <div id="checkout-form" class="form-control">
+        <div class="info">
+          
+            <h3>Shipping Products</h3>
+            <div>
+              {% for item in cart_items %}
+              <div class="card" style="padding: 10px; max-height: 80px; margin-bottom: 5px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 0; margin: 0;">
+                  <h3 class="title" style="font-size: 18px; padding: 0; margin: 0;">{{item.product_name}}</h3>
+                  <strong class="input">N{{item.total_price}}</strong>
+                </div>
+                <small>Quantity: {{item.quantity}}</small>
+              </div>
+              {% endfor %}
+
+              <h3>Shipping Information</h3>
+
+              <div class="form-group">
+                <p>Shipping full name: {{shipping_info.shipping_full_name}}</p>
+                <p>Shipping full name: {{shipping_info.shipping_email}}</p>
+                <p>Shipping phone number: {{shipping_info.shipping_phone_number}}</p>
+                <p>Shipping address 1: {{shipping_info.shipping_address_1}}</p>
+                <p>Shipping address 2: {{shipping_info.shipping_address_2}}</p>
+                <p>Shipping city: {{shipping_info.shipping_city}}</p>
+                <p>Shipping state: {{shipping_info.shipping_state}}</p>
+                <p>Shipping postal code: {{shipping_info.shipping_postal_code}}</p>
+                <p>Shipping country: {{shipping_info.shipping_country}}</p>
+
+
+              </div>
+              <div class="form-group">
+                <a href="{% url 'update_shipping_info' %}" class="checkout-btn" style="width: 30%; text-decoration: none;" > Update Info</a>
+              </div>
+            </div>
+           
+           <form action="{% url 'process_order' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+              {{billing_form}}
+            </div>
+            <div class="form-group">
+              <button type="submit" class="checkout-btn" style="width: 30%;"> Pay Now</button>
+            </div>
+          </form>
+        </div>
+        <form action="" class="Summary">
+          <div class="order-summary">
+            <h3>Order Summary</h3>
+            <ul>
+              <li>Subtotal: N149.98</li>
+              <li>Shipping: N10.00</li>
+              <li>Total: N{{total_price|floatformat:2}}</li>
+            </ul>
+            <!-- <button type="submit" class="checkout-btn">Complete Purchase</button> -->
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+<!-- <script src="{% static 'assets/js/cart.js' %}"></script> -->
+
+{% block footer %} {% endblock %}
