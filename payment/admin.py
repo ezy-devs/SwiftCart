@@ -19,5 +19,14 @@ admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
 # admin.site.register(ShippingInfo)
-admin.site.register(Order)
+
+class OrderItemInline(admin.StackedInline):
+    model = OrderItem
+    extra = 0
+
+class OrderAdmin(admin.ModelAdmin):
+    inlines = [OrderItemInline]
+    
+admin.site.register(Order, OrderAdmin)
+
 admin.site.register(OrderItem)

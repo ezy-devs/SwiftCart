@@ -52,7 +52,10 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Order #{self.id} - {self.user.username} - {self.status}"
+        if self.user:
+            return f"Order #{self.id} - {self.user.username} - {self.status}"
+        else:
+            return f"Order #{self.id} - Guest - {self.status}"
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
