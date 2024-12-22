@@ -30,9 +30,8 @@ def add_to_cart(request):
             cart_item.save()
 
             cart_count = CartItem.objects.filter(cart=cart).count()
-            response = JsonResponse({'message': 'Item added to cart', 'cart_count':cart_count})
-            messages.success(request, response)
-            return response
+           
+            return JsonResponse({'message': 'Item added to cart', 'cart_count':cart_count})
     
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
@@ -167,24 +166,59 @@ def remove_item(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         product = get_object_or_404(Product, id=product_id)
+        
         if request.user.is_authenticated:
             cart = Cart.objects.filter(user=request.user).first()
-            item = CartItem.objects.get(cart=cart, product=product)
-
         else:
             session_key = request.session.session_key
-            cart = Cart.objects.filter(session_key=session_key)
-            item = CartItem.objects.get(cart=cart, product=product)
-
-        item.delete()
-
-        response = JsonResponse({'message': 'Item removed'})
+            if not session_key:
+                request.session.create()
+                session_key = request.session.session_key
+            cart = Cart.objects.filter(session_key=session_key).first()
         
-        messages.success(request, 'Item removed')
-        return response
-    response = JsonResponse({'message': 'Unable to process request'})
-    messages.success(request, response)
-    return response
+        if cart:
+            item = CartItem.objects.filter(cart=cart, product=product).first()
+            if item:
+                item.delete()
+                # messages.success(request, 'Item removed')
+                return JsonResponse({'message': 'Item removed'})
+            else:
+                # messages.error(request, 'Item not found in cart')
+                return JsonResponse({'message': 'Item not found in cart'}, status=404)
+        else:
+            # messages.error(request, 'Cart not found')
+            return JsonResponse({'message': 'Cart not found'}, status=404)
+    
+    # messages.error(request, 'Invalid request method')
+    return JsonResponse({'message': 'Invalid request method'}, status=400)
+
+# def remove_item(request):
+#     if request.method == 'POST':
+#         product_id = request.POST.get('product_id')
+#         product = get_object_or_404(Product, id=product_id)
+#         if request.user.is_authenticated:
+#             cart = Cart.objects.filter(user=request.user).first()
+#             # item = CartItem.objects.get(cart=cart, product=product)
+
+#         else:
+#             session_key = request.session.session_key
+#             if not session_key:
+#                 session_key = request.session.create()
+
+#             cart = Cart.objects.filter(session_key=session_key)
+#         if cart:
+
+#             item = CartItem.objects.get(cart=cart, product=product).first()
+#             if item:
+#                 item.delete()
+#                 return JsonResponse({'message': 'Item removed'})
+#             else:
+#                 return JsonResponse({'error': 'Item not found'}, status=404)
+            
+#         else:
+#             return JsonResponse({'error': 'Cart not found'}, status=404)
+        
+#     return JsonResponse({'error': 'Invalid request'}, status=405)
 
 
 

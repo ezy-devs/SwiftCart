@@ -15,13 +15,11 @@
 <br>
 <br><br>
 <div class="container-fluid">
-    {% for message in messages %}
-    <div class="__modal" id="modal">
-        <div class="modal-content">
-            <p> {{message}}!</p>
+    
+        <div style="padding: 5px; background-color: #9adef8; color: #10a8ee; display: none; border-radius: 5px;" id="msg-modal">
+            <p id="message"></p>
         </div>
-    </div>
-    {% endfor %}
+        
     <div class="product-detail-page">
 
         <div style="display: flex; justify-content: space-between;" class="product-detail">
@@ -132,8 +130,10 @@
                                 csrfmiddlewaretoken: '{{csrf_token}}',
                                 action: 'post'
                             },
-                            success: function (json) {
-                                console.log(json)
+                            success: function (response) {
+                                console.log(response)
+                                document.getElementById('message').textContent = response.message;
+                                document.getElementById('msg-modal').style.display = 'block';
                             },
                             error: function (xhr, errmsg, err) {
 

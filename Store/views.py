@@ -12,7 +12,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import ProductSerializer, CategorySerializer
 
-from .models import Category, Product, Collection
+from .models import Category, Product, Collection, CollectionItem
 from .forms import ProductForm
 
 
@@ -25,7 +25,7 @@ def home(request):
     best_selling_products = best_selling()
 
     categories = Category.objects.all()
-    
+    collections = Collection.objects.all()
     # products_category = product_category(request, id=pk)
     context = {
         'trending_products':trending_products,
@@ -33,8 +33,20 @@ def home(request):
         'featured_products':featured_products,
         'best_selling_products':best_selling_products,
         'categories':categories,
+        'collections':collections,
     }
     return render(request, 'store/index.html', context)
+
+
+def collection_list(request):
+    collections = Collection.objects.all()
+    return render(request, 'store/collection_list.html', {'collections':collections})
+
+def collection_detail(request, slug):
+     collection = get_object_or_404(Collection, slug=slug)
+     collection_items = CollectionItem.objects.filter(collection=collection)
+     return render(request, 'store/collection_detail.html', {'collection':collection, 'collection_items':collection_items})
+
 
 def best_selling():
     best_selling = Product.objects.filter(is_best_seller=True)

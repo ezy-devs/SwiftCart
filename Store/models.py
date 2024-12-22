@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.text import slugify
 import uuid
 
 
@@ -30,18 +31,33 @@ class Product(models.Model):
     category = models.ForeignKey(Category, related_name='product_category', on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, related_name='addes_product', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return f'{self.name}'
     
 class Collection(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-    product = models.ForeignKey(Product, related_name='product_collections', on_delete=models.CASCADE)
-    created_by = models.ForeignKey(User, related_name='addes_collection', on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True, null=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    image = models.ImageField(upload_to='collections/', blank=True, null=True)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super(Collection, self).save(*args, **kwargs)
 
     def __str__(self):
-        return f'{self.name}'
+        return self.name
 
 
+class CollectionItem(models.Model):
+    collection = models.ForeignKey(Collection, related_name='collection_items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, related_name='product_items', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f'{self.collection.name} - {self.product.name}'

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Collection List</h1>
+    <ul>
+        {% for collection in collections %}
+            <li class="collection-item"></li>
+            <div class="collection-card">
+                <h2>{{ collection.name }}</h2>
+                <p>{{ collection.description }}</p>
+                <a href="{{ collection.get_absolute_url }}">View Collection</a>
+            </div>
+            </li>
+        {% endfor %}
+        {% for collection in collections %}
+            <li>{{ collection.name }}</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

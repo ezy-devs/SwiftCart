@@ -41,13 +41,7 @@
       <span><a href="" class="btn btn-primary">Shop Now</a></span>
     </div>
   </section>
-  {% for message in messages %}
-       
-  <small class="info">
-      <p> {{message}}!</p>
-  </small>
-
-{% endfor %}
+  
   <section class="section container" style="margin-top: 10px;">
     <div class="section-container">
       <div class="card">
@@ -164,54 +158,21 @@
   <section class="section container">
     <h1 class="title">Our Collections</h1>
     <div class="section-container">
+      {% for collection in collections %}
       <div class="card card-bg gradient-container">
-        <img src="{% static 'assets/images/best-design.jpeg' %}" alt="images/images (20).jpeg">
+        <img src="{{collection.image.url}}" alt="images/images (20).jpeg">
         <div class="hero-text collection">
           <div>
-            <h2>Fall 2024 Runaway Collection</h2>
+            <h2>{{collection.name}}</h2>
             <p>
-              Shop all latest styles from top Designers
+              {{collection.description}}
             </p>
           </div>
-          <span><a href="" class="btn btn-primary">Shop Now</a></span>
+          <span><a href="{% url 'collection_detail' collection.slug %}" class="btn">View Collection</a></span>
         </div>
       </div>
-      <div class="card card-bg gradient-container">
-        <img src="{% static 'assets/images/men-wear (4).jpeg' %}" alt="images/images (20).jpeg">
-        <div class="hero-text collection">
-          <div>
-            <h2>Fall 2024 Runaway Collection</h2>
-            <p>
-              Shop all latest styles from top Designers
-            </p>
-          </div>
-          <span><a href="" class="btn btn-primary">Shop Now</a></span>
-        </div>
-      </div>
-      <div class="card card-bg gradient-container">
-        <img src="{% static 'assets/images/men-wear (2).jpeg' %}" alt="images/images (20).jpeg">
-        <div class="hero-text collection">
-          <div>
-            <h2>Fall 2024 Runaway Collection</h2>
-            <p>
-              Shop all latest styles from top Designers
-            </p>
-          </div>
-          <span><a href="" class="btn btn-primary">Shop Now</a></span>
-        </div>
-      </div>
-      <div class="card card-bg gradient-container">
-        <img src="{% static 'assets/images/agbada.jpeg' %}" alt="images/images (20).jpeg">
-        <div class="hero-text collection">
-          <div>
-            <h2>Fall 2024 Runaway Collection</h2>
-            <p>
-              Shop all latest styles from top Designers
-            </p>
-          </div>
-          <span><a href="" class="btn btn-primary">Shop Now</a></span>
-        </div>
-      </div>
+      {% endfor %}
+      
     </div>
   </section>
 

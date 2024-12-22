@@ -177,6 +177,7 @@ def process_order(request):
                 for item in items:
                     order_item = OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
                     order_item.save()
+                items.delete()
 
         else:
             session_key = request.session.session_key
@@ -196,7 +197,8 @@ def process_order(request):
                 for item in items:
                     order_item = OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
                     order_item.save()
-
+            items.delete()
+            
         messages.success(request, 'Order placed successfully!')
         return redirect('cart')
 

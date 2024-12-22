@@ -18,4 +18,6 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     # path('search_shop/', views.search_shop, name='search_shop'),
     path('search_shop/', views.search_shop, name='search_shop'),
+    path('collection/<slug:slug>/', views.collection_detail, name='collection_detail'),
+    path('collections/', views.collection_list, name='collections'),
 ]

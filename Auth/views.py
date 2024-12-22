@@ -61,8 +61,10 @@ def user_login(request):
 
 
 def logout_user(request):
+    messages.success(request, 'User logged out!')
     logout(request)
-    return redirect(home)
+    return redirect('home')
+
 
 @login_required(login_url='login/')
 def password_reset(request, username):
@@ -128,18 +130,3 @@ def profile(request, username):
         return redirect(error_404)
 
 
-# def forget_password(request):
-#     if request.method == 'POST':
-#         form = ForgetPasswordForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('login')
-#         else:
-            
-#             for error in form.errors:
-#                 messages.error(request, error)
-#                 return redirect('forget_password')
-#     form = ForgetPasswordForm(request)
-#     return render(request, 'auth/password_forget.html', {'form':form})
-
-    
