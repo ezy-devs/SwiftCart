@@ -22,17 +22,12 @@
            
             <div class="settings-section">
                 <h3>Shipping info</h3>
-            <form action="{% url 'update_shipping_info' %}" method="post" enctype="multipart/form-data">
+            <form action="{% url 'shipping_info' %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group">
                     
                    {{ form.as_p }}
-                   <!-- {% if form.photo %}
-                   <div class="file-input-container">
-                    {{ form.photo.label }}
-                    {{ form.photo }}
-                    {% endif %} -->
-                    <!-- </div> -->
+                  
                 </div>
                 
                

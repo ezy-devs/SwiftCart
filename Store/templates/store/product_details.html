@@ -15,11 +15,11 @@
 <br>
 <br><br>
 <div class="container-fluid">
-    
-        <div style="padding: 5px; background-color: #9adef8; color: #10a8ee; display: none; border-radius: 5px;" id="msg-modal">
-            <p id="message"></p>
-        </div>
-        
+
+    <div style="padding: 5px; background-color: #9adef8; color: #10a8ee; display: none; border-radius: 5px;" id="msg-modal">
+        <p id="message"></p>
+    </div>
+
     <div class="product-detail-page">
 
         <div style="display: flex; justify-content: space-between;" class="product-detail">
@@ -101,7 +101,7 @@
 
                     }
                 </style>
-                
+
 
 
                 <div class="quantity">
@@ -113,9 +113,14 @@
                 </div>
 
                 <div class="cta-buttons">
-                    <button type="submit" class="add-to-cart btn" value="{{product.id}}" id="add-to-cart">Add to
-                        Cart</button>
-                    <button class="buy-now btn"><a href="{% url 'home' %}" style="text-decoration: none; color: #fafafa;">Home</a></button>
+                    <!-- <button type="submit" class="add-to-cart btn" value="{{product.id}}" id="add-to-cart">Add to
+                        Cart</button> -->
+                    <form id="add-to-cart-form">
+                        <input type="hidden" id="product-id" value="{{ product.id }}">
+                        <button type="button" id="add-to-cart">Add to Cart</button>
+                    </form>
+                    <button class="buy-now btn"><a href="{% url 'home' %}"
+                            style="text-decoration: none; color: #fafafa;">Home</a></button>
                 </div>
 
                 <script>
@@ -125,21 +130,26 @@
                             type: 'POST',
                             url: "{% url 'add_to_cart' %}",
                             data: {
-                                product_id: $('#add-to-cart').val(),
+                                product_id: $('#product-id').val(),
                                 quantity: $('#quantity').val(),
                                 csrfmiddlewaretoken: '{{csrf_token}}',
                                 action: 'post'
                             },
+                            // success: function (response) {
+                            //     console.log(response)
+                            //     document.getElementById('message').textContent = response.message;
+                            //     document.getElementById('msg-modal').style.display = 'block';
+                            // },
                             success: function (response) {
-                                console.log(response)
-                                document.getElementById('message').textContent = response.message;
-                                document.getElementById('msg-modal').style.display = 'block';
-                            },
+                    console.log(response);
+                    $('#message').text(response.message);
+                    $('#msg-modal').fadeIn().delay(2000).fadeOut();
+                },
                             error: function (xhr, errmsg, err) {
-
+                                console.log(xhr.status + ": " + xhr.responseText);
                             }
-                        })
-                    })
+                        });
+                    });
                 </script>
                 <div class="product-stock">
                     {% if product.in_stock == 1 %}

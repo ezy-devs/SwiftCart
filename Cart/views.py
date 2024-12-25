@@ -27,13 +27,16 @@ def add_to_cart(request):
         cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
         if not created:
             cart_item.quantity += int(quantity)
-            cart_item.save()
+        else:
+            cart_item.quantity = quantity
 
-            cart_count = CartItem.objects.filter(cart=cart).count()
+        cart_item.save()
+
+        cart_count = CartItem.objects.filter(cart=cart).count()
            
-            return JsonResponse({'message': 'Item added to cart', 'cart_count':cart_count})
+        return JsonResponse({'message': 'Item added to cart', 'cart_count':cart_count})
     
-    return JsonResponse({'error': 'Invalid request'}, status=400)
+    return JsonResponse({'message': 'Invalid request method'}, status=400)
 
 
 

@@ -49,3 +49,11 @@ class PaymentForm(forms.Form):
     card_state = forms.CharField(label='', widget=forms.TextInput(attrs={'class':INPUT_CLASSES, 'placeholder':'State'}))
     card_zipcode = forms.CharField(label='', widget=forms.TextInput(attrs={'class':INPUT_CLASSES, 'placeholder':'Zip code'}))
     card_country = forms.CharField(label='', widget=forms.TextInput(attrs={'class':INPUT_CLASSES, 'placeholder':'Country'}))
+
+
+
+
+
+class PaymentForm(forms.Form):
+    email = forms.EmailField()
+    amount = forms.IntegerField()

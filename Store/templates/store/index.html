@@ -183,34 +183,34 @@
     <div class="section-container">
     
         {% for product in featured_products reversed %}
-      <div class="card">
-        <div class="card-img">
-          <img src="{{product.image.url}}" alt="images/images (20).jpeg">
-        </div>
-        <div class="card-content">
-          <a href="{% url 'product' product.id %}" style="text-decoration: none; color: #222;">
-          <div>
-            <h3 class="product-title">{{product}}</h3>
-            <p class="product-description" style="padding: 0; margin: 0;">
-              {{product.description|truncatewords:10}}..
-            </p>
-            {% if product.is_sale%}
-            <p class="product-price" style="padding: 0; margin: 0;">N{{product.sale_price}} <span class="old-price"> N{{product.price}} </span></p>
-              {% else %}
-              <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} </p>
-            {% endif %}
-            
-            <div class="product-rating">
-              <span class="rating-stars">★★★★☆</span>
-              <span class="rating-count">(120 reviews)</span>
+        <div class="card">
+          <div class="card-img">
+            <img src="{{product.image.url}}" alt="images/images (20).jpeg">
+          </div>
+          <div class="card-content">
+            <a href="{% url 'product' product.id %}" style="text-decoration: none; color: #222;">
+            <div>
+              <h3 class="product-title">{{product}}</h3>
+              <p class="product-description" style="padding: 0; margin: 0;">
+                {{product.description|truncatewords:2}}..
+              </p>
+              {% if product.is_sale%}
+              <p class="product-price" style="padding: 0; margin: 0;">N{{product.sale_price}} <span class="old-price"> N{{product.price}} </span></p>
+                {% else %}
+                <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} </p>
+              {% endif %}
+              
+              <div class="product-rating">
+                <span class="rating-stars">★★★★☆</span>
+                <span class="rating-count">(120 reviews)</span>
+              </div>
+            </div>
+            </a>
+            <div class="action">
+              <span id="addwaitlist"><i class="fa fa-heart"></i></span>
             </div>
           </div>
-          </a>
-          <div class="action">
-            <span id="addwaitlist"><i class="fa fa-heart"></i></span>
-          </div>
         </div>
-      </div>
       {% endfor %}
 
     </div>

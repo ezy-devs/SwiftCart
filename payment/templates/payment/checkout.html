@@ -22,40 +22,44 @@
 
     <div class="checkout-form">
       <div id="checkout-form" class="form-control">
-        <form action="{% url 'billing_info' %}" class="info" method="post">
-          {% csrf_token %}
-          <h3>Shipping Products</h3>
-          <div>
-            {% for item in cart_items %}
-            <div class="card" style="padding: 10px; max-height: 80px; margin-bottom: 5px;">
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 0; margin: 0;">
-                <h3 class="title" style="font-size: 18px; padding: 0; margin: 0;">{{item.product_name}}</h3>
-                <strong class="input">N{{item.total_price}}</strong>
+        <div class="info">
+          <form method="post">
+            {% csrf_token %}
+            <h3>Shipping Products</h3>
+            <div>
+              {% for item in cart_items %}
+              <div class="card" style="padding: 10px; max-height: 80px; margin-bottom: 5px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 0; margin: 0;">
+                  <h3 class="title" style="font-size: 18px; padding: 0; margin: 0;">{{item.product_name}}</h3>
+                  <strong class="input">N{{item.item_price}}</strong>
+                </div>
+                <small>Quantity: {{item.quantity}}</small>
               </div>
-              <small>Quantity: {{item.quantity}}</small>
+              {% endfor %}
+  
+              <!-- <h3>Shipping Information</h3>
+   -->
+              <!-- <div class="form-group">
+                {{shipping_form.as_p}}
+              </div> -->
+              
             </div>
-            {% endfor %}
+        </div>
+        
+       
 
-            <h3>Shipping Information</h3>
-
-            <div class="form-group">
-              {{shipping_form.as_p}}
-            </div>
-            <div class="form-group">
-              <button type="submit" class="checkout-btn" style="width: 30%;"> Update Info</button>
-            </div>
-          </div>
-        </form>
-
-        <form action="" class="Summary">
+        <div  class="Summary">
           <div class="order-summary">
             <h3>Order Summary</h3>
             <ul>
               <li>Subtotal: N149.98</li>
               <li>Shipping: N10.00</li>
-              <li>Total: N{{total_price|floatformat:2}}</li>
+              <li>Total: N{{cart_total|floatformat:2}}</li>
             </ul>
-            <button type="submit" class="checkout-btn">Complete Purchase</button>
+            <div class="form-group">
+              <a href="{% url 'shipping_info' %}" class="checkout-btn" style="width: 30%; text-decoration: none;"> Continue</a>
+            </div>
+            <!-- <button type="submit" class="checkout-btn">Continue to Payment</button> -->
           </div>
         </form>
       </div>

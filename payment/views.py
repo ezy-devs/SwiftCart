@@ -1,13 +1,185 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib import messages
-
+from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+from django.urls import reverse
+import json
+import requests
 from Store.models import Category, Product
 from Cart.models import Cart, CartItem
 from .forms import ShippingForm, PaymentForm
 from .models import ShippingInfo, Order, OrderItem
+from .utills import calculate_cart_total
+
+from paystackapi.paystack import Paystack
+from paystackapi.transaction import Transaction
+import uuid
+
+paystack = Paystack(secret_key=settings.PAYSTACK_SECRET_KEY)
 
 
-def update_shipping_info(request):
+
+def initiate_payment(request):
+    my_shipping = request.session.get('my_shipping')
+    if not my_shipping:
+        messages.error(request, 'Shipping info not found')
+        return redirect('cart')
+    
+    # Construct shipping info
+    shipping_address = (
+        f"{my_shipping.get('shipping_address_1')} - {my_shipping.get('shipping_address_2')}, "
+        f"{my_shipping.get('shipping_city')}, "
+        f"{my_shipping.get('shipping_state')}, "
+        f"{my_shipping.get('shipping_country')}"
+    )
+    full_name = my_shipping.get('shipping_full_name')
+    email = my_shipping.get('shipping_email')
+
+    total_amount = calculate_cart_total(request)
+    if total_amount is None:
+        messages.error(request, 'Cart is empty, cannot place an order')
+        return redirect('cart')
+    
+    if request.method == 'POST':
+        # Get the amount and user info
+        if request.user.is_authenticated:
+            user = request.user
+
+            # Ensure total amount is converted to kobo (Paystack requires integer amounts in kobo)
+            try:
+                total_amount = int(float(total_amount) * 100)
+            except ValueError:
+                messages.error(request, 'Invalid amount')
+                return redirect('cart')
+
+            reference = str(uuid.uuid4())
+
+            order = Order.objects.create(
+                user=user,
+                amount_paid=total_amount / 100,  # Save the amount in naira
+                reference=reference,
+                full_name=full_name,
+                email=email,
+                shipping_address=shipping_address,
+            )
+
+            # Initiate Paystack payment
+            url = "https://api.paystack.co/transaction/initialize"
+            headers = {
+                'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',  # Replace with your Paystack secret key
+            }
+            data = {
+                'email': email,
+                'amount': total_amount,  # Send amount in kobo
+                'reference': reference,
+                'callback_url': 'https://swiftcart-production.up.railway.app/verify-payment/',
+            }
+
+            response = requests.post(url, headers=headers, json=data)
+            if response.status_code == 200:
+                payment_url = response.json().get('data', {}).get('authorization_url', '')
+                if payment_url:
+                    return redirect(payment_url)
+                else:
+                    messages.error(request, 'Unable to retrieve payment URL')
+                    return redirect('cart')
+            else:
+                error_message = response.json().get('message', 'Payment initialization failed')
+                messages.error(request, error_message)
+                return redirect('cart')
+        else:
+            messages.error(request, 'User is not authenticated')
+            return redirect('login')
+    
+    return render(request, 'payment/initiate_payment.html', {
+        'shipping_info': my_shipping,
+        'total_amount': total_amount,
+    })
+
+
+
+def verify_payment(request):
+    trxref = request.GET.get('trxref')
+    reference = request.GET.get('reference')
+
+    if not trxref or not reference:
+        messages.error(request, 'Transaction reference or reference missing.')
+        return redirect('cart')  # Redirect to cart if missing
+
+    # Perform verification with Paystack API
+    url = f"https://api.paystack.co/transaction/verify/{trxref}"
+    headers = {
+        'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
+    }
+
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        data = response.json().get('data', {})
+        status = data.get('status')
+
+        if status == 'success':
+            # Handle successful payment (e.g., update order status)
+            messages.success(request, 'Payment successful!')
+            # Optionally, update the order in the database
+        else:
+            messages.error(request, 'Payment verification failed.')
+            return redirect('cart')
+    else:
+        messages.error(request, 'Error verifying payment with Paystack.')
+        return redirect('cart')
+
+    return render(request, 'payment/verify_payment.html', {
+        'trxref': trxref,
+        'reference': reference,
+    })
+
+           
+
+
+
+# def initiate_payment(request):
+#     if request.method == 'POST':
+#         form = PaymentForm(request.POST)
+#         if form.is_valid():
+#             email = form.cleaned_data['email']
+#             amount = form.cleaned_data['amount'] * 100  # Convert to kobo
+#             response = Transaction.initialize(reference='unique_transaction_reference', amount=amount, email=email)
+#             if response['status']:
+#                 return redirect(response['data']['authorization_url'])
+#             else:
+#                 return JsonResponse(response, status=400)
+#     else:
+#         form = PaymentForm()
+#     return render(request, 'payment/initiate_payment.html', {'form': form})
+
+# def verify_payment(request, reference):
+#     response = Transaction.verify(reference)
+#     if response['status']:
+#         # Payment was successful
+#         return JsonResponse(response)
+#     else:
+#         # Payment failed
+#         return JsonResponse(response, status=400)
+
+
+
+
+@csrf_exempt
+def paystack_webhook(request):
+    if request.method == 'POST':
+        event = json.loads(request.body)
+        if event['event'] == 'charge.success':
+            reference = event['data']['reference']
+            # Update payment status in your database
+            # ...
+        return HttpResponse(status=200)
+    return HttpResponse(status=400)
+
+
+def shipping_info(request):
     if request.user.is_authenticated:
         shipping_info = ShippingInfo.objects.filter(user=request.user).first()
 
@@ -29,10 +201,11 @@ def update_shipping_info(request):
             
             messages.success(request, 'Shipping info updated successfully!')
             # return redirect('profile', request.user.username if request.user.is_authenticated else 'guest')
-            return redirect(update_shipping_info)
+            cart_total = float(request.session['cart_total'])
+            return redirect(f"{reverse('initiate_payment')}?amount={cart_total}")
         else:
             messages.error(request, 'could not process request, try again!')
-            return redirect(update_shipping_info)
+            return redirect('shipping_info')
     else:
         form = ShippingForm(instance=shipping_info)
 
@@ -49,7 +222,7 @@ def checkout(request):
         cart = Cart.objects.filter(session_key=session_key).first()
         shipping_info = ShippingInfo.objects.filter(session_key=session_key).first()
     cart_items = []
-    total_price = 0.0
+    total_amount = 0.0
     if cart:
         
         cart_item_list = cart.items.all()
@@ -61,18 +234,25 @@ def checkout(request):
                 price = item.product.price
             item_total =  item.quantity * price
             
-            total_price += float(item_total)
+            total_amount += float(item_total)
+            request.session['cart_total'] = total_amount
+            # total_price = total_price
+            # request.session['total_price'] = total_price
+            # total_price = request.session.get('total_price')
             
+            print('Total price: ' + str(total_amount))
+
             cart_items.append({
                     'product_id': item.product.id,
                     'product_image': item.product.image.url,
                     'product_name': item.product.name,
                     'description': item.product.description,
                     'quantity': item.quantity,
-                    'total_price': item_total,
+                    'item_price': item_total,
                     
                 })
-            print(cart_items)
+            # request.session.create('cart_items') = cart_items
+            
         
     cart_items.reverse()
     shipping_form = ShippingForm(instance=shipping_info)
@@ -81,7 +261,7 @@ def checkout(request):
             'categories':categories,
             'cart':cart,
             'cart_items':cart_items,
-            'total_price':total_price,
+            'cart_total':total_amount,
             'shipping_form':shipping_form,
         }
     return render(request, 'payment/checkout.html', context)
@@ -207,26 +387,4 @@ def process_order(request):
         return redirect('home')
 
 
-def calculate_cart_total(request):
-    """
-    Calculates the total price of items in the cart for the current user or session.
-    """
-    total_price = 0.0
-    cart = None
-
-    if request.user.is_authenticated:
-        cart = Cart.objects.filter(user=request.user).first()
-    else:
-        session_key = request.session.session_key
-        if session_key:
-            cart = Cart.objects.filter(session_key=session_key).first()
-
-    if not cart or not cart.items.exists():
-        return None
-
-    for item in cart.items.all():
-        price = item.product.sale_price if item.product.is_sale else item.product.price
-        total_price += item.quantity * float(price)
-
-    return total_price
 

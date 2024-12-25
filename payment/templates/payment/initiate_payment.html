@@ -1,0 +1,36 @@
+{% extends 'store/base.html' %}
+
+
+{% load static %}
+
+{% block title %}Cart - {{request.user}}{% endblock %}
+
+{% block forms %} {% endblock %}
+{% block dashboard %} {% endblock %}
+{% block profile %} {% endblock %}
+{% block shop %} {% endblock %}
+
+
+<!-- <link rel="stylesheet" href="{% static 'assets/css/shop.css' %}">   -->
+{% block content %}
+
+
+<!-- Checkout Page Content -->
+<section class="checkout-page">
+    <div class="container-fluid">
+        <h1>Initiate Payment</h1>
+        <div class="checkout-form">
+            <div id="checkout-form" class="form-control">
+                <p><strong>Shipping Address:</strong> {{ shipping_info.shipping_address }}</p>
+<p><strong>Total Amount:</strong> ₦{{ total_amount }}</p>
+<form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="amount" value="{{ total_amount }}">
+    <button type="submit" class="btn btn-primary">Proceed to Paystack</button>
+</form>
+
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

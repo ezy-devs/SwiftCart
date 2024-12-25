@@ -28,6 +28,9 @@ DEBUG = True
 ALLOWED_HOSTS = ["swiftcart-production.up.railway.app", "127.0.0.1"]
 
 
+PAYSTACK_PUBLIC_KEY = 'pk_test_e42124b229e8bcad610a36853618f1ab2eb24552'
+PAYSTACK_SECRET_KEY = 'sk_test_bde5c40fe82c5cdfe39d1cf74709fcbbb525821d'
+
 # Application definition
 
 INSTALLED_APPS = [

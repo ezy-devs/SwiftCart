@@ -39,14 +39,14 @@
               <h3>Shipping Information</h3>
 
               <div class="form-group">
-                <p>Shipping full name: {{shipping_info.shipping_full_name}}</p>
+                <!-- <p>Shipping full name: {{shipping_info.shipping_full_name}}</p>
                 <p>Shipping address 2: {{shipping_info.shipping_email}}</p>
                 <p>Shipping address 1: {{shipping_info.shipping_address_1}}</p>
                 <p>Shipping address 2: {{shipping_info.shipping_address_2}}</p>
                 <p>Shipping city: {{shipping_info.shipping_city}}</p>
                 <p>Shipping state: {{shipping_info.shipping_state}}</p>
                 <p>Shipping postal code: {{shipping_info.shipping_postal_code}}</p>
-                <p>Shipping country: {{shipping_info.shipping_country}}</p>
+                <p>Shipping country: {{shipping_info.shipping_country}}</p> -->
 
 
               </div>
@@ -55,7 +55,7 @@
               </div>
             </div>
            
-           <form action="{% url 'process_order' %}" method="post">
+           <form action="{% url 'initiate_payment' %}" method="post">
             {% csrf_token %}
             <div class="form-group">
               {{billing_form}}

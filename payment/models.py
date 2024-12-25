@@ -31,6 +31,16 @@ def create_or_update_user_shipping(sender, instance, created, **kwargs):
     else:  # If the User instance is updated
         instance.shipping_info
 
+class Transaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    session_key = models.CharField(max_length=255, null=True, blank=True)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    reference = models.CharField(max_length=100, unique=True)
+    shipping_info = models.ForeignKey(ShippingInfo, on_delete=models.CASCADE, null=True, blank=True)
+    status = models.CharField(max_length=20, default='pending')  # pending, success, failed
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
 
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -43,6 +53,7 @@ class Order(models.Model):
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders', null=True, blank=True)
     session_key = models.CharField(max_length=255, null=True, blank=True)
+    reference = models.CharField(max_length=100, unique=True)
     full_name = models.CharField(max_length=255, null=True)
     email = models.CharField(max_length=255, default='')
     shipping_address = models.CharField(max_length=255, null=True,)
