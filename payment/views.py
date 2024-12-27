@@ -47,7 +47,6 @@ def initiate_payment(request):
         if request.user.is_authenticated:
             user = request.user
 
-            # Ensure total amount is converted to kobo (Paystack requires integer amounts in kobo)
             try:
                 total_amount = int(float(total_amount) * 100)
             except ValueError:
@@ -64,40 +63,44 @@ def initiate_payment(request):
                 email=email,
                 shipping_address=shipping_address,
             )
+            
+            
+            
+        # Initiate Paystack payment
+        url = "https://api.paystack.co/transaction/initialize"
+        headers = {
+            'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',  
+        }
+        data = {
+            'full_name':full_name,
+            'email': email,
+            'amount': total_amount,  # Send amount in kobo
+            'reference': reference,
+            'callback_url': request.build_absolute_uri(reverse('verify-payment')),
+        }
 
-            # Initiate Paystack payment
-            url = "https://api.paystack.co/transaction/initialize"
-            headers = {
-                'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',  # Replace with your Paystack secret key
-            }
-            data = {
-                'email': email,
-                'amount': total_amount,  # Send amount in kobo
-                'reference': reference,
-                'callback_url': 'https://swiftcart-production.up.railway.app/verify-payment/',
-            }
-
-            response = requests.post(url, headers=headers, json=data)
-            if response.status_code == 200:
-                payment_url = response.json().get('data', {}).get('authorization_url', '')
-                if payment_url:
-                    return redirect(payment_url)
-                else:
-                    messages.error(request, 'Unable to retrieve payment URL')
-                    return redirect('cart')
+        response = requests.post(url, headers=headers, json=data)
+        if response.status_code == 200:
+            response_data = response.json().get('data', {})
+            authorization_url = response_data.get('authorization_url', '')
+            trxref = response_data.get('reference', '')
+            
+            
+            if authorization_url and trxref:
+                return redirect(f"{authorization_url}?trxref={trxref}&reference={trxref}")
+            
             else:
-                error_message = response.json().get('message', 'Payment initialization failed')
-                messages.error(request, error_message)
+                messages.error(request, 'Unable to retrieve payment URL')
                 return redirect('cart')
         else:
-            messages.error(request, 'User is not authenticated')
-            return redirect('login')
+            error_message = response.json().get('message', 'Payment initialization failed')
+            messages.error(request, error_message)
+            return redirect('cart')
     
     return render(request, 'payment/initiate_payment.html', {
         'shipping_info': my_shipping,
         'total_amount': total_amount,
     })
-
 
 
 def verify_payment(request):
@@ -106,66 +109,62 @@ def verify_payment(request):
 
     if not trxref or not reference:
         messages.error(request, 'Transaction reference or reference missing.')
-        return redirect('cart')  # Redirect to cart if missing
+        return redirect('cart')
 
-    # Perform verification with Paystack API
     url = f"https://api.paystack.co/transaction/verify/{trxref}"
-    headers = {
-        'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}',
-    }
+    headers = {'Authorization': f'Bearer {settings.PAYSTACK_SECRET_KEY}'}
 
     response = requests.get(url, headers=headers)
 
     if response.status_code == 200:
         data = response.json().get('data', {})
         status = data.get('status')
+        order = get_order(request, reference)
+
+        if not order:
+            return redirect('cart')
 
         if status == 'success':
-            # Handle successful payment (e.g., update order status)
+            cart = get_cart(request)
+            if cart:
+                handle_cart_items(cart, order)
             messages.success(request, 'Payment successful!')
-            # Optionally, update the order in the database
+            
+            return redirect(f"{reverse('payment_success')}?reference={reference}")
         else:
             messages.error(request, 'Payment verification failed.')
-            return redirect('cart')
     else:
         messages.error(request, 'Error verifying payment with Paystack.')
-        return redirect('cart')
 
-    return render(request, 'payment/verify_payment.html', {
-        'trxref': trxref,
-        'reference': reference,
-    })
+    return redirect('cart')
 
-           
-
-
-
-# def initiate_payment(request):
-#     if request.method == 'POST':
-#         form = PaymentForm(request.POST)
-#         if form.is_valid():
-#             email = form.cleaned_data['email']
-#             amount = form.cleaned_data['amount'] * 100  # Convert to kobo
-#             response = Transaction.initialize(reference='unique_transaction_reference', amount=amount, email=email)
-#             if response['status']:
-#                 return redirect(response['data']['authorization_url'])
-#             else:
-#                 return JsonResponse(response, status=400)
-#     else:
-#         form = PaymentForm()
-#     return render(request, 'payment/initiate_payment.html', {'form': form})
-
-# def verify_payment(request, reference):
-#     response = Transaction.verify(reference)
-#     if response['status']:
-#         # Payment was successful
-#         return JsonResponse(response)
-#     else:
-#         # Payment failed
-#         return JsonResponse(response, status=400)
+def handle_cart_items(cart, order):
+    items = cart.items.all()
+    for item in items:
+        OrderItem.objects.create(
+            order=order,
+            product=item.product,
+            price=item.product.price,
+            quantity=item.quantity,
+        )
+    items.delete()
 
 
+def get_order(request, reference):
+    if request.user.is_authenticated:
+        user = request.user
+        order = get_object_or_404(Order, user=user, reference=reference)
+    else:
+        session_key = request.session.session_key
+        if not session_key:
+            messages.success(request, 'Session expired, please try again')
+            return None
+        order = get_object_or_404(Order, session_key=session_key, reference=reference)
+    return order
 
+def get_cart(request):
+    cart = Cart.objects.filter(user=request.user).first() if request.user.is_authenticated else Cart.objects.filter(session_key=request.session.session_key).first()
+    return cart
 
 @csrf_exempt
 def paystack_webhook(request):
@@ -198,9 +197,12 @@ def shipping_info(request):
             else:
                 shipping_instance.session_key = request.session.session_key
             shipping_instance.save()
+
+            my_shipping = request.POST
+            request.session['my_shipping'] = my_shipping
             
+            print(my_shipping)
             messages.success(request, 'Shipping info updated successfully!')
-            # return redirect('profile', request.user.username if request.user.is_authenticated else 'guest')
             cart_total = float(request.session['cart_total'])
             return redirect(f"{reverse('initiate_payment')}?amount={cart_total}")
         else:
@@ -236,10 +238,7 @@ def checkout(request):
             
             total_amount += float(item_total)
             request.session['cart_total'] = total_amount
-            # total_price = total_price
-            # request.session['total_price'] = total_price
-            # total_price = request.session.get('total_price')
-            
+           
             print('Total price: ' + str(total_amount))
 
             cart_items.append({
@@ -318,8 +317,16 @@ def billing_info(request):
     
 
 def payment_success(request):
-    pass
+    reference = request.GET.get('reference')
+    cart = get_cart(request)
+    order = get_order(request, reference)
+    order_item = handle_cart_items(cart, order)
 
+    return render(request, 'payment/payment_success.html', {
+        'reference': reference,
+        'order':order,
+        'order_item':order_item,
+    })
 
 def process_order(request):
     if request.method == 'POST':
@@ -386,5 +393,16 @@ def process_order(request):
         messages.error(request, 'Access denied!')
         return redirect('home')
 
-
+# def get_order(request, reference):
+#     if request.user.is_authenticated:
+#         user = request.user
+#         order = get_object_or_404(Order, user=user, reference=reference)
+#     else:
+#         session_key = request.session.session_key
+#         if not session_key:
+#             messages.success(request, 'Session expired, please try again')
+#             return redirect('home')
+#         order = get_object_or_404(Order, session_key=session_key, reference=reference)
+    
+#     return order
 

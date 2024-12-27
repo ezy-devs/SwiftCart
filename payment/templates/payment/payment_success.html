@@ -1,0 +1,157 @@
+{% load static %}
+
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Payment Receipt</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+        }
+
+        .receipt-container {
+            max-width: 700px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header img {
+            max-width: 100px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 20px;
+            color: #414;
+        }
+
+        .details {
+            margin-bottom: 20px;
+        }
+
+        .details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .details th, .details td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        .details th {
+            background-color: #414;
+            color: #fff;
+        }
+
+        .details td {
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .summary {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .summary h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #414;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .footer p {
+            color: #414;
+        }
+    </style>
+</head>
+<body>
+    <div class="receipt-container">
+        <div class="header">
+            <img src="{% static 'assets/images/swiftcart logo.webp' %}" alt="Company Logo">
+            <h1>Payment Receipt</h1>
+        </div>
+
+        <div class="details">
+            <table>
+                <tr>
+                    <th>Transaction ID:</th>
+                    <td>#{{reference}}</td>
+                </tr>
+                <tr>
+                    <th>Date:</th>
+                    <td>{{order.date_ordered}}</td>
+                </tr>
+                <tr>
+                    <th>Customer Name:</th>
+                    <td>{{order.full_name}}</td>
+                </tr>
+                <tr>
+                    <th>Email:</th>
+                    <td>{{order.email}}</td>
+                </tr>
+                <tr>
+                    <th>Payment Method:</th>
+                    <td>Credit Card</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="details">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    {% for item in order.order_items.all %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.price }}</td>
+                        <td>${{ item.quantity|multiply:item.price }}</td>
+                    </tr>
+                    {% endfor %}
+                    
+                    <tr>
+                        <td colspan="3" style="text-align: right;"><strong>Grand Total:</strong></td>
+                        <td><strong>${{ order.amount_paid }}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for your purchase! If you have any questions, please contact us at support@example.com.</p>
+        </div>
+    </div>
+</body>
+</html>
