@@ -1,5 +1,3 @@
-
-
 {% extends 'dashboard/base.html' %}
 
 {% load static %}
@@ -8,42 +6,76 @@
 
 {% block content %}
 
- <!-- Main Content -->
- <main class="main-content">
-  <header class="main-header">
-    <h1>Welcome, {{request.user}}</h1>
-    <p>Here's a summary of your platform's performance.</p>
-  </header>
+<!-- Main Content -->
+<main class="main-content">
+  
 
   <!-- Analytics Section -->
-  <section class="analytics">
+  <section class="analytics" style="margin-top: 4rem;">
     <div class="card">
       <h3>Total Users</h3>
-      <p>12,345</p>
+      <div style="display: flex;  flex-direction: row; gap: 5px;">
+        <img src="{% static 'assets/images/analysis.png' %}" alt="" >
+        <p>{{users.count}}M+</p>
+      </div>
+
     </div>
     <div class="card">
       <h3>Total Orders</h3>
-      <p>4,567</p>
+      <div style="display: flex;  flex-direction: row; gap: 5px;">
+        <img src="{% static 'assets/images/data-analyst.png' %}" alt="" style="background-color: #414;">
+      <p>{{orders.count}}</p>
+      </div>
     </div>
     <div class="card">
+      
       <h3>Revenue</h3>
-      <p>$89,234</p>
+      <div style="display: flex;  flex-direction: row; gap: 5px;">
+      <img src="{% static 'assets/images/analysis.png' %}" alt="" >
+      <p>&#8358;89,234</p>
+      </div>
     </div>
   </section>
+  <section class="analytics">
+    <div class="card">
+      <h3>Pending Orders</h3>
+      <div style="display: flex;  flex-direction: row; gap: 5px;">
+        <img src="{% static 'assets/images/data-analyst.png' %}" alt="" style="background-color: #414;">
+      <p>{% if orders.status %} {{orders.count}} {% endif%}</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Processing Orders</h3>
+      <div style="display: flex;  flex-direction: row; gap: 5px;">
+        <img src="{% static 'assets/images/analysis.png' %}" alt="">
+      <p>{{orders.count}}</p>
+      </div>
+    </div>
 
+    <div class="card">
+      <h3>Revenue</h3>
+      <div style="display: flex;  flex-direction: row; gap: 5px;">
+        <img src="{% static 'assets/images/data-analyst.png' %}" alt="" style="background-color: #414;">
+      <p>$89,234</p>
+      </div>
+    </div>
+  </section>
   <!-- Chart Section -->
   <section class="charts">
-    <div class="chart-container">
+    <div class="chart-container card">
       <canvas id="salesChart"></canvas>
     </div>
-    <div class="chart-container">
+    <div class="chart-container card">
       <canvas id="usersChart"></canvas>
     </div>
   </section>
 </main>
 
+<script src="{% static 'assets/js/dashboard.js' %}"></script>
 
 {% endblock %}
+
+
 
 
 

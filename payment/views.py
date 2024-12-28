@@ -63,7 +63,26 @@ def initiate_payment(request):
                 email=email,
                 shipping_address=shipping_address,
             )
-            
+        else:
+            session_key = request.session.session_key
+            if not session_key:
+                session_key = request.session.create()
+            try:
+                total_amount = int(float(total_amount) * 100)
+            except ValueError:
+                messages.error(request, 'Invalid amount')
+                return redirect('cart')
+
+            reference = str(uuid.uuid4())
+
+            order = Order.objects.create(
+                session_key=session_key,
+                amount_paid=total_amount / 100,  # Save the amount in naira
+                reference=reference,
+                full_name=full_name,
+                email=email,
+                shipping_address=shipping_address,
+            )
             
             
         # Initiate Paystack payment

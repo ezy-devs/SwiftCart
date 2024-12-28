@@ -1,6 +1,7 @@
 # from django.contrib.auth import forms
 from django import forms
-from Store.models import Product, Category 
+from Store.models import Product, Category
+from payment.models import Order, OrderItem
 
 
 INPUT_CLASSES = 'input'
@@ -71,4 +72,16 @@ class EditProductForm(forms.ModelForm):
             #     'class': INPUT_CLASSES,
             # }),
         }
-        
+
+
+class EditOrderForm(forms.ModelForm):
+    class Meta:
+
+        model = Order
+        fields = ('__all__')
+
+class EditOrderItemForm(forms.ModelForm):
+    class Meta:
+
+        model = OrderItem
+        fields = ('__all__')

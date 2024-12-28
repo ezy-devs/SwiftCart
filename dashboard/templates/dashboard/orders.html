@@ -1,0 +1,44 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+{% block title %}Dashboard {% endblock %}
+
+
+{% block content %}
+
+<main class="main-content">
+    
+    <section class="orders" style="margin-top: 4rem;">
+        <h2>Orders</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+           {% for order in orders reversed %}
+            <tr>
+              <td>{{order.id}}</td>
+              <td>{{order.user}}</td>
+              <td>&#8358; {{order.amount_paid}}</td>
+              <td>{{order.status}}</td>
+              <td>{{order.date_ordered}}</td>
+              <td>
+                <a href="{% url 'order' order.id %}" class="btn view">View</a>
+                <button class="btn update">Update Status</button>
+              </td>
+            </tr>
+            {%  endfor %}
+          </tbody>
+        </table>
+      </section>
+      
+      
+</main>
+  {% endblock %}

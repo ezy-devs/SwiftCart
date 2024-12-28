@@ -9,13 +9,7 @@
 
 
 <main class="main-content">
-    <header class="main-header">
-        <h1>Welcome, Admin</h1>
-        <p>Here's a summary of your platform's performance.</p>
-    </header>
-
-
-    <form action="{% url 'create_product' %}" method="post" enctype="multipart/form-data">
+    <form action="{% url 'create_product' %}" method="post" enctype="multipart/form-data" style="margin-top: 4rem;">
         {% csrf_token %}
         <div class="form-group" style="width: 80%; padding: 10px;">
             {{form.as_p}}

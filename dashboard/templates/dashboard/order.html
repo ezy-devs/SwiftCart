@@ -1,0 +1,53 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+{% block title %}Edit order {% endblock %}
+
+
+{% block content %}
+<main class="main-content" style="max-width: 50%; ">
+   
+
+    <section class="orders">
+        <h2>Order ~ {{order.reference}}</h2>
+        <form action="" method="post">
+            <div class="form-group">
+                <div class="input" style="margin-bottom: 5px;">{{order}}</div>
+                <div class="input" style="margin-bottom: 5px;">{{order.reference}}</div>
+                <div class="input" style="margin-bottom: 5px;">{{order.full_name}}</div>
+                <div class="input" style="margin-bottom: 5px;">{{order.email}}</div>
+                <div class="input" style="margin-bottom: 5px;">{{order.shipping_address}}</div>
+                <div class="input" style="margin-bottom: 5px;">&#8358;{{order.amount_paid}}</div>
+
+                <div class="input" style="margin-bottom: 5px;">{{order.status}}</div>
+                <div class="input" style="margin-bottom: 5px;">{{order.date_ordered}}</div>
+                <div class="input" style="margin-bottom: 5px;">{{order.updated_at}}</div>
+                <!-- {{order_form.as_p}} -->
+            </div>
+        </form>
+    </section>
+    <section class="orders">
+        <h2>Order Items</h2>
+        <form action="" method="post">
+            <div class="form-group">
+                {% if order_items %}
+                {% for item in order_items %}
+                <h2>Item</h2>
+                <div class="input" style="margin-bottom: 5px;">{{item.order}}</div>
+                <div class="input" style="margin-bottom: 5px;">{{item.product}}</div>
+                <div class="input" style="margin-bottom: 5px;">{{item.quantity}}</div>
+                <div class="input" style="margin-bottom: 5px;">&#8358;{{item.price}}</div>
+                {% endfor %}
+                {% else %}
+                <div class="input" style="margin-bottom: 5px;">No Item Found</div>
+                {% endif %}
+            </div>
+            <div style="display: flex; gap:5px">
+                <button class="btn view">Update Order</button>
+                <button class="btn delete">Delete Order</button>
+            </div>
+
+        </form>
+    </section>
+</main>
+{% endblock %}

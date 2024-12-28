@@ -1,0 +1,24 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+{% block title %}Report {% endblock %}
+
+
+{% block content %}
+
+
+<main class="main-content">
+   
+
+    <section class="reports">
+        <h2>Reports</h2>
+        <div class="chart-container">
+          <canvas id="salesReportChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <canvas id="userActivityChart"></canvas>
+        </div>
+      </section>
+  </main>
+
+{% endblock %}

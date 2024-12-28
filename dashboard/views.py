@@ -7,15 +7,56 @@ from django.http import HttpResponse, JsonResponse
 import requests
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.models import User
+from payment.models import Order, OrderItem
+from .forms import EditOrderForm,EditOrderItemForm
+from django.contrib.auth.decorators import user_passes_test
 
 
 
+def admin_check(user):
+    return user.is_superuser
+
+@user_passes_test(admin_check, login_url='home')
 def dashboard(request):
-    return render(request, 'dashboard/index.html')
+
+    users = User.objects.all()
+    orders = Order.objects.all()
+    context = {
+        'users':users,
+        'orders':orders
+    }
+    return render(request, 'dashboard/index.html', context)
+
+@user_passes_test(admin_check, login_url='home')
+def users(request):
+    users = User.objects.all()
+    return render(request, 'dashboard/users.html', {'users':users})
 
 
+@user_passes_test(admin_check, login_url='home')
+def delete_user(request, user_id):
+    user = User.objects.filter(id=user_id)
+    user.delete()
+    return redirect('users')
 
-@login_required
+
+@user_passes_test(admin_check, login_url='home')
+def de_activate_user(request, user_id):
+    user = User.objects.filter(id=user_id)
+    user.is_active = False
+    
+    return redirect('users')
+
+
+@user_passes_test(admin_check, login_url='home')
+def products(request):
+    products = Product.objects.all()
+    # print(products)
+    return render(request, 'dashboard/products.html', {'products':products})
+
+
+@user_passes_test(admin_check, login_url='home')
 def create_product(request):
     if request.method == 'POST':
 
@@ -39,7 +80,7 @@ def create_product(request):
     return render(request, 'dashboard/create_product.html', {'form': form})
 
 
-@login_required
+@user_passes_test(admin_check, login_url='home')
 def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
@@ -58,8 +99,64 @@ def edit_product(request, product_id):
         edit_form = EditProductForm(instance=product)
     
     
-    return render(request, 'dashboard/edit_product.html', {'edit_form': edit_form})
+    return render(request, 'dashboard/edit_product.html', {'edit_form': edit_form, 'product':product})
 
 
+@user_passes_test(admin_check, login_url='home')
+def delete_product(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
 
+        product = get_object_or_404(Product, id=product_id)
+        if product:
+            product.delete()
+            return JsonResponse({'message': 'Product deleted!'})
+        else:
+            return JsonResponse({'message': 'error occured, try again'})
+    else:
+        return JsonResponse({'message': 'Invalid request method'})
+    
+
+@user_passes_test(admin_check, login_url='home')
+def orders(request):
+    orders = Order.objects.all()
+    for order in orders:
+
+        order_item = OrderItem.objects.filter(order=order)
+
+    return render(request, 'dashboard/orders.html', {'orders':orders})
+
+
+@user_passes_test(admin_check, login_url='home')
+def order(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    
+    order_items = OrderItem.objects.filter(order=order)
+    order_form = EditOrderForm(instance=order)
+   
+    for item in order_items:
+        item_form = EditOrderItemForm(instance=item)
+
+    
+    return render(request, 'dashboard/order.html', 
+                  {'order':order, 'order_items':order_items,
+                   })
+
+
+@user_passes_test(admin_check, login_url='home')
+def reports(request):
+    return render(request, 'dashboard/reports.html', {})
+
+
+@user_passes_test(admin_check, login_url='home')
+def delete(request, pk, Model):
+    result = get_object_or_404(Model, id=pk)
+    result.delete()
+    return result
+
+
+@user_passes_test(admin_check, login_url='home')
+def settings(request):
+
+     return render(request, 'dashboard/settings.html', {})
 
