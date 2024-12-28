@@ -86,6 +86,12 @@
         .footer p {
             color: #414;
         }
+
+        @media screen and (max-width: 768px) {
+            .receipt-container {
+                max-width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -99,7 +105,7 @@
             <table>
                 <tr>
                     <th>Transaction ID:</th>
-                    <td>#{{reference}}</td>
+                    <td>{{reference}}</td>
                 </tr>
                 <tr>
                     <th>Date:</th>
@@ -136,21 +142,21 @@
                     <tr>
                         <td>{{ item.product.name }}</td>
                         <td>{{ item.quantity }}</td>
-                        <td>${{ item.price }}</td>
-                        <td>${{ item.quantity|multiply:item.price }}</td>
+                        <td>&#8358;{{ item.price }}</td>
+                        <td>&#8358;{{ item.quantity|multiply:item.price }}</td>
                     </tr>
                     {% endfor %}
                     
                     <tr>
                         <td colspan="3" style="text-align: right;"><strong>Grand Total:</strong></td>
-                        <td><strong>${{ order.amount_paid }}</strong></td>
+                        <td><strong>&#8358;{{ order.amount_paid }}</strong></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div class="footer">
-            <p>Thank you for your purchase! If you have any questions, please contact us at support@example.com.</p>
+            <p>Thank you for your purchase! If you have any questions, please contact us at support@swiftcart.com.</p>
         </div>
     </div>
 </body>
