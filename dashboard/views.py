@@ -21,10 +21,12 @@ def admin_check(user):
 def dashboard(request):
 
     users = User.objects.all()
+    recent_orders = Order.objects.order_by('-date_ordered')[:6]
     orders = Order.objects.all()
     context = {
         'users':users,
-        'orders':orders
+        'recent_orders':recent_orders,
+        'orders':orders,
     }
     return render(request, 'dashboard/index.html', context)
 
@@ -67,13 +69,12 @@ def create_product(request):
             product.created_by = request.user
             product.save()
             
-            messages.success(request, "Product created successfully!")  # Feedback to the user
-            
-            # Redirect to the dashboard or a specific page for the product
-            return redirect('dashboard')  
+            messages.success(request, "Product added successfully!")  
+            return redirect('creare_product')  
+        
         else:
             messages.error(request, "There was an error with the form. Please check the details and try again.")
-    
+ 
     else:
         form = CreateProductForm()
     
@@ -120,6 +121,7 @@ def delete_product(request):
 @user_passes_test(admin_check, login_url='home')
 def orders(request):
     orders = Order.objects.all()
+    
     for order in orders:
 
         order_item = OrderItem.objects.filter(order=order)
@@ -141,6 +143,53 @@ def order(request, order_id):
     return render(request, 'dashboard/order.html', 
                   {'order':order, 'order_items':order_items,
                    })
+
+
+@user_passes_test(admin_check, login_url='home')
+def update_order(request):
+    order_id = request.POST.get('order_id')
+    order_status = request.POST.get('order_status')
+    try:
+        order = Order.objects.filter(id=order_id).first()
+        if order:
+
+            order.status = order_status
+            order.save()
+            return JsonResponse({'message': 'Order status updated!'})
+        else:
+            return JsonResponse({'message': 'Order not found!'})
+    except Exception as e:
+        return JsonResponse({'message': str(e)})
+
+@user_passes_test(admin_check, login_url='home')
+def get_recent_orders(request):
+   
+    recent_orders = Order.objects.all().order_by('-date_ordered')[:10]  # Adjust the query as needed
+    orders_data = [
+        {
+            'id': order.id,
+            'user': order.user.username if order.user else 'Guest',
+            'amount_paid': order.amount_paid,
+            'status': order.get_status_display(),
+            'date_ordered': order.date_ordered.strftime('%Y-%m-%d %H:%M:%S'),
+            'status_choices': order.STATUS_CHOICES
+        }
+        for order in recent_orders
+    ]
+    all_orders = Order.objects.all()
+    all_orders_data = [
+        {
+            'id': order.id,
+            'user': order.user.username if order.user else 'Guest',
+            'amount_paid': order.amount_paid,
+            'status': order.get_status_display(),
+            'date_ordered': order.date_ordered.strftime('%Y-%m-%d %H:%M:%S'),
+            'status_choices': order.STATUS_CHOICES
+        }
+        for order in all_orders
+    ]
+
+    return JsonResponse({'orders': orders_data, 'all_orders':all_orders_data})
 
 
 @user_passes_test(admin_check, login_url='home')

@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         datasets: [{
           label: "Monthly Sales",
           data: [1500, 2000, 3000, 2500, 4000, 5000],
-          borderColor: "#1abc9c",
+          borderColor: "#414",
           backgroundColor: "rgba(26, 188, 156, 0.2)"
         }]
       },

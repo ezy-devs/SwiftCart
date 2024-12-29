@@ -9,17 +9,27 @@
 
 
 <main class="main-content">
-    <form action="{% url 'create_product' %}" method="post" enctype="multipart/form-data" style="margin-top: 4rem;">
-        {% csrf_token %}
-        <div class="form-group" style="width: 80%; padding: 10px;">
-            {{form.as_p}}
-        </div>
-        <div class="form-group">
-            <input type="submit" value="Add Product" id="" class="btn">
-        </div>
-    </form>
-    
+    <section class="settings">
+        <div class="settings-container card">
+            <form action="{% url 'create_product' %}" method="post" enctype="multipart/form-data"
+                style="margin-top: 4rem;">
+                {% csrf_token %}
+                <div class="form-group" style="width: 80%; padding: 10px;">
+                    {{form.as_p}}
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Add Product" id="" class="btn add-product">
+                </div>
+            </form>
 
+            <!-- <script>
+        $(document).on('click', '.add-product', function(e) {
+            e.preventDefault();
+            window.location.href: "{% url 'create_product' %}";
+        })
+    </script> -->
+        </div>
+    </section>
 </main>
 {% endblock %}
 

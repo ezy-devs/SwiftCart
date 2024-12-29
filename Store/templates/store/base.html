@@ -83,6 +83,12 @@
             <a class="link" href="/checkout.html">Contact</a>
           </li>
           {% if request.user.is_authenticated %}
+
+          {% if request.user.is_superuser %}
+          <li class="menu-item link">
+            <span><a href="{% url 'dashboard' %}" class="link">Dashboard</a></span>
+          </li>
+          {% endif %}
           <li class="menu-item link">
             <span><a href="{% url 'logout' %}" class="link">Logout</a></span>
           </li>&nbsp;&nbsp;&nbsp;

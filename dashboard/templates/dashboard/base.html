@@ -113,6 +113,10 @@
                   <span class="nav-icon">📩</span>
                   <span class="nav-text">Users</span>
                 </a>
+                <a href="{% url 'users' %}" class="nav-item">
+                  <span class="nav-icon">📩</span>
+                  <span class="nav-text">Notification</span>
+                </a>
                 <a href="{% url 'logout' %}" class="nav-item">
                   <span class="nav-icon">🔒</span>
                   <span class="nav-text">Logout</span>
@@ -145,10 +149,11 @@
     
         <!-- User Profile -->
         <div class="user-profile">
-          <img src="https://via.placeholder.com/40" alt="User Avatar" class="avatar">
+          
+          <img src="{{request.user.profile.photo.url}}" alt="User Avatar" class="avatar">
           <div class="dropdown">
             <ul>
-              <li><a href="#">Profile</a></li>
+              <li><a href="{% url 'profile' user %}">Profile</a></li>
               <li><a href="#">Settings</a></li>
               <li><a href="#">Logout</a></li>
             </ul>

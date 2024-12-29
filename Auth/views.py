@@ -109,7 +109,7 @@ def update_profile(request):
 # @login_required(login_url='login/')
 def profile(request, username):
     if request.user.is_authenticated:
-
+    
         username = request.user
         try:
             get_object_or_404(User, username=username)
@@ -127,8 +127,12 @@ def profile(request, username):
 
         except ShippingInfo.objects.filter(user=request.user).DoesNotExist:
             shipping_Form = ShippingForm()
-            
-        return render(request, 'auth/profile.html', {'username': username, 'form':form, 'shipping_Form':shipping_Form})
+        if request.user.is_superuser:
+
+            return render(request, 'dashboard/profile.html', {'username': username, 'form':form, 'shipping_Form':shipping_Form})
+        else:
+
+            return render(request, 'auth/profile.html', {'username': username, 'form':form, 'shipping_Form':shipping_Form})
     else:
         messages.error(request, 'You have to login to access that page')
         return redirect(error_404)

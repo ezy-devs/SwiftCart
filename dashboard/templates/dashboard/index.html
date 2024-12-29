@@ -8,14 +8,14 @@
 
 <!-- Main Content -->
 <main class="main-content">
-  
+
 
   <!-- Analytics Section -->
   <section class="analytics" style="margin-top: 4rem;">
     <div class="card">
       <h3>Total Users</h3>
       <div style="display: flex;  flex-direction: row; gap: 5px;">
-        <img src="{% static 'assets/images/analysis.png' %}" alt="" >
+        <img src="{% static 'assets/images/analysis.png' %}" alt="">
         <p>{{users.count}}M+</p>
       </div>
 
@@ -24,15 +24,15 @@
       <h3>Total Orders</h3>
       <div style="display: flex;  flex-direction: row; gap: 5px;">
         <img src="{% static 'assets/images/data-analyst.png' %}" alt="" style="background-color: #414;">
-      <p>{{orders.count}}</p>
+        <p>{{orders.count}}</p>
       </div>
     </div>
     <div class="card">
-      
+
       <h3>Revenue</h3>
       <div style="display: flex;  flex-direction: row; gap: 5px;">
-      <img src="{% static 'assets/images/analysis.png' %}" alt="" >
-      <p>&#8358;89,234</p>
+        <img src="{% static 'assets/images/analysis.png' %}" alt="">
+        <p>&#8358;89,234</p>
       </div>
     </div>
   </section>
@@ -41,14 +41,14 @@
       <h3>Pending Orders</h3>
       <div style="display: flex;  flex-direction: row; gap: 5px;">
         <img src="{% static 'assets/images/data-analyst.png' %}" alt="" style="background-color: #414;">
-      <p>{% if orders.status %} {{orders.count}} {% endif%}</p>
+        <p>{% if orders.status %} {{orders.count}} {% endif%}</p>
       </div>
     </div>
     <div class="card">
       <h3>Processing Orders</h3>
       <div style="display: flex;  flex-direction: row; gap: 5px;">
         <img src="{% static 'assets/images/analysis.png' %}" alt="">
-      <p>{{orders.count}}</p>
+        <p>{{orders.count}}</p>
       </div>
     </div>
 
@@ -56,10 +56,11 @@
       <h3>Revenue</h3>
       <div style="display: flex;  flex-direction: row; gap: 5px;">
         <img src="{% static 'assets/images/data-analyst.png' %}" alt="" style="background-color: #414;">
-      <p>$89,234</p>
+        <p>$89,234</p>
       </div>
     </div>
   </section>
+
   <!-- Chart Section -->
   <section class="charts">
     <div class="chart-container card">
@@ -69,6 +70,124 @@
       <canvas id="usersChart"></canvas>
     </div>
   </section>
+
+  <div class="settings-container card" style="max-width: 100%;">
+    <section class="orders">
+      <h2>Recent Orders</h2>
+      <table id="orders-table" class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>User</th>
+            <th>Amount Paid</th>
+            <th>Status</th>
+            <th>Date Ordered</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Orders will be dynamically inserted here -->
+        </tbody>
+      </table>
+
+      <script>
+        function fetchOrders() {
+          $.ajax({
+            url: "{% url 'get_recent_orders' %}",
+            method: 'GET',
+            success: function (response) {
+              const ordersTableBody = $('tbody');
+              ordersTableBody.empty();
+              response.orders.forEach(order => {
+                const orderRow = `
+                              <tr>
+                                  <td>${order.id}</td>
+                                  <td>${order.user}</td>
+                                  <td>&#8358; ${order.amount_paid}</td>
+                                  <td>${order.status}</td>
+                                  <td>${order.date_ordered}</td>
+                                  <td style="display: flex; gap: 5px;">
+                                      <a href="/dashboard/order/${order.id}/" class="btn view">View</a>
+                                      <div class="user-profile">
+                                          <button class="btn update">Update Status</button>
+                                          <div class="dropdown">
+                                              <ul>
+                                                  ${order.status_choices.map(choice => `
+                                                      <li>
+                                                          <button value="${choice[0]}" data-order-id="${order.id}" id="order-status" style="background-color: transparent; border: none; color:#eaf2f8;">
+                                                              ${choice[1]}
+                                                          </button>
+                                                      </li>
+                                                  `).join('')}
+                                              </ul>
+                                          </div>
+                                      </div>
+                                  </td>
+                              </tr>
+                          `;
+                ordersTableBody.append(orderRow);
+              });
+            },
+            error: function (xhr) {
+              console.log(xhr.responseJSON);
+            }
+          });
+        }
+
+        $(document).ready(function () {
+          fetchOrders();
+          setInterval(fetchOrders, 30000); // Fetch orders every 30 seconds
+
+          $(document).on('click', '#order-status', function (e) {
+            e.preventDefault();
+            const order_id = $(this).data('order-id');
+            const order_status = $(this).val();
+            $.ajax({
+              type: 'POST',
+              url: "{% url 'update_order' %}",
+              data: {
+                order_id: order_id,
+                order_status: order_status,
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                action: 'post'
+              },
+              success: function (response) {
+                console.log(response);
+                fetchOrders(); // Refresh orders after update
+              },
+              error: function (xhr) {
+                console.log(xhr.responseJSON);
+              },
+            });
+          });
+        });
+      </script>
+    </section>
+
+    <script>
+      $(document).on('click', '#order-status', function (e) {
+        e.preventDefault();
+        const order_id = $(this).data('order-id');
+        const order_status = $(this).val();
+        $.ajax({
+          type: 'POST',
+          url: "{% url 'update_order' %}",
+          data: {
+            order_id: order_id,
+            order_status: order_status,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
+          },
+          success: function (response) {
+            console.log(response);
+          },
+          error: function (xhr) {
+            console.log(xhr.responseJSON);
+          },
+        });
+      });
+    </script>
+  </div>
 </main>
 
 <script src="{% static 'assets/js/dashboard.js' %}"></script>

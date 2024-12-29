@@ -9,16 +9,20 @@
 
 
 <main class="main-content">
-    <form action="{% url 'edit_product' product.id %}" method="post" enctype="multipart/form-data" style="margin-top: 4rem;">
-        {% csrf_token %}
-        <div class="form-group" style="width: 80%; padding: 10px;">
-            {{edit_form.as_p}}
+    <section class="settings">
+        <div class="settings-container card" style="max-width: 100%;">
+            <form action="{% url 'edit_product' product.id %}" method="post" enctype="multipart/form-data"
+                style="margin-top: 4rem;">
+                {% csrf_token %}
+                <div class="form-group" style="width: 80%; padding: 10px;">
+                    {{edit_form.as_p}}
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Update Product" id="" class="btn">
+                </div>
+            </form>
         </div>
-        <div class="form-group">
-            <input type="submit" value="Update Product" id="" class="btn">
-        </div>
-    </form>
-
+    </section>
 
 </main>
 {% endblock %}
