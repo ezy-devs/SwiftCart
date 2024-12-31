@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from Store.models import Product
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.urls import reverse
 
 
 
@@ -61,7 +62,11 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     date_ordered = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
+    
+    
+    def get_absolute_url(self):
+        return reverse('order', args=[str(self.id)])
+    
     def __str__(self):
         if self.user:
             return f"Order #{self.id} - {self.user.username} - {self.status}"

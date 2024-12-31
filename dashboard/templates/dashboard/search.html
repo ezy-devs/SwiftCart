@@ -1,0 +1,78 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+{% block title %}Dashboard {% endblock %}
+
+
+{% block content %}
+
+<main class="main-content">
+  <section class="settings">
+    <div class="settings-container card" style="max-width: 100%;">
+      {% for message in messages %}
+      <div class="msg"
+        style="background-color: rgb(119, 34, 119); color: rgb(237, 254, 255); padding: 2px; border-radius: 10px; min-width: 100px;">
+        <p>{{message}}</p>
+      </div>
+      {% endfor %}
+      <section class="orders">
+        <div class="header">
+          <h2>Orders</h2>
+          <div class="actions">
+            <form action="{% url 'search-order' %}" method="get">
+              <input type="search" class="input" placeholder="Search by name or email" name="search-input">
+            </form>
+            <a href="{% url 'download_orders_excel' %}" class="btn add-user">Download Excel</a>
+          </div>
+        </div>
+        <table id="orders-table" class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Email</th>
+              <th>Amount Paid</th>
+              <th>Status</th>
+              <th>Date Ordered</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in results %}
+            <tr>
+              <td>{{order.id}}</td>
+              <td>{{order.user}}</td>
+              <td>{{order.email}}</td>
+              <td>&#8358; {{order.amount_paid}}</td>
+              <td>{{order.status}}</td>
+              <td>{{order.date_ordered}}</td>
+              <td style="display: flex; gap: 5px;">
+                <a href="{% url 'order' order.id %}" class="btn view">View</a>
+                <div class="user-profile">
+                  <button class="btn update">Update Status</button>
+                  <div class="dropdown">
+                    <ul>
+                      <li>
+                        <button value="{{choice[0]}" data-order-id="{{order.id}" id="order-status"
+                          style="background-color: transparent; border: none; color:#eaf2f8;">
+
+                        </button>
+                      </li>
+
+                    </ul>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+
+          </tbody>
+        </table>
+
+      </section>
+
+    </div>
+  </section>
+
+</main>
+{% endblock %}

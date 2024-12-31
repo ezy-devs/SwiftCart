@@ -10,12 +10,20 @@
   <section class="settings">
     <div class="settings-container card" style="max-width: 100%;">
       <section class="orders">
-        <h2>Orders</h2>
-        <table id="orders-table" class="table">
+        <div class="header">
+          <h2>Orders</h2>
+          <div class="actions">
+            <a href="{% url 'search-order' %}" class="btn add-user " id="searchbtn">Search</a>
+            <a href="{% url 'download_orders_excel' %}" class="btn add-user" >Download Excel</a>
+          </div>
+        </div>
+      
+        <table id="orders-table" class="table" >
           <thead>
             <tr>
               <th>ID</th>
               <th>User</th>
+              <th>Email</th>
               <th>Amount Paid</th>
               <th>Status</th>
               <th>Date Ordered</th>
@@ -26,6 +34,7 @@
             <!-- Orders will be dynamically inserted here -->
           </tbody>
         </table>
+
       </section>
 
     </div>
@@ -34,7 +43,7 @@
 
 
   <script>
-    function fetchOrders() {
+  function fetchOrders() {
       $.ajax({
         url: "{% url 'get_recent_orders' %}",
         method: 'GET',
@@ -43,30 +52,31 @@
           ordersTableBody.empty();
           response.all_orders.forEach(order => {
             const orderRow = `
-                          <tr>
-                              <td>${order.id}</td>
-                              <td>${order.user}</td>
-                              <td>&#8358; ${order.amount_paid}</td>
-                              <td>${order.status}</td>
-                              <td>${order.date_ordered}</td>
-                              <td style="display: flex; gap: 5px;">
-                                  <a href="/dashboard/order/${order.id}/" class="btn view">View</a>
-                                  <div class="user-profile">
-                                      <button class="btn update">Update Status</button>
-                                      <div class="dropdown">
-                                          <ul>
-                                              ${order.status_choices.map(choice => `
-                                                  <li>
-                                                      <button value="${choice[0]}" data-order-id="${order.id}" id="order-status" style="background-color: transparent; border: none; color:#eaf2f8;">
-                                                          ${choice[1]}
-                                                      </button>
-                                                  </li>
-                                              `).join('')}
-                                          </ul>
-                                      </div>
-                                  </div>
-                              </td>
-                          </tr>
+            <tr>
+                <td>${order.id}</td>
+                <td>${order.user}</td>
+                <td>${order.email}</td>
+                <td>&#8358; ${order.amount_paid}</td>
+                <td>${order.status}</td>
+                <td>${order.date_ordered}</td>
+                <td style="display: flex; gap: 5px;">
+                    <a href="/dashboard/order/${order.id}/" class="btn view">View</a>
+                    <div class="user-profile">
+                        <button class="btn update">Update Status</button>
+                        <div class="dropdown">
+                            <ul>
+                                ${order.status_choices.map(choice => `
+                                    <li>
+                                        <button value="${choice[0]}" data-order-id="${order.id}" id="order-status" style="background-color: transparent; border: none; color:#eaf2f8;">
+                                            ${choice[1]}
+                                        </button>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </td>
+            </tr>
                       `;
             ordersTableBody.append(orderRow);
           });
@@ -75,12 +85,13 @@
           console.log(xhr.responseJSON);
         }
       });
+    
     }
-
+  
     $(document).ready(function () {
       fetchOrders();
       setInterval(fetchOrders, 30000); // Fetch orders every 30 seconds
-
+    });
       $(document).on('click', '#order-status', function (e) {
         e.preventDefault();
         const order_id = $(this).data('order-id');
@@ -103,7 +114,7 @@
           },
         });
       });
-    });
+  
   </script>
 </main>
 {% endblock %}

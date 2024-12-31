@@ -2,17 +2,20 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 import uuid
+from django.urls import reverse
 
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    created_by = models.ForeignKey(User, related_name='creates_category', on_delete=models.CASCADE)
+    description = models.TextField(default='', null=True, blank=True)
+    user = models.ForeignKey(User, related_name='creates_category', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ('name',)
         verbose_name_plural = 'Categories'
-
+    def get_absolute_url(self):
+        return reverse('edit-category', args=[str(self.id)])
     def __str__(self):
         return f'{self.name}'
 
@@ -32,6 +35,9 @@ class Product(models.Model):
     created_by = models.ForeignKey(User, related_name='addes_product', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse('product', args=[str(self.id)])
     
     def __str__(self):
         return f'{self.name}'

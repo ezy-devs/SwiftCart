@@ -10,7 +10,7 @@ class CreateProductForm(forms.ModelForm):
     class Meta:
 
         model = Product
-        fields = ('category', 'name', 'image', 'description',  'price', 'is_sale', 'sale_price', 'is_featured', 'is_trending', 'is_best_seller')
+        fields = ('category', 'name', 'image', 'description',  'price', 'in_stock', 'is_sale', 'sale_price', 'is_featured', 'is_trending', 'is_best_seller')
 
         widgets = {
             'category': forms.Select(attrs={
@@ -28,15 +28,12 @@ class CreateProductForm(forms.ModelForm):
             'price': forms.TextInput(attrs={
                 'class': INPUT_CLASSES,
             }),
-            # 'is_sale': forms.BooleanField(attrs={
-            #     'class': INPUT_CLASSES,
-            # }),
+           'in_stock':forms.TextInput(attrs={
+                'class': INPUT_CLASSES,
+            }),
             'sale_price': forms.TextInput(attrs={
                 'class': INPUT_CLASSES,
             }),
-            # 'is_featured':forms.BooleanField(attrs={
-            #     'class': INPUT_CLASSES,
-            # }),
         }
 
 
@@ -44,7 +41,7 @@ class EditProductForm(forms.ModelForm):
     class Meta:
 
         model = Product
-        fields = ('category', 'name', 'image', 'description',  'price', 'is_sale', 'sale_price', 'is_featured', 'is_trending', 'is_best_seller')
+        fields = ('category', 'name', 'image', 'description',  'price', 'in_stock', 'is_sale', 'sale_price', 'is_featured', 'is_trending', 'is_best_seller')
 
         widgets = {
             'category': forms.Select(attrs={
@@ -62,17 +59,44 @@ class EditProductForm(forms.ModelForm):
             'price': forms.TextInput(attrs={
                 'class': INPUT_CLASSES,
             }),
-            # 'is_sale': forms.BooleanField(attrs={
-            #     'class': INPUT_CLASSES,
-            # }),
+           'in_stock':forms.TextInput(attrs={
+                'class': INPUT_CLASSES,
+            }),
             'sale_price': forms.TextInput(attrs={
                 'class': INPUT_CLASSES,
             }),
-            # 'is_featured':forms.BooleanField(attrs={
-            #     'class': INPUT_CLASSES,
-            # }),
         }
 
+
+class NewCategoryForm(forms.ModelForm):
+    class Meta:
+
+        model = Category
+        fields = ('name', 'description')
+
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': INPUT_CLASSES,
+            }),
+            'description': forms.Textarea(attrs={
+                'class': INPUT_CLASSES,
+            }),
+        }
+
+class EditCategoryForm(forms.ModelForm):
+    class Meta:
+
+        model = Category
+        fields = ('name', 'description')
+
+        widgets = {
+            'name': forms.TextInput(attrs={
+                'class': INPUT_CLASSES,
+            }),
+            'description': forms.Textarea(attrs={
+                'class': INPUT_CLASSES,
+            }),
+        }
 
 class EditOrderForm(forms.ModelForm):
     class Meta:

@@ -15,12 +15,22 @@
         <div class="header">
           <h2>Users</h2>
           <div class="actions">
-            <input type="text" id="searchUsers" placeholder="Search by name or email">
-            <button class="btn add-user">Add New User</button>
-            <button class="btn add-user">Download</button>
+            <input type="text" id="searchUsers" class="search-input" placeholder="Search by name or email">
+            <button class="btn add-user" id="new-user">Add New User</button>
+            <a href="{% url 'download_users_excel' %}" class="btn add-user" >Download</a>
           </div>
         </div>
-      
+      <script>
+        const newUserbtn = document.getElementById('new-user')
+        newUserbtn.addEventListener('click', () => {
+          window.location.href = "{% url 'new_user' %}";
+        })
+
+        const downloadBtn = document.getElementById('download-excel')
+        newUserbtn.addEventListener('click', () => {
+          window.location.href = "{% url 'download_users_excel' %}";
+        })
+      </script>
         <table class="table">
           <thead>
             <tr>
@@ -44,10 +54,23 @@
               {% else %} 
               <td><span class="status inactive">Inactive</span></td>
               {% endif %}
-              <td>
+              <td style="display: flex; gap: 5px;">
                 <button class="btn edit">Edit</button>
                 <a href="{% url 'delete_user' user.id %}" class="btn delete">Delete</a>
-                <a  href="{% url 'de-activate-user' user.id %}" class="btn deactivate">Deactivate</a>
+                
+                {% if user.is_active %}
+                <form action="{% url 'deactivate-user' user.id %}" method="post">
+                  {% csrf_token %}
+                <button type="submit" class="btn deactivate">Deactivate</button>
+              </form>
+              
+              {% else %}
+              <form action="{% url 'activate-user' user.id %}" method="post">
+                {% csrf_token %}
+              <button type="submit" class="btn deactivate">Activate</button>
+            </form>
+              
+            {% endif %}
               </td>
             </tr>
             {% endfor %}

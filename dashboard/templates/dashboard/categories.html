@@ -1,0 +1,65 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+{% block title %}Categories {% endblock %}
+
+
+{% block content %}
+
+<!-- Main Content -->
+<main class="main-content">
+  <section class="settings">
+    <div class="settings-container card" style="max-width: 100%;">
+      {% for message in messages %}
+      <div class="msg"
+        style="background-color: rgb(119, 34, 119); color: rgb(237, 254, 255); padding: 2px; border-radius: 10px; min-width: 100px;">
+        <p>{{message}}</p>
+      </div>
+      {% endfor %}
+      <section class="products">
+        <h2>Categories</h2>
+        <div class="header">
+          <div class="actions">
+            <a href="{% url 'new-category' %}" class="btn">Add New Category</a>
+            <a href="{% url 'download_orders_excel' %}" class="btn add-user">Download Excel</a>
+          </div>
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Created by</th>
+              <th>Created at</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for category in categories reversed %}
+            <tr>
+
+              <td>{{category.id}}</td>
+              <td>{{category}}</td>
+              <td>{{category.description|truncatewords:3}}</td>
+              <td>{{category.created_by}}</td>
+              <td>{{category.created_at}}</td>
+              <td>
+                <a href="{% url 'edit-category' category.id %}" class="btn edit" id="edit-product">Edit</a>
+                <a href="{% url 'delete-category' category.id %}" class="btn delete"
+                  data-product-id="{{product.id}}">Delete</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </section>
+
+</main>
+
+{% endblock %}
+{% block footer %}
+{% endblock %}

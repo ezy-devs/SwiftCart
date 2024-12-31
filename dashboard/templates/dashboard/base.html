@@ -43,6 +43,7 @@
     padding: 8px;
     font-size: 16px;
     flex: 1;
+    outline: none;
     border-radius: 25px 0 0 25px;
     background-color: #1f1f1f; /* Matching background */
     color: #e0e0e0; /* Light text */
@@ -85,7 +86,7 @@
         <div class="logo">
           <div class="brand logo" style="display: flex; align-items: center;">
             <img src="{% static 'assets/images/swiftcart logo.webp' %}" alt="Company Logo" style="width: 35px; border-radius: 10px; ">
-              <a href="" class="brand" style="text-decoration: none;">SwiftCart</a>
+              <a href="" class="brand" style="text-decoration: none; color: #e0e0e0;">SwiftCart</a>
             </div>
         </div>
             <nav class="nav">
@@ -101,17 +102,22 @@
                     <span class="nav-icon">📊</span>
                     <span class="nav-text">Products</span>
                   </a>
+                  <a href="{% url 'categories' %}" class="nav-item">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Categories</span>
+                  </a>
                   <a href="{% url 'orders' %}" class="nav-item">
                     <span class="nav-icon">📊</span>
                     <span class="nav-text">Orders</span>
                   </a>
-                <a href="{% url 'settings' %}" class="nav-item">
-                  <span class="nav-icon">⚙️</span>
-                  <span class="nav-text">Settings</span>
-                </a>
+                
                 <a href="{% url 'users' %}" class="nav-item">
                   <span class="nav-icon">📩</span>
                   <span class="nav-text">Users</span>
+                </a>
+                <a href="{% url 'settings' %}" class="nav-item">
+                  <span class="nav-icon">⚙️</span>
+                  <span class="nav-text">Settings</span>
                 </a>
                 <a href="{% url 'users' %}" class="nav-item">
                   <span class="nav-icon">📩</span>
@@ -131,14 +137,16 @@
       
         <a href="" class="brand" style="text-decoration: none;">Dashboard</a>
       </div>
-        <div class="search-container">
-          <input type="text" placeholder="Search..." class="search-input">
-          <button class="search-button">
+       
+          <form action="{% url 'search' %}" method="get" class="search-container">
+          <input type="search" placeholder="Search..." class="search-input" name="q">
+          <button type="submit" class="search-button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
               <path d="M10 2a8 8 0 105.293 14.707l4.707 4.707a1 1 0 001.414-1.414l-4.707-4.707A8 8 0 0010 2zM4 10a6 6 0 1112 0 6 6 0 01-12 0z" />
             </svg>
           </button>
-        </div>
+        </form>
+        
       </div>
       <div class="header-right">
         <!-- Notification Icon -->

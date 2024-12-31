@@ -1,7 +1,7 @@
 {% extends 'dashboard/base.html' %}
 
 {% load static %}
-{% block title %}Dashboard {% endblock %}
+{% block title %}Edit Category {% endblock %}
 
 
 {% block content %}
@@ -16,19 +16,24 @@
                 <p>{{message}}</p>
             </div>
             {% endfor %}
-            <h2>Product - {{product}}</h2>
-            <form action="{% url 'product' product.id %}" method="post" enctype="multipart/form-data">
+            <form action="{% url 'edit-category' category.id %}" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group" style="width: 80%; padding: 10px;">
                     {{edit_form.as_p}}
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Update Product" id="" class="btn">
+                    <input type="submit" value="Update category" id="" class="btn add-product">
                 </div>
             </form>
+
+            <!-- <script>
+        $(document).on('click', '.add-product', function(e) {
+            e.preventDefault();
+            window.location.href: "{% url 'create_product' %}";
+        })
+    </script> -->
         </div>
     </section>
-
 </main>
 {% endblock %}
 

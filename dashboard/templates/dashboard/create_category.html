@@ -1,7 +1,7 @@
 {% extends 'dashboard/base.html' %}
 
 {% load static %}
-{% block title %}Dashboard {% endblock %}
+{% block title %}New Category {% endblock %}
 
 
 {% block content %}
@@ -16,13 +16,13 @@
                 <p>{{message}}</p>
             </div>
             {% endfor %}
-            <form action="{% url 'create_product' %}" method="post" enctype="multipart/form-data">
+            <form action="{% url 'new-category' %}" method="post">
                 {% csrf_token %}
                 <div class="form-group" style="width: 80%; padding: 10px;">
                     {{form.as_p}}
                 </div>
                 <div class="form-group">
-                    <input type="submit" value="Add Product" id="" class="btn add-product">
+                    <input type="submit" value="Add Category" id="" class="btn add-product">
                 </div>
             </form>
 

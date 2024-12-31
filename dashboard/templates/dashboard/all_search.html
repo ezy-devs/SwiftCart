@@ -1,0 +1,31 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+{% block title %}Dashboard {% endblock %}
+
+
+{% block content %}
+
+<main class="main-content">
+
+    <section class="analytics" style="margin-top: 4rem; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;">
+      {% for result in results %} 
+      {% if result.profile %}
+      <!-- User result -->
+      <a href="{{result.profile.get_absolute_url}}">
+        <div class="card" style="min-height: 80px;">
+        <h3>{{result.profile.user}}</h3>
+  </div>
+</a>
+  {% else %}
+      <a href="{{result.get_absolute_url}}" style="text-decoration: none; color: inherit;">
+      <div class="card" style="min-height: 80px;">
+          <h3>{{result}}</h3>
+    </div>
+  </a> 
+  {% endif %}
+    {% endfor %}    
+      </section>
+
+</main>
+{% endblock %}

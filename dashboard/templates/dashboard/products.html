@@ -10,42 +10,30 @@
 <main class="main-content" >
   <section class="settings">
     <div class="settings-container card" style="max-width: 100%;">
-    <section class="products" style="margin-top: 4rem;">
+      <div style="background-color: rgb(119, 34, 119); color: rgb(237, 254, 255); padding: 4px; display: none; border-radius: 5px;" id="msg-modal">
+        <p id="message"></p>
+    </div>
+
+    <section class="products">
         <h2>Products</h2>
         <a href="{% url 'create_product' %}" class="btn">Add New Product</a>
 
         
-        <table class="table">
+        <table id="products-table" class="table">
           <thead>
             <tr>
-              <th>ID</th>
+             
+              <th>Photo</th>
               <th>Name</th>
               <th>Category</th>
               <th>Price</th>
-              <th>Stock</th>
+              <th>Sale</th>
+              <th>Created at</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {% for product in products reversed %}
-            <tr>
-              <td>
-                <img src="{{product.image.url}}" alt="" width="50px" height="50px" style="object-fit: cover; border-radius: 10px;"></td>
-              <!-- <td>{{product.id}}</td> -->
-              <td>{{product}}</td>
-              <td>{{product.category}}</td>
-              <td>&#8358;{{product.price}}</td>
-              <td>{{product.in_stock}}</td>
-              <td>
-                <a href="{% url 'edit_product' product.id %}" class="btn edit" id="edit-product">Edit</a>
-                
-                  <input type="hidden" name="" data-product-id="{{product.id}}"="product-id" value="">
-                  <button type="button" class="btn delete" data-product-id="{{product.id}}">Delete</button>
-                
-               
-              </td>
-            </tr>
-            {% endfor %}
+           
           </tbody>
         </table>
       </section>
@@ -68,7 +56,8 @@
       },
      
       success: function(response) {
-       
+        $('#message').text(response.message);
+        $('#msg-modal').fadeIn().delay(2000).fadeOut();
         console.log(response);
       },
       error: function(xhr, errmsg, err) {
@@ -76,71 +65,46 @@
       }
     })
   })
-  $(document).ready(function () {
+  
 
-function fetchCartItems() {
-    $.ajax({
-        url: "{% url 'fetch_cart' %}",
-        type: 'GET',
+function fetchProducts() {
+      $.ajax({
+        url: "{% url 'fetch_products' %}",
+        method: 'GET',
         success: function (response) {
-            const cartItems = response.cart_items;
-            const totalPrice = document.getElementById('total');
-            totalPrice.innerHTML = 'N'+response.total_price + '.00';
-            
-            if (cartItems.length > 0) {
-                let html = '<div class="cart-items">';
-                cartItems.forEach(item => {
-                    html += `  
-    <div class="cart-item">
-    
-    <img src="${item.product_image}" alt="Product 1">
-    <div class="cart-item-details">
-        <div style="padding: 0; margin: 0;">
-            <h3 style="padding: 0; margin: 0;">${item.product_name}</h3>
-            {% if item.product.is_sale %}
-            <p class="product-price" style="padding: 0; margin: 0;">N{{item.product.sale_price}} <span
-                    class="old-price"> N{{item.product.price}} </span></p>
-            {% else %}
-            <p class="product-price" style="padding: 0; margin: 0;">N${item.total_price} </p>
-            {% endif %}
-            <p style="padding: 0; margin: 0;">quantity: <strong>${item.quantity}</strong></p>
-        </div>
-        <p>${item.description}</p>
-    </div>
-    <div>
-        <div class="quantity">
-            <label for="quantity-${item.quantity}">quantity:</label>
-            <input type="number" name="quantity" id="quantity" min="1" value="${item.quantity}"
-                class="button">
-        </div>
-        <div class="cta-buttons">
-            <button type="button" data-product-id="${item.product_id}"  class="update-cart btn">Update</button>
-            
-            <button type="button" class="remove-item btn" data-product-id="${item.product_id}">Remove</button>
-        </div>
-    </div>
-</div>`;
-                });
-
-                html += '</div>';
-                $('#cart-items').html(html);
-            }
-
-            else {
-                $('#cart-items').html('<h3>Your cart is empty.</h3>');
-            }
+          const productTableBody = $('tbody');
+          productTableBody.empty();
+          response.products.forEach(product => {
+            const productRow = `
+                          <tr>
+                              <td>
+                                <img src="${product.image}" alt="" width="50px" height="50px" style="object-fit: cover; border-radius: 10px;">
+                              </td>
+                              <td>${product.name}</td>
+                              <td>${product.category}..</td>
+                              <td>&#8358; ${product.price}</td>
+                              <td>${product.sale}</td>
+                              <td>${product.created_at}</td>
+                              <td style="display: flex; gap: 5px;">
+                                  <a href="/dashboard/product/${product.id}" class="btn view">View</a>
+                                      <a href="/dashboard/product/${product.id}/" class="btn Delete">Delete</a>
+                                  </div>
+                              </td>
+                          </tr>
+                      `;
+            productTableBody.append(productRow);
+          });
         },
-        error: function (xhr, errmsg, err) {
-            console.log(err);
-            $('#cart-items').html('<h3>Failed to load cart items.</h3>');
+        error: function (xhr) {
+          console.log(xhr.responseJSON);
         }
+      });
+    }
+
+    $(document).ready(function () {
+      fetchProducts();
+      setInterval(fetchProducts, 30000); // Fetch orders every 30 seconds
     })
-}
-fetchCartItems();
-
-setInterval(fetchCartItems, 3000);
-});
-
 
 
 </script>

@@ -489,6 +489,7 @@ h2 {
   outline: none;
   transition: border-color 0.3s;
   background-color: rgba(71, 41, 71, 0.425);
+  color: #eaf2f8;
 }
 
 .input:focus {
