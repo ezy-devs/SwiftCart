@@ -157,19 +157,22 @@ def search_shop(request):
             'search_term':search_term
             })
 
-def product_details(request, product_id):
-    categories = Category.objects.all()
+# def product_details(request, product_id):
+#     categories = Category.objects.all()
 
-    product = get_object_or_404(Product, id=product_id)
-    related_products = Product.objects.filter(category=product.category).exclude(id=product_id)[0:3]
-    
+#     product = get_object_or_404(Product, id=product_id)
+#     related_products = Product.objects.filter(category=product.category).exclude(id=product_id)[0:3]
+#     if request.user.is_superuser:
 
-    context = {
-        'product':product,
-        'related_products':related_products,
-        'categories':categories,
-        }
-    return render(request, 'store/product_details.html', context)
+#         return render(request, 'dashboard/products.html', {'products':products})
+#     else:
+
+#         context = {
+#             'product':product,
+#             'related_products':related_products,
+#             'categories':categories,
+#             }
+#         return render(request, 'store/product_details.html', context)
 
 
 

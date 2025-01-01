@@ -16,14 +16,8 @@ import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-from dotenv import load_dotenv
-
-load_dotenv()
-api_key = os.getenv('API_KEY')
-
-
 env = environ.Env()
-environ.Env.read_env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
 
@@ -40,8 +34,9 @@ DEBUG = True
 ALLOWED_HOSTS = ["swiftcart-production.up.railway.app", "127.0.0.1"]
 
 
-PAYSTACK_PUBLIC_KEY = 'pk_test_e42124b229e8bcad610a36853618f1ab2eb24552'
-PAYSTACK_SECRET_KEY = 'sk_test_bde5c40fe82c5cdfe39d1cf74709fcbbb525821d'
+PAYSTACK_PUBLIC_KEY = env('PAYSTACK_PUBLIC_KEY')
+PAYSTACK_SECRET_KEY = env('PAYSTACK_SECRET_KEY')
+
 
 # Application definition
 

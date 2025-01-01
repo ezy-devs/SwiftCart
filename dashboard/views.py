@@ -257,26 +257,37 @@ def create_product(request):
     return render(request, 'dashboard/create_product.html', {'form': form})
 
 
-@user_passes_test(admin_check, login_url='home')
+# @user_passes_test(admin_check, login_url='home')
 def edit_product(request, product_id):
     product = get_object_or_404(Product, id=product_id)
+    categories = Category.objects.all()
 
-    if request.method == 'POST':
-        edit_form = EditProductForm(request.POST, request.FILES, instance=product)
-        if edit_form.is_valid():
-            edit_form.save()
-            
-            messages.success(request, "Product Updated successfully!")  
-            
-            return redirect('dashboard')  
+    related_products = Product.objects.filter(category=product.category).exclude(id=product_id)[0:3]
+    if request.user.is_superuser:
+ 
+        if request.method == 'POST':
+            edit_form = EditProductForm(request.POST, request.FILES, instance=product)
+            if edit_form.is_valid():
+                edit_form.save()
+                
+                messages.success(request, "Product Updated successfully!")  
+                
+                return redirect('dashboard')  
+            else:
+                messages.error(request, "There was an error with the form. Please check the details and try again.")
+        
         else:
-            messages.error(request, "There was an error with the form. Please check the details and try again.")
-    
+            edit_form = EditProductForm(instance=product)
+        
+        
+        return render(request, 'dashboard/edit_product.html', {'edit_form': edit_form, 'product':product})
     else:
-        edit_form = EditProductForm(instance=product)
-    
-    
-    return render(request, 'dashboard/edit_product.html', {'edit_form': edit_form, 'product':product})
+        context = {
+            'product':product,
+            'related_products':related_products,
+            'categories':categories,
+            }
+        return render(request, 'store/product_details.html', context)
 
 
 @user_passes_test(admin_check, login_url='home')
