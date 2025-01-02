@@ -16,9 +16,7 @@
 </div>
 <main>
     <section class="section container" style="margin-top: 10px;">
-        <h1 class="title" id="title">
-            <h1>{{ collection.name }}</h1>
-        </h1>
+        
         <div class="section-container">
             {% for product in collection_items %}
             <a href="{% url 'product' product.product.id %}" style="text-decoration: none; color: #222;">

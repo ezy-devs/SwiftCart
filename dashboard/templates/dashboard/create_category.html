@@ -1,6 +1,125 @@
 {% extends 'dashboard/base.html' %}
 
 {% load static %}
+{% block title %}Dashboard {% endblock %}
+
+
+{% block content %}
+
+<main class="main-content">
+  <section class="settings">
+    <div class="settings-container card" style="max-width: 100%;">
+      <section class="orders">
+        <div class="header">
+          <h2>Orders</h2>
+          <div class="actions">
+            <a href="{% url 'search-order' %}" class="btn add-user " id="searchbtn">Search</a>
+            <a href="{% url 'download_orders_excel' %}" class="btn add-user" >Download Excel</a>
+          </div>
+        </div>
+      
+        <table id="orders-table" class="table" >
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Email</th>
+              <th>Amount Paid</th>
+              <th>Status</th>
+              <th>Date Ordered</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Orders will be dynamically inserted here -->
+          </tbody>
+        </table>
+
+      </section>
+
+    </div>
+  </section>
+
+
+
+  <script>
+  function fetchOrders() {
+      $.ajax({
+        url: "{% url 'get_recent_orders' %}",
+        method: 'GET',
+        success: function (response) {
+          const ordersTableBody = $('tbody');
+          ordersTableBody.empty();
+          response.all_orders.forEach(order => {
+            const orderRow = `
+            <tr>
+                <td>${order.id}</td>
+                <td>${order.user}</td>
+                <td>${order.email}</td>
+                <td>&#8358; ${order.amount_paid}</td>
+                <td>${order.status}</td>
+                <td>${order.date_ordered}</td>
+                <td style="display: flex; gap: 5px;">
+                    <a href="/dashboard/order/${order.id}/" class="btn view">View</a>
+                    <div class="user-profile">
+                        <button class="btn update">Update Status</button>
+                        <div class="dropdown">
+                            <ul>
+                                ${order.status_choices.map(choice => `
+                                    <li>
+                                        <button value="${choice[0]}" data-order-id="${order.id}" id="order-status" style="background-color: transparent; border: none; color:#eaf2f8;">
+                                            ${choice[1]}
+                                        </button>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+                      `;
+            ordersTableBody.append(orderRow);
+          });
+        },
+        error: function (xhr) {
+          console.log(xhr.responseJSON);
+        }
+      });
+    
+    }
+  
+    $(document).ready(function () {
+      fetchOrders();
+      setInterval(fetchOrders, 30000); // Fetch orders every 30 seconds
+    });
+      $(document).on('click', '#order-status', function (e) {
+        e.preventDefault();
+        const order_id = $(this).data('order-id');
+        const order_status = $(this).val();
+        $.ajax({
+          type: 'POST',
+          url: "{% url 'update_order' %}",
+          data: {
+            order_id: order_id,
+            order_status: order_status,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
+          },
+          success: function (response) {
+            console.log(response);
+            fetchOrders(); // Refresh orders after update
+          },
+          error: function (xhr) {
+            console.log(xhr.responseJSON);
+          },
+        });
+      });
+  
+  </script>
+</main>
+{% endblock %}{% extends 'dashboard/base.html' %}
+
+{% load static %}
 {% block title %}New Category {% endblock %}
 
 

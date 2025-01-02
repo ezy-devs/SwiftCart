@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
         datasets: [{
           label: "Monthly Sales",
           data: [1200, 1900, 3000, 5000, 2500, 4200],
-          borderColor: "#1abc9c",
-          backgroundColor: "rgba(26, 188, 156, 0.2)"
+          borderColor: "#414",
+          backgroundColor: "#414"
         }]
       },
       options: {
@@ -27,8 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
         datasets: [{
           label: "New Users",
           data: [300, 450, 700, 1200, 900, 1500],
-          backgroundColor: "#3498db",
-          borderColor: "#2980b9"
+          backgroundColor: "#414",
+          borderColor: "#414"
         }]
       },
       options: {
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
           label: "Monthly Sales",
           data: [1500, 2000, 3000, 2500, 4000, 5000],
           borderColor: "#414",
-          backgroundColor: "rgba(26, 188, 156, 0.2)"
+          backgroundColor: "#414"
         }]
       },
     });

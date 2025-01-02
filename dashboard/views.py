@@ -53,8 +53,6 @@ def view_profile(request, username):
     return render(request, 'dashboard/view_profile.html', {'user': user, 'form':form, 'shipping_Form':shipping_Form})
 
 
-
-
 def search(request):
     if request.method == 'GET':
 
@@ -95,10 +93,24 @@ def dashboard(request):
     users = User.objects.all()
     recent_orders = Order.objects.order_by('-date_ordered')[:6]
     orders = Order.objects.all()
+    pending_orders = orders.filter(status__iexact='pending')
+    processing_orders = Order.objects.filter(status__iexact='processing')
+    shipped_orders = Order.objects.filter(status__iexact='shipped')
+    delivered_orders = Order.objects.filter(status__iexact='delivered')
+    cancelled_orders = Order.objects.filter(status__iexact='cancelled')
+    categories = Category.objects.all()
+    products = Product.objects.all()
     context = {
         'users':users,
         'recent_orders':recent_orders,
         'orders':orders,
+        'pending_orders':pending_orders,
+        'processing_orders':processing_orders,
+        'shipped_orders':shipped_orders,
+        'delivered_orders':delivered_orders,
+        'cancelled_orders':cancelled_orders,
+        'categories':categories,
+        'products':products,
     }
     return render(request, 'dashboard/index.html', context)
 
@@ -326,10 +338,49 @@ def order(request, order_id):
     for item in order_items:
         item_form = EditOrderItemForm(instance=item)
 
-    
+    if request.method == 'POST':
+        order_form = EditOrderForm(request.POST, instance=order)
+        if order_form.is_valid():
+            order_form.save()
+            messages.success(request, 'Order status updated!.')
+            return redirect('order', order_id)
+        else:
+            messages.success(request, 'There was an issue with the form, check details and try again!.')
+            return redirect('order', order_id)
+        
     return render(request, 'dashboard/order.html', 
-                  {'order':order, 'order_items':order_items,
-                   })
+                  {
+                      'order':order, 
+                    'order_items':order_items,
+                    'order_form':order_form,
+                   }
+                   )
+
+
+
+
+def pending_orders(request):
+    
+    pending_orders = Order.objects.filter(status__iexact='pending')
+    return render(request, 'dashboard/pending_orders.html', {'orders':pending_orders})
+
+
+def processing_orders(request):
+    orders = Order.objects.filter(status__iexact='processing')
+
+    return render(request, 'dashboard/processing_orders.html', {'orders':orders})
+
+def shipped_orders(request):
+    orders = Order.objects.filter(status__iexact='shipped')
+    return render(request, 'dashboard/shipped_orders.html', {'orders':orders})
+
+def delivered_orders(request):
+    orders = Order.objects.filter(status__iexact='delivered')
+    return render(request, 'dashboard/delivered_orders.html', {'orders':orders})
+
+def cancelled_orders(request):
+    orders = Order.objects.filter(status__iexact='cancelled')
+    return render(request, 'dashboard/cancelled_orders.html', {'orders':orders})
 
 
 @user_passes_test(admin_check, login_url='home')

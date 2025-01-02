@@ -22,7 +22,7 @@ body {
   
   /* Auth Box */
   .auth-box {
-    background: #ffffff;
+    background: #eaf2f8;
     padding: 30px;
     width: 50%;
     border-radius: 10px;
@@ -31,7 +31,7 @@ body {
   }
   
   .auth-box h2 {
-    color: #2ecc71;
+    color: #414;
     font-size: 24px;
     margin-bottom: 20px;
     font-weight: bold;
@@ -84,23 +84,23 @@ body {
     width: 100%;
     padding: 10px;
     font-size: 14px;
-    border: 1px solid #dcdcdc;
+    border: 1px solid #eaf2f8;
     border-radius: 5px;
     outline: none;
     transition: border-color 0.3s;
   }
   .input:focus {
-    border-color: #2ecc71;
+    border-color: #414;
   }
   .form-group input:focus {
-    border-color: #2ecc71;
+    border-color: #414;
   }
   
   /* Button */
   .btn {
     width: 100%;
-    background-color: #2ecc71;
-    color: #ffffff;
+    background-color: #414;
+    color: #eaf2f8;
     border: none;
     padding: 12px;
     font-size: 16px;
@@ -111,7 +111,7 @@ body {
   }
   
   .btn:hover {
-    background-color: #27ae60;
+    background-color: rgb(46, 13, 46);
   }
   
   /* Switch Links */
@@ -122,7 +122,7 @@ body {
   }
   
   .switch-link a {
-    color: #2ecc71;
+    color: #414;
     text-decoration: none;
     font-weight: bold;
   }

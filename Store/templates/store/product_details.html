@@ -31,8 +31,8 @@
             <div class="product-info">
                 <h1 class="product-title">{{product}}</h1>
                 {% if product.is_sale%}
-                <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} <span class="old-price">
-                        N{{product.sale_price}} </span></p>
+                <p class="product-price" style="padding: 0; margin: 0;">&#8358;{{product.sale_price}} <span class="old-price">
+                    &#8358; {{product.price}}</span></p>
                 {% else %}
                 <p class="product-price" style="padding: 0; margin: 0;">N{{product.price}} </p>
                 {% endif %}
@@ -107,14 +107,11 @@
                 <div class="quantity">
                     <label for="quantity-{{product.id}}">quantity:</label>
                     <input type="number" name="quantity" id="quantity" min="1" value="1" class="button">
-                    <!-- <button onclick="updateQuantity(-1, 20)">-</button>
-                        <span id="quantity">1</span>
-                        <button onclick="updateQuantity(1, 20)">+</button> -->
+                   
                 </div>
 
                 <div class="cta-buttons">
-                    <!-- <button type="submit" class="add-to-cart btn" value="{{product.id}}" id="add-to-cart">Add to
-                        Cart</button> -->
+                   
                     <form id="add-to-cart-form">
                         <input type="hidden" id="product-id" value="{{ product.id }}">
                         <button type="button" id="add-to-cart">Add to Cart</button>

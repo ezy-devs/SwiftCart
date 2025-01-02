@@ -9,9 +9,15 @@
 <!-- Main Content -->
 <main class="main-content">
 
-
+  {% for message in messages %}
+  <div class="msg"
+    style="background-color: rgb(119, 34, 119); color: rgb(237, 254, 255);min-width: 100px; border-radius: 5px;">
+    <p>{{message}}</p>
+  </div>
+  {% endfor %}
   <!-- Analytics Section -->
   <section class="analytics" style="margin-top: 4rem;">
+
     <div class="card">
       <h3>Total Users</h3>
       <div style="display: flex;  flex-direction: row; gap: 5px;">
@@ -38,29 +44,64 @@
   </section>
   <section class="analytics">
     <div class="card">
+      <h3>Total Categories</h3>
+      <div style="display: flex;  flex-direction: row; gap: 5px;">
+        <img src="{% static 'assets/images/analysis.png' %}" alt="">
+        <p>{{categories.count}}</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Total Products</h3>
+      <div style="display: flex;  flex-direction: row; gap: 5px;">
+        <img src="{% static 'assets/images/data-analyst.png' %}" alt="" style="background-color: #414;">
+        <p>{{products.count}}</p>
+      </div>
+    </div>
+
+    <div class="card">
       <h3>Pending Orders</h3>
       <div style="display: flex;  flex-direction: row; gap: 5px;">
         <img src="{% static 'assets/images/data-analyst.png' %}" alt="" style="background-color: #414;">
-        <p>{% if orders.status %} {{orders.count}} {% endif%}</p>
+        <p>{{pending_orders.count}}</p>
       </div>
     </div>
+
+
+  </section>
+
+  <section class="analytics">
     <div class="card">
       <h3>Processing Orders</h3>
       <div style="display: flex;  flex-direction: row; gap: 5px;">
         <img src="{% static 'assets/images/analysis.png' %}" alt="">
-        <p>{{orders.count}}</p>
+        <p>{{processing_orders.count}}</p>
       </div>
     </div>
 
     <div class="card">
-      <h3>Revenue</h3>
+      <h3>Shipped Ordrs</h3>
       <div style="display: flex;  flex-direction: row; gap: 5px;">
         <img src="{% static 'assets/images/data-analyst.png' %}" alt="" style="background-color: #414;">
-        <p>$89,234</p>
+        <p>{{shipped_orders.count}}</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Delivered Orders</h3>
+      <div style="display: flex;  flex-direction: row; gap: 5px;">
+        <img src="{% static 'assets/images/data-analyst.png' %}" alt="" style="background-color: #414;">
+        <p>{{delivered_orders.count}}</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Cancelled Orders</h3>
+      <div style="display: flex;  flex-direction: row; gap: 5px;">
+        <img src="{% static 'assets/images/data-analyst.png' %}" alt="" style="background-color: #414;">
+        <p>{{cancelled_orders.count}}</p>
       </div>
     </div>
   </section>
-
   <!-- Chart Section -->
   <section class="charts">
     <div class="chart-container card">
@@ -192,11 +233,4 @@
 
 <script src="{% static 'assets/js/dashboard.js' %}"></script>
 
-{% endblock %}
-
-
-
-
-
-{% block footer %}
 {% endblock %}

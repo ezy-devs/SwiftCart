@@ -1,0 +1,29 @@
+{% extends 'dashboard/base.html' %}
+
+{% load static %}
+{% block title %}Processing Orders {% endblock %}
+
+
+{% block content %}
+
+<main class="main-content">
+    <div class="header" style="margin-top: 4rem;">
+        <h2>Processing Orders</h2>
+        <div class="actions">
+          <a href="{% url 'search-order' %}" class="btn add-user " id="searchbtn">Search</a>
+          <a href="{% url 'download_orders_excel' %}" class="btn add-user" >Download Excel</a>
+        </div>
+      </div>
+    <section class="analytics" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;">
+        {% for order in orders %}
+        <a href="{% url 'order' order.id %}" style="text-decoration: none;">
+            <div class="card" style="min-height: 80px;">
+                <h3>{{order}}</h3>
+            </div>
+        </a>
+        {% endfor %}
+          
+      </section>
+
+</main>
+{% endblock %}

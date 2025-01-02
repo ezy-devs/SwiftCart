@@ -102,7 +102,14 @@ class EditOrderForm(forms.ModelForm):
     class Meta:
 
         model = Order
-        fields = ('__all__')
+        fields = ('status', )
+
+        widgets = {
+            
+            'status': forms.Select(attrs={
+                'class': INPUT_CLASSES,
+            }),
+        }
 
 class EditOrderItemForm(forms.ModelForm):
     class Meta:

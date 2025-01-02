@@ -3,23 +3,23 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Bootstrap custom cdn -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <title>{% block title %} {% endblock %} | Admin</title>
+  <!-- Bootstrap custom cdn -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-    <!-- <link rel="stylesheet" href="{% static 'assets/css/forms.css' %}"> -->
-    <link rel="stylesheet" href="{% static 'assets/css/dashboard.css' %}">
+  <title>{% block title %} {% endblock %} | Admin</title>
+
+  <!-- <link rel="stylesheet" href="{% static 'assets/css/forms.css' %}"> -->
+  <link rel="stylesheet" href="{% static 'assets/css/dashboard.css' %}">
 
 </head>
 
@@ -27,174 +27,201 @@
 
   <style>
     .search-container {
-    display: flex;
-    align-items: center;
-    background-color: #1f1f1f; /* Darker container background */
-    border: 1px solid #414; /* Brand color border */
-    border-radius: 25px;
-    padding: 5px 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); /* Subtle shadow */
-  }
-  
-  /* Input field styling */
-  .search-input {
-    border: none;
-    outline: none;
-    padding: 8px;
-    font-size: 16px;
-    flex: 1;
-    outline: none;
-    border-radius: 25px 0 0 25px;
-    background-color: #1f1f1f; /* Matching background */
-    color: #e0e0e0; /* Light text */
-  }
-  
-  /* Button styling */
-  .search-button {
-    background: none;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 0 10px;
-    border-radius: 0 25px 25px 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  /* SVG icon styling */
-  .search-button svg {
-    fill: #e0e0e0; /* Light color for icon */
-    width: 20px;
-    height: 20px;
-    transition: fill 0.3s ease;
-  }
-  
-  /* Hover effects */
-  .search-button:hover svg {
-    fill: #414; /* Highlight icon with brand color */
-  }
-  
-  .search-input::placeholder {
-    color: #888; /* Subdued placeholder text */
-  }
+      display: flex;
+      align-items: center;
+      background-color: #1f1f1f;
+      /* Darker container background */
+      border: 1px solid #414;
+      /* Brand color border */
+      border-radius: 25px;
+      padding: 5px 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+      /* Subtle shadow */
+    }
+
+    /* Input field styling */
+    .search-input {
+      border: none;
+      outline: none;
+      padding: 8px;
+      font-size: 16px;
+      flex: 1;
+      outline: none;
+      border-radius: 25px 0 0 25px;
+      background-color: #1f1f1f;
+      /* Matching background */
+      color: #e0e0e0;
+      /* Light text */
+    }
+
+    /* Button styling */
+    .search-button {
+      background: none;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 0 10px;
+      border-radius: 0 25px 25px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* SVG icon styling */
+    .search-button svg {
+      fill: #e0e0e0;
+      /* Light color for icon */
+      width: 20px;
+      height: 20px;
+      transition: fill 0.3s ease;
+    }
+
+    /* Hover effects */
+    .search-button:hover svg {
+      fill: #414;
+      /* Highlight icon with brand color */
+    }
+
+    .search-input::placeholder {
+      color: #888;
+      /* Subdued placeholder text */
+    }
   </style>
-    <!-- NAVIGATION MENU -->
-    {% block aside %}
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="logo">
-          <div class="brand logo" style="display: flex; align-items: center;">
-            <img src="{% static 'assets/images/swiftcart logo.webp' %}" alt="Company Logo" style="width: 35px; border-radius: 10px; ">
-              <a href="" class="brand" style="text-decoration: none; color: #e0e0e0;">SwiftCart</a>
-            </div>
-        </div>
-            <nav class="nav">
-                <a href="{% url 'dashboard' %}" class="nav-item">
-                  <span class="nav-icon">🏠</span>
-                  <span class="nav-text">Home</span>
-                </a>
-                <a href="{% url 'reports' %}" class="nav-item">
-                  <span class="nav-icon">📊</span>
-                  <span class="nav-text">Analytics</span>
-                </a>
-                <a href="{% url 'products' %}" class="nav-item">
-                    <span class="nav-icon">📊</span>
-                    <span class="nav-text">Products</span>
-                  </a>
-                  <a href="{% url 'categories' %}" class="nav-item">
-                    <span class="nav-icon">📊</span>
-                    <span class="nav-text">Categories</span>
-                  </a>
-                  <a href="{% url 'orders' %}" class="nav-item">
-                    <span class="nav-icon">📊</span>
-                    <span class="nav-text">Orders</span>
-                  </a>
-                
-                <a href="{% url 'users' %}" class="nav-item">
-                  <span class="nav-icon">📩</span>
-                  <span class="nav-text">Users</span>
-                </a>
-                <a href="{% url 'settings' %}" class="nav-item">
-                  <span class="nav-icon">⚙️</span>
-                  <span class="nav-text">Settings</span>
-                </a>
-                <a href="{% url 'users' %}" class="nav-item">
-                  <span class="nav-icon">📩</span>
-                  <span class="nav-text">Notification</span>
-                </a>
-                <a href="{% url 'logout' %}" class="nav-item">
-                  <span class="nav-icon">🔒</span>
-                  <span class="nav-text">Logout</span>
-                </a>
-              </nav>
-    </aside>
-    {% endblock %}
+  <!-- NAVIGATION MENU -->
+  {% block aside %}
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="brand logo" style="display: flex; align-items: center;">
+        <img src="{% static 'assets/images/swiftcart logo.webp' %}" alt="Company Logo"
+          style="width: 35px; border-radius: 10px; ">
+        <a href="" class="brand" style="text-decoration: none; color: #e0e0e0;">SwiftCart</a>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="{% url 'dashboard' %}" class="nav-item">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-text">Home</span>
+      </a>
+      <a href="{% url 'reports' %}" class="nav-item">
+        <span class="nav-icon">📊</span>
+        <span class="nav-text">Analytics</span>
+      </a>
+      <a href="{% url 'products' %}" class="nav-item">
+        <span class="nav-icon">📊</span>
+        <span class="nav-text">Products</span>
+      </a>
+      <a href="{% url 'categories' %}" class="nav-item">
+        <span class="nav-icon">📊</span>
+        <span class="nav-text">Categories</span>
+      </a>
+      <!-- <a href="{% url 'orders' %}" class="nav-item user-profile"> -->
 
-    {% block header %}
-    <header class="main-header" style="position: fixed; left: 15.5rem; right: 0; top: 0; z-index: 100; height: 66px; display: flex; align-items: center;">
-      <div class="brand logo" style="display: flex; align-items: center; justify-content: space-around;">
-      
-        <a href="" class="brand" style="text-decoration: none;">Dashboard</a>
-      </div>
-       
-          <form action="{% url 'all-search' %}" method="get" class="search-container">
-          <input type="search" placeholder="Search..." class="search-input" name="q">
-          <button type="submit" class="search-button">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-              <path d="M10 2a8 8 0 105.293 14.707l4.707 4.707a1 1 0 001.414-1.414l-4.707-4.707A8 8 0 0010 2zM4 10a6 6 0 1112 0 6 6 0 01-12 0z" />
-            </svg>
-          </button>
-        </form>
-        
-      </div>
-      <div class="header-right">
-        <!-- Notification Icon -->
-        <div class="notification">
-          <span class="icon">🔔</span>
-          <span class="badge">3</span>
-        </div>
+
+      <div class="order-ui nav-item">
+        <span class="nav-icon">📊</span>
+        <span class="nav-text order-ui">Orders</span>
+        <div class="dropdown">
+          <ul>
+            <li><a href="{% url 'orders' %}">All Orders</a></li>
+            <li><a href="{% url 'pending-orders' %}">Pending Orders</a></li>
+            <li><a href="{% url 'processing-orders' %}">Processing Orders</a></li>
+            <li><a href="{% url 'shipped-orders' %}">Shipped Orders</a></li>
+            <li><a href="{% url 'delivered-orders' %}">Delivered Orders</a></li>
+            <li><a href="{% url 'cancelled-orders' %}">Cancelled Orders</a></li>
+          </ul>
     
-        <!-- User Profile -->
-        <div class="user-profile">
-          
-          <img src="{{request.user.profile.photo.url}}" alt="User Avatar" class="avatar">
-          <div class="dropdown">
-            <ul>
-              <li><a href="{% url 'profile' user %}">Profile</a></li>
-              <li><a href="#">Settings</a></li>
-              <li><a href="#">Logout</a></li>
-            </ul>
-          </div>
         </div>
-    </header>
-    {% endblock %}
+      </div>
 
-    {% block content %}
+      <a href="{% url 'users' %}" class="nav-item">
+        <span class="nav-icon">📩</span>
+        <span class="nav-text">Users</span>
+      </a>
+      <a href="{% url 'settings' %}" class="nav-item">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-text">Settings</span>
+      </a>
+      <a href="{% url 'users' %}" class="nav-item">
+        <span class="nav-icon">📩</span>
+        <span class="nav-text">Notification</span>
+      </a>
+      <a href="{% url 'logout' %}" class="nav-item">
+        <span class="nav-icon">🔒</span>
+        <span class="nav-text">Logout</span>
+      </a>
+    </nav>
+  </aside>
+  {% endblock %}
 
-    {% endblock %}
+  {% block header %}
+  <header class="main-header"
+    style="position: fixed; left: 15.5rem; right: 0; top: 0; z-index: 100; height: 60px; display: flex; align-items: center; border-radius: 30px">
+    <div class="brand logo" style="display: flex; align-items: center; justify-content: space-around;">
 
 
-    {% block footer %}
+    </div>
+
+    <form action="{% url 'all-search' %}" method="get" class="search-container">
+      <input type="search" placeholder="Search..." class="search-input" name="q">
+      <button type="submit" class="search-button">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+          <path
+            d="M10 2a8 8 0 105.293 14.707l4.707 4.707a1 1 0 001.414-1.414l-4.707-4.707A8 8 0 0010 2zM4 10a6 6 0 1112 0 6 6 0 01-12 0z" />
+        </svg>
+      </button>
+    </form>
+
+    </div>
+    <div class="header-right">
+      <!-- Notification Icon -->
+      <div class="notification">
+        <span class="icon">🔔</span>
+        <span class="badge">3</span>
+      </div>
+
+      <!-- User Profile -->
+      <div class="user-profile">
+
+        <img src="{{request.user.profile.photo.url}}" alt="User Avatar" class="avatar">
+        <div class="dropdown">
+          <ul>
+            <li><a href="{% url 'profile' user %}">Profile</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+  </header>
+  {% endblock %}
+
+  {% block content %}
+
+  {% endblock %}
+
+
+  {% block footer %}
+  <center style="position: relative; top:50vh;">
     <footer class="footer">
 
-        <!-- Copyright -->
-        <div class="footer-bottom">
-            <p>&copy; 2024 Benue Fashion Hub | All Rights Reserved</p>
-        </div>
-    </footer>
-    {% endblock %}
+    <!-- Copyright -->
+    <div class="footer-bottom">
+      <p>&copy; 2025 SwiftCart | All Rights Reserved</p>
+    </div>
+  </footer>
+  </center>
+  {% endblock %}
 
 
-    <!-- Bootstrap JavaScript (with Popper) -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ENjdO4Dr2bkBIFxQpd6aqTeGh0kBhWZY4PTZT2ylH8laC2xLpz5rs9czjR0VVnDa"
-        crossorigin="anonymous"></script>
-    
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+  <!-- Bootstrap JavaScript (with Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpd6aqTeGh0kBhWZY4PTZT2ylH8laC2xLpz5rs9czjR0VVnDa"
+    crossorigin="anonymous"></script>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-    <script src="{% static 'assets/js/script.js' %}"></script>
+  <script src="{% static 'assets/js/script.js' %}"></script>
 </body>
 
 </html>

@@ -8,7 +8,7 @@
 body {
   font-family: Arial, sans-serif;
   line-height: 1.6;
-  background-color: #f4f4f4;
+  background-color: #f8f9fa;
 }
 
 
@@ -92,6 +92,10 @@ h2 {
   padding: 10px 15px;
   cursor: pointer;
   border-radius: 5px;
+}
+.cta-buttons {
+  display: flex;
+  gap: 5px;
 }
 .cta-buttons .remove-item {
   background-color: #e74c3c;
@@ -245,6 +249,9 @@ textarea {
     display: flex;
     flex-direction: column;
   }
+  }
+  .cta-buttons {
+    display: block;
   }
 /* Footer */
 .footer {
