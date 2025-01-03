@@ -29,6 +29,7 @@
   }
   .btn:hover {
     background-color: rgb(44, 13, 44);
+    color: #eaf2f8;
   }
   
   /* HEADER SECTION STYLE*/
@@ -449,7 +450,7 @@
   
   .section-container {
     display: flex;
-    justify-content: space-between;
+    gap: 3px;
     overflow-x: hidden;
     overflow: scroll;
     scrollbar-width: none;
@@ -462,13 +463,18 @@
   }
   
   .section-container .card {
-    max-width: 320px;
+    max-width: 240px;
     max-height: 300px;
     border: 1px solid #3333;
     border-radius: 10px;
     min-width: 230px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   
+  .section-container .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px #eaf2f8;
+  }
   .card.card-bg {
     min-width: 400px;
     max-height: 300px;
@@ -880,6 +886,7 @@
     .section-container {
       display: flex;
       overflow-x: scroll;
+      gap: 3px;
       gap: 5px;
     }
   
@@ -897,6 +904,9 @@
     }
     .product-price, .product-rating {
       font-size: 12px;
+    }
+    .product-rating {
+      display: none;
     }
     .card-img{
       margin-bottom: 0;

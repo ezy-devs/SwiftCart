@@ -229,9 +229,9 @@
         <div class="card-content">
           <a href="{% url 'product' product.id %}" style="text-decoration: none; color: #222;">
           <div>
-            <h3 class="product-title">{{product}}</h3>
+            <h3 class="product-title">{{product|truncatewords:3}}</h3>
             <p class="product-description" style="padding: 0; margin: 0;">
-              {{product.description|truncatewords:4}}..
+              {{product.description|truncatewords:2}}
             </p>
             {% if product.is_sale%}
             <p class="product-price" style="padding: 0; margin: 0;">N{{product.sale_price}} <span class="old-price"> N{{product.price}} </span></p>
@@ -269,7 +269,7 @@
           <div>
             <h3 class="product-title">{{product}}</h3>
             <p class="product-description" style="padding: 0; margin: 0;">
-              {{product.description|truncatewords:2}}..
+              {{product.description|truncatewords:2}}
             </p>
             {% if product.is_sale%}
             <p class="product-price" style="padding: 0; margin: 0;">N{{product.sale_price}} <span class="old-price"> N{{product.price}} </span></p>

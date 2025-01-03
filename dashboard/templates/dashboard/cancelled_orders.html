@@ -14,7 +14,7 @@
           <a href="{% url 'download_orders_excel' %}" class="btn add-user" >Download Excel</a>
         </div>
       </div>
-    <section class="analytics" style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr;">
+      <section class="analytics order">
         {% for order in orders %}
         <a href="{% url 'order' order.id %}" style="text-decoration: none;">
             <div class="card" style="min-height: 80px;">

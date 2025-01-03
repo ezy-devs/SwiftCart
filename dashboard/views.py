@@ -16,9 +16,44 @@ from .forms import EditOrderForm,EditOrderItemForm, NewCategoryForm, EditCategor
 from django.contrib.auth.decorators import user_passes_test
 from django.utils.timezone import make_naive
 from django.db.models import Q
+from django.views import View
+from django.db.models import Count
 from Auth.forms import UpdateProfileForm
 from payment.models import ShippingInfo
 from payment.forms import ShippingForm
+
+from django.db.models.functions import ExtractMonth
+
+
+
+class UserDataView(View):
+    def get(self, request):
+        try:
+            user_data = User.objects.annotate(month=ExtractMonth('date_joined')).values('month').annotate(count=Count('id')).order_by('month')
+
+            print("User data:", user_data)
+
+            labels_first_half = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"]
+            labels_second_half = ["Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+            user_counts_first_half = [0] * 6
+            user_counts_second_half = [0] * 6
+
+            for entry in user_data:
+                month = int(entry['month']) - 1  # Convert month to zero-based index
+                if 0 <= month < 6:
+                    user_counts_first_half[month] = entry['count']
+                elif 6 <= month < 12:
+                    user_counts_second_half[month - 6] = entry['count']
+
+            data = {
+                "labels_first_half": labels_first_half,
+                "userData_first_half": user_counts_first_half,
+                "labels_second_half": labels_second_half,
+                "userData_second_half": user_counts_second_half
+            }
+            return JsonResponse(data)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
 
 def admin_check(user):
     return user.is_superuser
@@ -222,7 +257,6 @@ def products(request):
     return render(request, 'dashboard/products.html', {'products':products})
 
 
-
 @user_passes_test(admin_check, login_url='home')
 def fetch_products(request):
    
@@ -356,7 +390,15 @@ def order(request, order_id):
                    }
                    )
 
-
+def delete_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    if order:
+        order.delete()
+        messages.success(request, f'Order "{order_id}" deleted successfully!.')
+        return redirect('orders')
+    else:
+        messages.error(request, 'Order does not exist')
+        return redirect('orders')
 
 
 def pending_orders(request):

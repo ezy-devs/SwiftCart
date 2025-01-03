@@ -25,6 +25,9 @@ PAYSTACK_PUBLIC_KEY = env('PAYSTACK_PUBLIC_KEY')
 PAYSTACK_SECRET_KEY = env('PAYSTACK_SECRET_KEY')
 
 
+
+# AUTH_USER_MODEL = 'Auth.CustomUser'
+
 # Application definition
 
 INSTALLED_APPS = [

@@ -21,7 +21,7 @@
         <div class="header">
           <div class="actions">
             <a href="{% url 'new-category' %}" class="btn">Add New Category</a>
-            <a href="{% url 'download_orders_excel' %}" class="btn add-user">Download Excel</a>
+            <!-- <a href="{% url 'download_orders_excel' %}" class="btn add-user">Download Excel</a> -->
           </div>
         </div>
 
@@ -46,9 +46,9 @@
               <td>{{category.created_by}}</td>
               <td>{{category.created_at}}</td>
               <td>
-                <a href="{% url 'edit-category' category.id %}" class="btn edit" id="edit-product">Edit</a>
+                <a href="{% url 'edit-category' category.id %}" class="btn edit" id="edit-product" style="padding: 4px">Edit</a>
                 <a href="{% url 'delete-category' category.id %}" class="btn delete"
-                  data-product-id="{{product.id}}">Delete</a>
+                  data-product-id="{{product.id}}" style="padding: 4px;">Delete</a>
               </td>
             </tr>
             {% endfor %}

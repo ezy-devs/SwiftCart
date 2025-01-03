@@ -9,6 +9,12 @@
 <main class="main-content">
   <section class="settings">
     <div class="settings-container card" style="max-width: 100%;">
+      {% for message in messages %}
+      <div class="msg"
+          style="background-color: rgb(119, 34, 119); color: rgb(237, 254, 255);min-width: 100px; border-radius: 5px; padding: 5px 10px;">
+          <p>{{message}}</p>
+      </div>
+      {% endfor %}
       <section class="orders">
         <div class="header">
           <h2>Orders</h2>

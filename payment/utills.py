@@ -1,20 +1,5 @@
-from django.shortcuts import render, redirect,get_object_or_404
-from django.contrib import messages
-from django.conf import settings
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
-from django.urls import reverse
-import json
-import requests
-from Store.models import Category, Product
-from Cart.models import Cart, CartItem
-from .forms import ShippingForm, PaymentForm
-from .models import ShippingInfo, Order, OrderItem
 
-
-
-
+from Cart.models import Cart
 
 def calculate_cart_total(request):
     """

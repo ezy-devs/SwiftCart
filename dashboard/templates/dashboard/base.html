@@ -90,15 +90,16 @@
   <!-- NAVIGATION MENU -->
   {% block aside %}
   <!-- Sidebar -->
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="logo">
-      <div class="brand logo" style="display: flex; align-items: center;">
+      <div class="brand logo" style="align-items: center;">
         <img src="{% static 'assets/images/swiftcart logo.webp' %}" alt="Company Logo"
           style="width: 35px; border-radius: 10px; ">
-        <a href="" class="brand" style="text-decoration: none; color: #e0e0e0;">SwiftCart</a>
+        <a href="{% url 'dashboard' %}" class="brand" style="text-decoration: none; color: #e0e0e0;">SwiftCart</a>
       </div>
     </div>
     <nav class="nav">
+      
       <a href="{% url 'dashboard' %}" class="nav-item">
         <span class="nav-icon">🏠</span>
         <span class="nav-text">Home</span>
@@ -130,7 +131,7 @@
             <li><a href="{% url 'delivered-orders' %}">Delivered Orders</a></li>
             <li><a href="{% url 'cancelled-orders' %}">Cancelled Orders</a></li>
           </ul>
-    
+
         </div>
       </div>
 
@@ -155,11 +156,19 @@
   {% endblock %}
 
   {% block header %}
-  <header class="main-header"
-    style="position: fixed; left: 15.5rem; right: 0; top: 0; z-index: 100; height: 60px; display: flex; align-items: center; border-radius: 30px">
-    <div class="brand logo" style="display: flex; align-items: center; justify-content: space-around;">
+  <header class="main-header" style="display: flex; justify-content: space-between;">
+    <div class="action toggler">
+      <span id="opennav" onclick="openBar()" style="padding: 5px; width: 32px;">
+        <div class="link"></div>
+        <div class="link"></div>
+        <div class="link"></div>
+      </span>
 
-
+      <span id="closebar" onclick="closeBar()" style="padding: 5px; width: 32px;">
+        <div class="link"></div>
+        <div class="link"></div>
+        <div class="link"></div>
+      </span>
     </div>
 
     <form action="{% url 'all-search' %}" method="get" class="search-container">
@@ -201,17 +210,26 @@
 
 
   {% block footer %}
-  <center style="position: relative; top:50vh;">
-    <footer class="footer">
-
-    <!-- Copyright -->
-    <div class="footer-bottom">
-      <p>&copy; 2025 SwiftCart | All Rights Reserved</p>
-    </div>
-  </footer>
-  </center>
+ 
   {% endblock %}
 
+  <script>
+    const opennav = document.getElementById('opennav');
+    const closenav = document.getElementById('closebar')
+    function openBar() {
+      document.getElementById('sidebar').style.display = "flex";
+      opennav.style.display = "none";
+      closenav.style.display = "block";
+
+    }
+
+    function closeBar() {
+      document.getElementById('sidebar').style.display = "none";
+      closenav.style.display = "none";
+      opennav.style.display = "block";
+
+    }
+  </script>
 
   <!-- Bootstrap JavaScript (with Popper) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
@@ -222,6 +240,7 @@
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
   <script src="{% static 'assets/js/script.js' %}"></script>
+  <script src="{% static 'assets/js/dashboard.js' %}"></script>
 </body>
 
 </html>

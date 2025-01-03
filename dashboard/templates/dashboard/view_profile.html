@@ -8,76 +8,75 @@
 {% block content %}
 <!-- Main Content -->
 <main class="main-content">
-    <section class="settings">
-        <div class="settings-container card" style="max-width: 
+  <section class="settings">
+    <div class="settings-container card" style="max-width: 
         100%;">
-            <h2>Profile</h2>
-            {% for message in messages %}
-            <div style="padding: 10px; background-color: #8acbf7; color: #0464a3;">
-                <p>{{message}}</p>
-                
-            </div>
-            {% endfor %}
-            <!-- Profile Settings -->
-            <div class="settings-section">
-                <h3>Profile</h3>
-                <center>
-                    {% if user.profile.photo %}
-                    <img src="{{user.profile.photo.url}}" alt="Profile Picture" class="profile-pic" style="object-fit: cover; width: 200px; height: 200px;">
-                    {% else %}
-                    <img src="{% static 'assets/images/best-design.jpeg' %}" alt="Profile Picture" class="profile-pic" style="object-fit: cover; width: 200px; height: 200px;">
-                    {% endif %}
-                </center>
-                <form action="{% url 'view_profile' user %}" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        
-                       {{ form.as_p }}
-                    </div>
-                    
-                   
-                    <button type="submit" class="btn save-btn">Save Changes</button>
-                </form>
-            </div>
-            <div class="settings-section">
-                <h3>Shipping info</h3>
-            <form action="{% url 'shipping_info' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <div class="form-group">
-                    
-                   {{ shipping_Form.as_p }}
-                   
-                </div>
-                
-               
-                <button type="submit" class="btn save-btn">Save Changes</button>
-            </form>
+      <h2>Profile</h2>
+      {% for message in messages %}
+      <div class="msg"
+        style="background-color: rgb(119, 34, 119); color: rgb(237, 254, 255);min-width: 100px; padding: 5px 10px; border-radius: 5px;">
+        <p>{{message}}</p>
+      </div>
+      {% endfor %}
+      <!-- Profile Settings -->
+      <div class="settings-section">
+        <h3>Profile</h3>
+        <center>
+          {% if user.profile.photo %}
+          <img src="{{user.profile.photo.url}}" alt="Profile Picture" class="profile-pic"
+            style="object-fit: cover; width: 200px; height: 200px;">
+          {% else %}
+          <img src="{% static 'assets/images/best-design.jpeg' %}" alt="Profile Picture" class="profile-pic"
+            style="object-fit: cover; width: 200px; height: 200px;">
+          {% endif %}
+        </center>
+        <form action="{% url 'view_profile' user %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group">
+
+            {{ form.as_p }}
+          </div>
+
+
+          <button type="submit" class="btn save-btn">Save Changes</button>
+        </form>
+      </div>
+      <div class="settings-section">
+        <h3>Shipping info</h3>
+        <form action="{% url 'shipping_info' %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group">
+
+            {{ shipping_Form.as_p }}
+
+          </div>
+
+
+          <button type="submit" class="btn save-btn">Save Changes</button>
+        </form>
+      </div>
+
+
+
+      <!-- Security Settings -->
+      <div class="settings-section">
+        <h3>Security</h3>
+        <a href="{% url 'password-reset' user %}" class="btn save-btn">Update Password</a>
+
+      </div>
+
+      <!-- Account Settings -->
+      <div class="settings-section">
+        <h3>Account</h3>
+        <div class="cta">
+          <button class="btn deactivate">Deactivate Account</button>
+          <button class="btn delete">Delete Account</button>
+
         </div>
-            
-           
 
-            <!-- Security Settings -->
-            <div class="settings-section">
-                <h3>Security</h3>
-                <a href="{% url 'password-reset' request.user %}" class="btn save-btn">Update Password</a>
-                
-            </div>
-
-            <!-- Account Settings -->
-            <div class="settings-section">
-                <h3>Account</h3>
-                <div class="form-group" style="display: flex; justify-content: space-between; align-items: center; gap:2px">
-                    <button class="btn deactivate-btn" style="background-color: #ff1f2a;">Deactivate Account</button>
-                    <button class="btn delete-btn" style="background-color: #ff1f2a;">Delete Account</button>
-
-                </div>
-                
-                <div class="form-group">
-                </div>
-                
-            </div>
-        </div>
-    </section>
+      </div>
+    </div>
+  </section>
 
 </main>
 {% endblock %}

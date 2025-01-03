@@ -61,7 +61,7 @@
         console.log(response);
       },
       error: function(xhr, errmsg, err) {
-        console.log(xhr)
+        console.log(xhr.responseJSON.text)
       }
     })
   })
@@ -87,7 +87,7 @@ function fetchProducts() {
                               <td>${product.created_at}</td>
                               <td style="display: flex; gap: 5px;">
                                   <a href="/dashboard/product/${product.id}" class="btn view">View</a>
-                                      <a href="/dashboard/product/${product.id}/" class="btn Delete">Delete</a>
+                                      <button data-product-id="${product.id}" class="btn delete">Delete</button>
                                   </div>
                               </td>
                           </tr>
@@ -103,7 +103,7 @@ function fetchProducts() {
 
     $(document).ready(function () {
       fetchProducts();
-      setInterval(fetchProducts, 30000); // Fetch orders every 30 seconds
+      setInterval(fetchProducts, 300); // Fetch orders every 30 seconds
     })
 
 

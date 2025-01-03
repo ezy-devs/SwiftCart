@@ -1,3 +1,9 @@
+
+
+
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
     // Sales Chart
     const salesCtx = document.getElementById("salesChart").getContext("2d");
@@ -37,7 +43,73 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
   
+
+  document.addEventListener("DOMContentLoaded", function() {
+    const usersChartFirstHalfElement = document.getElementById("usersChartFirstHalf");
+    const usersChartSecondHalfElement = document.getElementById("usersChartSecondHalf");
+
+    if (!usersChartFirstHalfElement || !usersChartSecondHalfElement) {
+        console.error("Canvas elements not found.");
+        return;
+    }
+
+    const usersCtxFirstHalf = usersChartFirstHalfElement.getContext("2d");
+    const usersCtxSecondHalf = usersChartSecondHalfElement.getContext("2d");
+
+    fetch('/dashboard/user-data')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Fetched data:', data);
+
+            const labelsFirstHalf = data.labels_first_half || [];
+            const userDataFirstHalf = data.userData_first_half || [];
+            const labelsSecondHalf = data.labels_second_half || [];
+            const userDataSecondHalf = data.userData_second_half || [];
+
+            new Chart(usersCtxFirstHalf, {
+                type: "bar",
+                data: {
+                    labels: labelsFirstHalf,
+                    datasets: [{
+                        label: "New Users (First Half)",
+                        data: userDataFirstHalf,
+                        backgroundColor: "#414",
+                        borderColor: "#414",
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                },
+            });
+
+            new Chart(usersCtxSecondHalf, {
+                type: "bar",
+                data: {
+                    labels: labelsSecondHalf,
+                    datasets: [{
+                        label: "New Users (Second Half)",
+                        data: userDataSecondHalf,
+                        backgroundColor: "#414",
+                        borderColor: "#414",
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                },
+            });
+        })
+        .catch(error => console.error('Error fetching user data:', error));
+});
+
 
   document.addEventListener("DOMContentLoaded", () => {
     // Sales Report Chart

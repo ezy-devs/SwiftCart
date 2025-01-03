@@ -12,6 +12,11 @@ from payment.forms import ShippingForm
 from payment.models import ShippingInfo
 
 
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
 def register(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -20,47 +25,46 @@ def register(request):
         password2 = request.POST['password2']
         
         if password == password2:
-
+            # Check if email already exists
             if User.objects.filter(email=email).exists():
                 messages.error(request, 'Email already used')
                 return redirect('register')
-            elif User.objects.filter(username=username).exists():
-                messages.error(request, 'username already used')
-                return redirect('register')
             else:
+                # Create the user with email as username
                 user = User.objects.create_user(username=username, email=email, password=password)
                 user = authenticate(request, username=username, password=password)
                 
-                login(request, user)
-                messages.success(request, 'Login successfully!')
-                return redirect(home)
+                # Log the user in
+                if user is not None:
+                    login(request, user)
+                    messages.success(request, 'Registration successful! Logged in.')
+                    return redirect('home')  # Replace 'home' with your desired redirect URL
         else:
-            messages.error(request, 'Password does not match')
-            return redirect(register)
+            messages.error(request, 'Passwords do not match')
+            return redirect('register')
 
     return render(request, 'auth/register.html')
 
-    
 def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
-         
+        
+        # Authenticate using the email as the username
         user = authenticate(request, username=username, password=password)
         if user is not None:
-                if user.is_superuser:
-                    login(request, user)
-                    messages.success(request, 'Login successfully!')
-                    return redirect('dashboard')
-                else:
-                    login(request, user)
-                    messages.success(request, 'Login successfully!')
-                    return redirect('home')
+            if user.is_superuser:
+                login(request, user)
+                messages.success(request, 'Login successfully!')
+                return redirect('dashboard')  
+            else:
+                login(request, user)
+                messages.success(request, 'Login successfully!')
+                return redirect('home') 
         else:
-            messages.error(request, 'Incorrect username or password')
+            messages.error(request, 'Incorrect username or password')  # Update error message
             return redirect('login')
     else:
-        
         return render(request, 'auth/login.html')
 
 
@@ -73,24 +77,45 @@ def logout_user(request):
 @login_required(login_url='login/')
 def password_reset(request, username):
     user = get_object_or_404(User, username=username)
-    if request.method == 'POST':
-        form = PasswordResetForm(user, request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Password reset successfully!')
-            login(request, user)
-            return redirect('profile', user)
-        else: 
-            messages.error(request, 'Password does not Match')
-            for error in list(form.errors.values()):
+    if request.user.is_superuser:
+            if request.method == 'POST':
+                form = PasswordResetForm(user, request.POST)
+                if form.is_valid():
+                    form.save()
+                    if user.is_superuser:
+                        login(request, user)
+                        messages.success(request, 'Password reset successfully!')
+                        return redirect('view_profile', user)
+                    else:
+                        messages.success(request, 'Password reset successfully!')
+                        return redirect('view_profile', user)
+                else: 
+                    for error in list(form.errors.values()):
+                        messages.error(request, error)
+                        return redirect('password-reset', user)
+                    
+            else:
+                form = PasswordResetForm(user)  
+                return render(request, 'dashboard/password_reset.html', {'form': form, 'user':user})
+    else:     
+        if request.method == 'POST':
+            form = PasswordResetForm(user, request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Password reset successfully!')
+                login(request, user)
+                return redirect('profile', user)
+            else: 
+                messages.error(request, 'Password does not Match')
+                for error in list(form.errors.values()):
 
-                messages.error(request, error)
-                return redirect('password-reset', user)
-    else:
+                    messages.error(request, error)
+                    return redirect('password-reset', user)
+        else:
 
-        form = PasswordResetForm(user)
-        
-        return render(request, 'auth/password_reset.html', {'form': form})
+            form = PasswordResetForm(user)
+            
+            return render(request, 'auth/password_reset.html', {'form': form})
 
 def error_404(request):
      return render(request, 'auth/404.html', {})
