@@ -10,7 +10,7 @@
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "manage.py"
+        "dest": "vercel_app.py"
       }
     ],
     "env": {
