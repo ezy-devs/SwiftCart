@@ -293,7 +293,8 @@
     justify-content: center;
     margin-top: 4rem;
     width: 100%;
-    height: 450px;
+    min-height: 450px;
+    max-height: 600px;
     border-radius: 10px;
     position: relative;
   }
@@ -784,14 +785,12 @@
   
   /* Footer Bottom */
   .footer-bottom {
-    background-color: #414;
+    /* background-color: #414; */
     padding: 5px;
-    text-align: center;
+    /* text-align: center; */
     font-size: 14px;
-    color: #eaf2f8;
+    /* color: #eaf2f8; */
     position: absolute;
-    left: 0;
-    right: 0;
     bottom: 0;
   }
   
