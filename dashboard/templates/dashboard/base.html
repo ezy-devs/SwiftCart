@@ -191,8 +191,11 @@
 
       <!-- User Profile -->
       <div class="user-profile">
-
+        {% if request.user.profile.photo %}
         <img src="{{request.user.profile.photo.url}}" alt="User Avatar" class="avatar">
+        {% else %}
+        <img src="{% static 'assets/images/latest.jpg' %}" alt="User Avatar" class="avatar">
+        {% endif %}
         <div class="dropdown">
           <ul>
             <li><a href="{% url 'profile' user %}">Profile</a></li>

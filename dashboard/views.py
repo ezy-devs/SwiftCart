@@ -377,7 +377,7 @@ def order(request, order_id):
         if order_form.is_valid():
             order_form.save()
             messages.success(request, 'Order status updated!.')
-            return redirect('order', order_id)
+            return redirect('orders')
         else:
             messages.success(request, 'There was an issue with the form, check details and try again!.')
             return redirect('order', order_id)
@@ -566,7 +566,7 @@ def new_category(request):
         form = NewCategoryForm(request.POST)
         if form.is_valid():
             category = form.save(commit=False)
-            category.user = request.user
+            category.created_by = request.user
             category.save()
             name = category.name
             messages.success(request, f'Category "{name}" added successfully!')

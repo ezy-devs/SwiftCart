@@ -91,12 +91,30 @@ WSGI_APPLICATION = 'SwiftCart.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
+
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql',  
+        'NAME': 'swift-cart-db',  
+        'USER': 'postgres',  
+        'PASSWORD': 'ezydevs@2003',  
+        'HOST': 'localhost',  
+        'PORT': '5432',
+    },
 }
+
+
+# import dj_database_url
+
+# DATABASES = {
+#     'default': dj_database_url.parse(
+#         "postgresql://postgres:Supabase@2003swiftcart@db.llurutfjgnmnbjgvwnts.supabase.co:5432/postgres"
+#     )
+    
+# }
+
 
 
 # Password validation

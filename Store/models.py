@@ -7,8 +7,8 @@ from django.urls import reverse
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    description = models.TextField(default='', null=True, blank=True)
-    user = models.ForeignKey(User, related_name='creates_category', on_delete=models.CASCADE)
+    description = models.TextField(null=True, blank=True)
+    created_by = models.ForeignKey(User, related_name='creates_category', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -23,11 +23,11 @@ class Product(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4)
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='products_images', blank=True, null=True)
-    description = models.TextField()
+    description = models.TextField(null=True, blank=True)
     in_stock = models.PositiveBigIntegerField(default=1)
-    price = models.DecimalField(decimal_places=2, max_digits=10000)
+    price = models.DecimalField(decimal_places=2, max_digits=10)
     is_sale = models.BooleanField(default=False)
-    sale_price = models.DecimalField(decimal_places=2, max_digits=10000, blank=True, null=True)
+    sale_price = models.DecimalField(decimal_places=2, max_digits=10, blank=True, null=True)
     is_featured = models.BooleanField(default=False)
     is_trending = models.BooleanField(default=False)
     is_best_seller = models.BooleanField(default=False)
