@@ -1,1 +1,1 @@
-web: gunicorn SwiftCart.wsgi:application
+web: gunicorn SwiftCart.wsgi:app
