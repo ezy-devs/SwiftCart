@@ -18,7 +18,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["swiftcart-production.up.railway.app", "swift-cart-jet.vercel.app", "swiftcart-one.vercel.app", "127.0.0.1"]
+ALLOWED_HOSTS = ["swiftcart-production.up.railway.app", "swift-cart-jet.vercel.app", "swiftcart-one.vercel.app", "swiftcart-1-b1tq.onrender.com", "127.0.0.1"]
 
 
 PAYSTACK_PUBLIC_KEY = env('PAYSTACK_PUBLIC_KEY')
