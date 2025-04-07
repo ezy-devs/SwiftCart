@@ -16,7 +16,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = ["swiftcart-production.up.railway.app", "swift-cart-jet.vercel.app", "swiftcart-one.vercel.app", "swiftcart-1-b1tq.onrender.com", "127.0.0.1"]
 
